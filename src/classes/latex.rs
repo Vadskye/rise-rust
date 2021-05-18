@@ -4,34 +4,66 @@ use numerics::Numerics;
 use titlecase::titlecase;
 
 pub fn generate_latex_basic_class_abilities(class: &class_definition::Class) -> String {
-    return latex_formatting::latexify(
-        format!(
-            "
+    return latex_formatting::latexify(format!(
+        "
                 \\subsection<Basic Class Abilities>
                 If you are a {name}, you gain the following abilities.
 
                 \\cf<{shorthand_name}><Defenses>
                 You gain the following bonuses to your \\glossterm<defenses>: {defenses}.
 
-                \\cf<{shorthand_name}><Resources>
-                You have the following \\glossterm<resources>:
-                \\begin<itemize>
-                    \\item {insight_points}, which you can spend to gain additional abilities or proficiencies (see \\pcref<Insight Points>).
-                    \\item {skill_points}, which you can spend to learn skills (see \\pcref<Skills>).
-                    \\item {attunement_points}, which you can use to attune to items and abilities that affect you (see \\pcref<Attunement Points>).
-                    \\item A \\plus{fatigue_tolerance} bonus to your \\glossterm<fatigue tolerance>, which makes it easier for you to use powerful abilities that fatigue you (see \\pcref<Fatigue>).
-                \\end<itemize>
+                {resources}
 
-                \\cf<{shorthand_name}><Weapon Proficiencies>
+                {weapon_proficiencies}
+
+                {armor_proficiencies}
             ",
-            attunement_points = generate_labeled_english_number( class.attunement_points(), "\\glossterm<attunement point>", "\\glossterm<attunement points>"),
-            defenses = generate_latex_defense_bonuses(&class.defenses()).trim(),
-            fatigue_tolerance = class.fatigue_tolerance(),
-            insight_points = generate_labeled_english_number(class.insight_points(), "\\glossterm<insight point>", "\\glossterm<insight points>"),
-            name = class.name(),
-            shorthand_name = class.shorthand_name(),
-            skill_points = generate_labeled_english_number(class.skill_points(), "\\glossterm<skill point>", "\\glossterm<skill points>"),
-        )
+        defenses = generate_latex_defense_bonuses(&class.defenses()).trim(),
+        name = class.name(),
+        resources = generate_latex_resources(class).trim().to_string(),
+        shorthand_name = class.shorthand_name(),
+        armor_proficiencies = generate_latex_armor_proficiencies(class).trim().to_string(),
+        weapon_proficiencies = generate_latex_weapon_proficiencies(class)
+            .trim()
+            .to_string(),
+    ));
+}
+
+fn generate_latex_resources(class: &class_definition::Class) -> String {
+    return format!(
+        "
+            \\cf<{shorthand_name}><Resources>
+            You have the following \\glossterm<resources>:
+            \\begin<itemize>
+                \\item {insight_points}, which you can spend to gain additional abilities or proficiencies (see \\pcref<Insight Points>).
+                \\item {skill_points}, which you can spend to learn skills (see \\pcref<Skills>).
+                \\item {attunement_points}, which you can use to attune to items and abilities that affect you (see \\pcref<Attunement Points>).
+                \\item A \\plus{fatigue_tolerance} bonus to your \\glossterm<fatigue tolerance>, which makes it easier for you to use powerful abilities that fatigue you (see \\pcref<Fatigue>).
+            \\end<itemize>
+        ",
+        attunement_points = uppercase_first_letter(&
+            generate_labeled_english_number(
+                class.attunement_points(),
+                "\\glossterm<attunement point>",
+                "\\glossterm<attunement points>",
+            )
+        ),
+        fatigue_tolerance = class.fatigue_tolerance(),
+        insight_points = uppercase_first_letter(&
+            generate_labeled_english_number(
+                class.insight_points(),
+                "\\glossterm<insight point>",
+                "\\glossterm<insight points>",
+            )
+        ),
+        shorthand_name = class.shorthand_name(),
+        skill_points = uppercase_first_letter(&
+            generate_labeled_english_number(
+                class.skill_points(),
+                "\\glossterm<skill point>",
+                "\\glossterm<skill points>",
+            )
+        ),
     );
 }
 
@@ -45,5 +77,98 @@ fn generate_labeled_english_number(val: u8, singular: &str, plural: &str) -> Str
     let converter = Numerics::builder().build();
     let english_number = converter.convert_number(val).unwrap();
     let suffix = if val == 1 { singular } else { plural };
-    return format!("{} {}", titlecase(&english_number[0]), suffix);
+    return format!("{} {}", english_number[0], suffix);
+}
+
+fn generate_latex_armor_proficiencies(class: &class_definition::Class) -> String {
+    let armor_proficiencies = class.armor_proficiencies();
+    let proficiences_text: String;
+    if armor_proficiencies.len() == 0 {
+        proficiences_text = "
+            You are not proficient with any type of armor.
+            Encumbrance from armor interferes with the gestures you make to cast spells, which can cause your spells with \\glossterm{somatic components} to fail (see \\pcref{Somatic Component Failure}).
+        ".to_string();
+    } else {
+        let stringified: Vec<&str> = armor_proficiencies.iter().map(|w| w.name()).collect();
+        proficiences_text = format!(
+            "
+                You are proficient with {usage_classes} armor.
+            ",
+            usage_classes = join_string_list(&stringified).unwrap(),
+        )
+    }
+
+    return format!(
+        "
+            \\cf<{shorthand_name}><Armor Proficiencies>
+            {proficiencies}
+        ",
+        proficiencies = proficiences_text,
+        shorthand_name = class.shorthand_name(),
+    );
+}
+
+fn generate_latex_weapon_proficiencies(class: &class_definition::Class) -> String {
+    let weapon_proficiencies = class.weapon_proficiencies();
+    let proficiences_text: String;
+    if !weapon_proficiencies.simple_weapons {
+        proficiences_text = "
+            You are not proficient with any weapon groups, even simple weapons.
+            You are still proficient with your natural weapons.
+        "
+        .to_string();
+    } else if weapon_proficiencies.specific_weapons.is_some() {
+        let specific_weapons = weapon_proficiencies.specific_weapons.unwrap();
+        let stringified: Vec<String> = specific_weapons.iter().map(|w| w.plural_name()).collect();
+        proficiences_text = format!(
+            "
+                You are proficient with simple weapons, any {weapon_group_text}, and {specific_weapon_text}.
+            ",
+            specific_weapon_text = stringified.join(", "),
+            weapon_group_text = generate_labeled_english_number(weapon_proficiencies.custom_weapon_groups, "other weapon group","other weapon groups"),
+        );
+    } else {
+        proficiences_text = format!(
+            "
+                You are proficient with simple weapons and any {weapon_group_text}.
+            ",
+            weapon_group_text = generate_labeled_english_number(
+                weapon_proficiencies.custom_weapon_groups,
+                "other weapon group",
+                "other weapon groups"
+            ),
+        );
+    }
+    return format!(
+        "
+            \\cf<{shorthand_name}><Armor Proficiencies>
+            {proficiencies}
+        ",
+        shorthand_name = class.shorthand_name(),
+        proficiencies = proficiences_text,
+    );
+}
+
+fn join_string_list(strings: &[&str]) -> Option<String> {
+    if strings.len() == 0 {
+        return None;
+    } else if strings.len() == 1 {
+        return Some(strings[0].to_string());
+    } else if strings.len() == 2 {
+        return Some(format!("{} and {}", strings[0], strings[1]));
+    } else {
+        return Some(format!(
+            "{}, and {}",
+            strings[..strings.len() - 1].join(", "),
+            strings[strings.len() - 1]
+        ));
+    }
+}
+
+fn uppercase_first_letter(text: &str) -> String {
+    if let Some(c) = text.get(0..1) {
+        return c.to_ascii_uppercase() + if let Some(s) = text.get(1..) { s } else { "" }
+    } else {
+        return text.to_string();
+    }
 }
