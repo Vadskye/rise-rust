@@ -1,3 +1,4 @@
+#![allow(dead_code)]
 mod classes;
 mod core_mechanics;
 mod equipment;

@@ -1,4 +1,5 @@
 pub mod archetypes;
+pub mod archetype_rank_abilities;
 pub mod latex;
 
 use crate::equipment;
@@ -22,6 +23,12 @@ impl Class {
 
     pub fn archetypes(&self) -> Vec<archetypes::ClassArchetype> {
         return archetypes::all_archetypes().into_iter().filter(|a| a.class().name() == self.name()).collect();
+    }
+
+    pub fn alignment(&self) -> &str {
+        match self {
+            _ => "Any",
+        }
     }
 
     pub fn class_skills(&self) -> Vec<Skill> {

@@ -1,4 +1,5 @@
 use crate::classes::Class;
+use crate::classes::archetype_rank_abilities;
 
 pub enum ClassArchetype {
     // Barbarian
@@ -65,6 +66,43 @@ impl ClassArchetype {
             Self::CombatTrickster => "Combat Trickster",
             Self::JackOfAllTrades => "Jack of All Trades",
             Self::SuaveScoundrel => "Suave Scoundrel",
+        }
+    }
+
+    pub fn rank_abilities(&self) -> Vec<Vec<archetype_rank_abilities::RankAbility>> {
+        return archetype_rank_abilities::archetype_rank_abilities(self);
+    }
+
+    pub fn short_description(&self) -> &str {
+        match self {
+            // Barbarian
+            Self::BattleforgedResilience => "This archetype improves your durability in combat.",
+            Self::Battlerager => "This archetype grants you a devastating rage, improving your combat prowess.",
+            Self::OutlandSavage => "This archetype improves your mobility and combat prowess with direct, brutal abilities.",
+            Self::PrimalWarrior => "This archetype grants you abilities to use in combat and improves your physical skills.",
+            Self::Totemist => "This archetype allows you to embody the spirits of apex predators to improve your combat ability.",
+            // Cleric
+            Self::ClericDivineMagic => "
+                This archetype grants you the ability to cast divine spells.
+                All abilities from this archetype are \\glossterm{magical}.
+            ",
+            Self::DivineSpellMastery => "
+                This archetype improves the divine spells you cast.
+                You must have the Divine Magic archetype from the cleric class to gain the abilities from this archetype.
+                All abilities from this archetype are \\glossterm{magical}.
+            ",
+            Self::DomainInfluence => "
+                This archetype grants you divine influence over two domains of your choice.
+                All abilities from this archetype are \\glossterm{magical}.
+            ",
+            Self::Healer => "This archetype grants you healing abilities.",
+            Self::Preacher => "This archetype grants you the ability to inspire your allies and denounce or even convert your foes.",
+            // Rogue
+            Self::Assassin => "This archetype improves your agility, stealth, and combat prowess against unaware targets.",
+            Self::BardicMusic => "This archetype grants you the ability to inspire your allies and impair your foes with musical performances.",
+            Self::CombatTrickster => "This archetype grants you abilities to use in combat and improves your combat prowess.",
+            Self::JackOfAllTrades => "This archetype improves your skills.",
+            Self::SuaveScoundrel => "This archetype improves your deceptiveness and helps you make use of that talent in combat.",
         }
     }
 }
