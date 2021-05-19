@@ -1,34 +1,37 @@
 use crate::classes::definition as class_definition;
+use crate::core_mechanics::attributes;
 use crate::latex_formatting;
 use numerics::Numerics;
 use titlecase::titlecase;
 
+// Generate the whole "Basic Class Abilities" subsection used to explain a class in the
+// Classes chapter.
 pub fn generate_latex_basic_class_abilities(class: &class_definition::Class) -> String {
     return latex_formatting::latexify(format!(
         "
-                \\subsection<Basic Class Abilities>
-                If you are a {name}, you gain the following abilities.
+            \\subsection<Basic Class Abilities>
+            If you are a {name}, you gain the following abilities.
 
-                \\cf<{shorthand_name}><Defenses>
-                You gain the following bonuses to your \\glossterm<defenses>: {defenses}.
+            {defenses}
 
-                {resources}
+            {resources}
 
-                {weapon_proficiencies}
+            {weapon_proficiencies}
 
-                {armor_proficiencies}
-            ",
-        defenses = generate_latex_defense_bonuses(&class.defenses()).trim(),
+            {armor_proficiencies}
+
+            {class_skills}
+        ",
+        defenses = generate_latex_defenses(class).trim(),
         name = class.name(),
-        resources = generate_latex_resources(class).trim().to_string(),
-        shorthand_name = class.shorthand_name(),
-        armor_proficiencies = generate_latex_armor_proficiencies(class).trim().to_string(),
-        weapon_proficiencies = generate_latex_weapon_proficiencies(class)
-            .trim()
-            .to_string(),
+        resources = generate_latex_resources(class).trim(),
+        armor_proficiencies = generate_latex_armor_proficiencies(class).trim(),
+        class_skills = generate_latex_class_skills(class).trim(),
+        weapon_proficiencies = generate_latex_weapon_proficiencies(class).trim(),
     ));
 }
 
+// Generate the Resources section of the basic class abilities.
 fn generate_latex_resources(class: &class_definition::Class) -> String {
     return format!(
         "
@@ -67,10 +70,12 @@ fn generate_latex_resources(class: &class_definition::Class) -> String {
     );
 }
 
-fn generate_latex_defense_bonuses(defenses: &class_definition::ClassDefenseBonuses) -> String {
+fn generate_latex_defenses(class: &class_definition::Class) -> String {
+    let defenses = class.defenses();
     return latex_formatting::latexify(format!("
-        \\plus{armor} Armor, \\plus{fortitude} Fortitude, \\plus{reflex} Reflex, \\plus{mental} Mental
-    ", armor=defenses.armor, fortitude=defenses.fortitude, reflex=defenses.reflex, mental=defenses.mental));
+        \\cf<{shorthand_name}><Defenses>
+        You gain the following bonuses to your \\glossterm<defenses>: \\plus{armor} Armor, \\plus{fortitude} Fortitude, \\plus{reflex} Reflex, \\plus{mental} Mental
+    ", armor=defenses.armor, fortitude=defenses.fortitude, reflex=defenses.reflex, mental=defenses.mental, shorthand_name=class.shorthand_name()));
 }
 
 fn generate_labeled_english_number(val: u8, singular: &str, plural: &str) -> String {
@@ -167,8 +172,70 @@ fn join_string_list(strings: &[&str]) -> Option<String> {
 
 fn uppercase_first_letter(text: &str) -> String {
     if let Some(c) = text.get(0..1) {
-        return c.to_ascii_uppercase() + if let Some(s) = text.get(1..) { s } else { "" }
+        return c.to_ascii_uppercase() + if let Some(s) = text.get(1..) { s } else { "" };
     } else {
         return text.to_string();
     }
+}
+
+fn generate_latex_class_skills(class: &class_definition::Class) -> String {
+    let class_skills = class.class_skills();
+    let mut attribute_texts = Vec::new();
+    // For each attribute, find all class skills for the current class that are based on that
+    // attribute. Then, if there are any class skills for that attribute, modify `attribute_texts`
+    // to list them.
+    for attr in attributes::all_attributes() {
+        let skills_for_attribute: Vec<String> = class_skills
+            .iter()
+            .filter(|skill| {
+                if let Some(a) = skill.attribute() {
+                    a.name() == attr.name()
+                } else {
+                    false
+                }
+            })
+            .map(|skill| titlecase(skill.name()))
+            .collect();
+        // It's easier to directly push this text onto `attribute_texts` instead of creating a
+        // separate object to avoid needing to bundle the skills in an object with the attribute
+        // itself.
+        if skills_for_attribute.len() > 0 {
+            attribute_texts.push(format!(
+                "\\item \\subparhead<{attribute_name}> {skills_text}.",
+                attribute_name = uppercase_first_letter(attr.name()),
+                skills_text = skills_for_attribute.join(", "),
+            ));
+        }
+    }
+
+    // There is clearly some duplication between the attribute-less skills and the attribute-based
+    // skills, but there are enough differences in the way we compare and use them that it's easier
+    // to treat this as a separate block instead of merging attributes and non-attributes into a
+    // single large chunk.
+    let skills_without_attribute: Vec<String> = class_skills
+        .iter()
+        .filter(|skill| skill.attribute().is_none())
+        .map(|skill| titlecase(skill.name()))
+        .collect();
+    // In practice, every class currently has the standard set of attribute-less skills like
+    // Profession as class skills, but this structure is still better in case that changes.
+    if skills_without_attribute.len() > 0 {
+        attribute_texts.push(format!(
+            "\\item \\subparhead<Other> {skills_text}",
+            skills_text = skills_without_attribute.join(", "),
+        ))
+    }
+
+    return format!(
+        "
+            \\cf<{shorthand_name}><Class Skills>
+            You have the following \\glossterm<class skills>:
+
+            \\begin<itemize>
+                {attribute_texts}
+            \\end<itemize>
+        ",
+        attribute_texts = attribute_texts.join("\n"),
+        shorthand_name = class.shorthand_name(),
+    );
 }

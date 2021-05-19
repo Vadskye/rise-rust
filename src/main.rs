@@ -1,6 +1,8 @@
 mod classes;
+mod core_mechanics;
 mod equipment;
 mod latex_formatting;
+mod skills;
 
 fn main() {
     let barbarian = classes::definition::Class::Barbarian;

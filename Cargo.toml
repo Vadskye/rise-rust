@@ -9,3 +9,4 @@ edition = "2018"
 [dependencies]
 numerics = "0.0.1"
 titlecase = "1.1.0"
+# itertools = "0.10.0"

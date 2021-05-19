@@ -1,4 +1,5 @@
 use crate::equipment;
+use crate::skills::Skill;
 use std::fmt;
 
 pub enum Class {
@@ -13,6 +14,66 @@ impl Class {
             Self::Barbarian => 1,
             Self::Cleric => 2,
             Self::Rogue => 1,
+        }
+    }
+
+    pub fn class_skills(&self) -> Vec<Skill> {
+        match self {
+            Self::Barbarian => vec![
+                Skill::Agility,
+                Skill::Awareness,
+                Skill::Climb,
+                Skill::Craft,
+                Skill::CreatureHandling,
+                Skill::Deception,
+                Skill::Endurance,
+                Skill::Flexibility,
+                Skill::Intimidate,
+                Skill::Jump,
+                Skill::Medicine,
+                Skill::Persuasion,
+                Skill::Profession,
+                Skill::Ride,
+                Skill::Survival,
+                Skill::Swim,
+            ],
+            Self::Cleric => vec![
+                Skill::Awareness,
+                Skill::Craft,
+                Skill::Deception,
+                Skill::Deduction,
+                Skill::Intimidate,
+                Skill::Knowledge,
+                Skill::Linguistics,
+                Skill::Medicine, 
+                Skill::Persuasion,
+                Skill::Profession,
+                Skill::SocialInsight,
+                Skill::Spellsense,
+            ],
+            Self::Rogue => vec![
+                Skill::Agility,
+                Skill::Awareness,
+                Skill::Climb,
+                Skill::Craft,
+                Skill::Deception,
+                Skill::Deduction,
+                Skill::Devices,
+                Skill::Disguise,
+                Skill::Flexibility,
+                Skill::Intimidate,
+                Skill::Jump,
+                Skill::Knowledge,
+                Skill::Linguistics,
+                Skill::Perform,
+                Skill::Persuasion,
+                Skill::Profession,
+                Skill::Ride,
+                Skill::SleightOfHand,
+                Skill::SocialInsight,
+                Skill::Stealth,
+                Skill::Swim,
+            ],
         }
     }
 
@@ -127,7 +188,7 @@ impl Class {
 
 impl fmt::Display for Class {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(f, "Class({})", self.name())
+        write!(f, "{}", self.name())
     }
 }
 
