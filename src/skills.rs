@@ -1,4 +1,5 @@
 use crate::core_mechanics::attributes::Attribute;
+use titlecase::titlecase;
 // use itertools::Itertools;
 use std::fmt;
 
@@ -16,7 +17,7 @@ pub enum Skill {
     Flexibility,
     Intimidate,
     Jump,
-    Knowledge,
+    Knowledge(Vec<KnowledgeSubskill>),
     Linguistics,
     Medicine,
     Perform,
@@ -47,7 +48,7 @@ impl Skill {
             Self::Flexibility => Some(Attribute::Dexterity),
             Self::Intimidate => None,
             Self::Jump => Some(Attribute::Strength),
-            Self::Knowledge => Some(Attribute::Intelligence),
+            Self::Knowledge(_) => Some(Attribute::Intelligence),
             Self::Linguistics => Some(Attribute::Intelligence),
             Self::Medicine => Some(Attribute::Intelligence),
             Self::Perform => None,
@@ -78,7 +79,7 @@ impl Skill {
             Self::Flexibility => "flexibility",
             Self::Intimidate => "intimidate",
             Self::Jump => "jump",
-            Self::Knowledge => "knowledge",
+            Self::Knowledge(_) => "knowledge",
             Self::Linguistics => "linguistics",
             Self::Medicine => "medicine",
             Self::Perform => "perform",
@@ -93,10 +94,55 @@ impl Skill {
             Self::Swim => "swim",
         }
     }
+
+    // It's useful to return this separately from .name() for three reasons.
+    // First, it naturally takes the form of `String` instead of `&str`.
+    // Second, it requires some calculation and allocations, while `.name()` should be trivial.
+    // Third, the titleing behavior is weird - you want to `titlecase()` most skill names, but you
+    // don't want to capitalize the subskill names, which makes it hard to convert the string
+    // returned here into a useful case after this function has been called.
+    pub fn titled_name_with_subskills(&self) -> String {
+        match self {
+            Self::Knowledge(subskills) => {
+                let subskill_names: Vec<&str> = subskills.iter().map(|subskill| subskill.name()).collect();
+                return format!(
+                    "Knowledge ({})",
+                    subskill_names.join(", ")
+                );
+            },
+            _ => titlecase(self.name()),
+        }
+    }
 }
 
 impl fmt::Display for Skill {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.name())
+    }
+}
+
+pub enum KnowledgeSubskill {
+    Arcana,
+    Dungeoneering,
+    Engineering,
+    Geography,
+    Local,
+    Nature,
+    Planes,
+    Religion,
+}
+
+impl KnowledgeSubskill {
+    pub fn name(&self) -> &str {
+        match self {
+            Self::Arcana => "arcana",
+            Self::Dungeoneering => "dungeoneering",
+            Self::Engineering => "engineering",
+            Self::Geography => "geography",
+            Self::Local => "local",
+            Self::Nature => "nature",
+            Self::Planes => "planes",
+            Self::Religion => "religion",
+        }
     }
 }

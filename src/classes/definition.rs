@@ -1,5 +1,5 @@
 use crate::equipment;
-use crate::skills::Skill;
+use crate::skills::{Skill, KnowledgeSubskill};
 use std::fmt;
 
 pub enum Class {
@@ -43,7 +43,7 @@ impl Class {
                 Skill::Deception,
                 Skill::Deduction,
                 Skill::Intimidate,
-                Skill::Knowledge,
+                Skill::Knowledge(vec![KnowledgeSubskill::Arcana, KnowledgeSubskill::Local, KnowledgeSubskill::Religion, KnowledgeSubskill::Planes]),
                 Skill::Linguistics,
                 Skill::Medicine, 
                 Skill::Persuasion,
@@ -63,7 +63,7 @@ impl Class {
                 Skill::Flexibility,
                 Skill::Intimidate,
                 Skill::Jump,
-                Skill::Knowledge,
+                Skill::Knowledge(vec![KnowledgeSubskill::Dungeoneering, KnowledgeSubskill::Local]),
                 Skill::Linguistics,
                 Skill::Perform,
                 Skill::Persuasion,

@@ -2,7 +2,6 @@ use crate::classes::definition as class_definition;
 use crate::core_mechanics::attributes;
 use crate::latex_formatting;
 use numerics::Numerics;
-use titlecase::titlecase;
 
 // Generate the whole "Basic Class Abilities" subsection used to explain a class in the
 // Classes chapter.
@@ -194,7 +193,7 @@ fn generate_latex_class_skills(class: &class_definition::Class) -> String {
                     false
                 }
             })
-            .map(|skill| titlecase(skill.name()))
+            .map(|skill| skill.titled_name_with_subskills())
             .collect();
         // It's easier to directly push this text onto `attribute_texts` instead of creating a
         // separate object to avoid needing to bundle the skills in an object with the attribute
@@ -215,7 +214,7 @@ fn generate_latex_class_skills(class: &class_definition::Class) -> String {
     let skills_without_attribute: Vec<String> = class_skills
         .iter()
         .filter(|skill| skill.attribute().is_none())
-        .map(|skill| titlecase(skill.name()))
+        .map(|skill| skill.titled_name_with_subskills())
         .collect();
     // In practice, every class currently has the standard set of attribute-less skills like
     // Profession as class skills, but this structure is still better in case that changes.
