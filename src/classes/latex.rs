@@ -1,12 +1,31 @@
-use crate::classes::definition as class_definition;
+use crate::classes;
 use crate::core_mechanics::attributes;
 use crate::latex_formatting;
+use titlecase::titlecase;
 use numerics::Numerics;
+
+pub fn generate_latex_class_definition(class: &classes::Class) -> String {
+    let archetypes = class.archetypes();
+    let archetype_names: Vec<&str> = archetypes.iter().map(|a| a.name()).collect();
+    return latex_formatting::latexify(format!(
+        "
+            \\newpage
+            \\section<{class_name}>\\label<{class_name}>
+
+            \\classbasics<Archetypes> {class_name}s have the {archetypes} archetypes.
+
+            {basic_class_abilities}
+        ",
+        basic_class_abilities = generate_latex_basic_class_abilities(class).trim(),
+        class_name = titlecase(class.name()),
+        archetypes = join_string_list(&archetype_names).unwrap(),
+    ))
+}
 
 // Generate the whole "Basic Class Abilities" subsection used to explain a class in the
 // Classes chapter.
-pub fn generate_latex_basic_class_abilities(class: &class_definition::Class) -> String {
-    return latex_formatting::latexify(format!(
+fn generate_latex_basic_class_abilities(class: &classes::Class) -> String {
+    return format!(
         "
             \\subsection<Basic Class Abilities>
             If you are a {name}, you gain the following abilities.
@@ -27,11 +46,11 @@ pub fn generate_latex_basic_class_abilities(class: &class_definition::Class) -> 
         armor_proficiencies = generate_latex_armor_proficiencies(class).trim(),
         class_skills = generate_latex_class_skills(class).trim(),
         weapon_proficiencies = generate_latex_weapon_proficiencies(class).trim(),
-    ));
+    );
 }
 
 // Generate the Resources section of the basic class abilities.
-fn generate_latex_resources(class: &class_definition::Class) -> String {
+fn generate_latex_resources(class: &classes::Class) -> String {
     return format!(
         "
             \\cf<{shorthand_name}><Resources>
@@ -69,7 +88,7 @@ fn generate_latex_resources(class: &class_definition::Class) -> String {
     );
 }
 
-fn generate_latex_defenses(class: &class_definition::Class) -> String {
+fn generate_latex_defenses(class: &classes::Class) -> String {
     let defenses = class.defenses();
     return latex_formatting::latexify(format!("
         \\cf<{shorthand_name}><Defenses>
@@ -84,7 +103,7 @@ fn generate_labeled_english_number(val: u8, singular: &str, plural: &str) -> Str
     return format!("{} {}", english_number[0], suffix);
 }
 
-fn generate_latex_armor_proficiencies(class: &class_definition::Class) -> String {
+fn generate_latex_armor_proficiencies(class: &classes::Class) -> String {
     let armor_proficiencies = class.armor_proficiencies();
     let proficiences_text: String;
     if armor_proficiencies.len() == 0 {
@@ -112,7 +131,7 @@ fn generate_latex_armor_proficiencies(class: &class_definition::Class) -> String
     );
 }
 
-fn generate_latex_weapon_proficiencies(class: &class_definition::Class) -> String {
+fn generate_latex_weapon_proficiencies(class: &classes::Class) -> String {
     let weapon_proficiencies = class.weapon_proficiencies();
     let proficiences_text: String;
     if !weapon_proficiencies.simple_weapons {
@@ -177,7 +196,7 @@ fn uppercase_first_letter(text: &str) -> String {
     }
 }
 
-fn generate_latex_class_skills(class: &class_definition::Class) -> String {
+fn generate_latex_class_skills(class: &classes::Class) -> String {
     let class_skills = class.class_skills();
     let mut attribute_texts = Vec::new();
     // For each attribute, find all class skills for the current class that are based on that

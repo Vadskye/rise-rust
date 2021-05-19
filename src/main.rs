@@ -5,19 +5,19 @@ mod latex_formatting;
 mod skills;
 
 fn main() {
-    let barbarian = classes::definition::Class::Barbarian;
+    let barbarian = classes::Class::Barbarian;
     println!(
         "Barbarian! {}",
-        classes::latex::generate_latex_basic_class_abilities(&barbarian)
+        classes::latex::generate_latex_class_definition(&barbarian)
     );
-    let cleric = classes::definition::Class::Cleric;
+    let cleric = classes::Class::Cleric;
     println!(
         "Cleric! {}",
-        classes::latex::generate_latex_basic_class_abilities(&cleric)
+        classes::latex::generate_latex_class_definition(&cleric)
     );
-    let rogue = classes::definition::Class::Rogue;
+    let rogue = classes::Class::Rogue;
     println!(
         "Rogue! {}",
-        classes::latex::generate_latex_basic_class_abilities(&rogue)
+        classes::latex::generate_latex_class_definition(&rogue)
     );
 }
