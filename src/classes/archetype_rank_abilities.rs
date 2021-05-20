@@ -216,20 +216,97 @@ fn cleric_rank_abilities(archetype: &ClassArchetype) -> Vec<Vec<RankAbility>> {
 }
 
 fn rogue_rank_abilities(archetype: &ClassArchetype) -> Vec<Vec<RankAbility>> {
-    return vec![
-        vec![
-            RankAbility {
-                description: "full description",
-                rank: 0,
-                name: "unbattered resilience",
-            },
-        ],
-        vec![
-            RankAbility {
-                description: "full description",
-                rank: 1,
-                name: "battle-scarred",
-            },
-        ]
-    ]
+    match archetype {
+        ClassArchetype::Assassin => {
+            return vec![
+                vec![
+                    RankAbility {
+                        name: "stealthy instincts",
+                        rank: 0,
+                        description: "todo",
+                    },
+                ],
+                vec![
+                    RankAbility {
+                        name: "sneak attack",
+                        rank: 1,
+                        description: "todo",
+                    },
+                ],
+            ];
+        },
+        ClassArchetype::BardicMusic => {
+            return vec![
+                vec![
+                    RankAbility {
+                        name: "bardic lore",
+                        rank: 0,
+                        description: "todo",
+                    },
+                ],
+                vec![
+                    RankAbility {
+                        name: "bardic performances",
+                        rank: 1,
+                        description: "todo",
+                    },
+                ],
+            ];
+        },
+        ClassArchetype::CombatTrickster => {
+            return vec![
+                vec![
+                    RankAbility {
+                        name: "tricky finesse",
+                        rank: 0,
+                        description: "todo",
+                    },
+                ],
+                vec![
+                    RankAbility {
+                        name: "combat styles",
+                        rank: 1,
+                        description: "todo",
+                    },
+                ],
+            ];
+        },
+        ClassArchetype::JackOfAllTrades => {
+            return vec![
+                vec![
+                    RankAbility {
+                        name: "dabbler",
+                        rank: 0,
+                        description: "todo",
+                    },
+                ],
+                vec![
+                    RankAbility {
+                        name: "skill exemplar",
+                        rank: 1,
+                        description: "todo",
+                    },
+                ],
+            ];
+        },
+        ClassArchetype::SuaveScoundrel => {
+            return vec![
+                vec![
+                    RankAbility {
+                        name: "smooth liar",
+                        rank: 0,
+                        description: "todo",
+                    },
+                ],
+                vec![
+                    RankAbility {
+                        name: "confound",
+                        rank: 1,
+                        description: "todo",
+                    },
+                ],
+            ];
+        },
+        _ => panic!("Missing archetype '{}'", archetype.name())
+    }
 }
