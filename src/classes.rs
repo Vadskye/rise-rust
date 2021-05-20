@@ -13,7 +13,7 @@ pub enum Class {
 }
 
 impl Class {
-    pub fn attunement_points(&self) -> u8 {
+    pub fn attunement_points(&self) -> i8 {
         match self {
             Self::Barbarian => 1,
             Self::Cleric => 2,
@@ -114,7 +114,7 @@ impl Class {
         }
     }
 
-    pub fn fatigue_tolerance(&self) -> u8 {
+    pub fn fatigue_tolerance(&self) -> i8 {
         match self {
             Self::Barbarian => 4,
             Self::Cleric => 1,
@@ -122,7 +122,7 @@ impl Class {
         }
     }
 
-    pub fn insight_points(&self) -> u8 {
+    pub fn insight_points(&self) -> i8 {
         match self {
             Self::Barbarian => 1,
             Self::Cleric => 3,
@@ -157,7 +157,7 @@ impl Class {
         }
     }
 
-    pub fn skill_points(&self) -> u8 {
+    pub fn skill_points(&self) -> i8 {
         match self {
             Self::Barbarian => 9,
             Self::Cleric => 6,
@@ -212,23 +212,23 @@ impl fmt::Display for Class {
 
 #[derive(Debug)]
 pub struct ClassDefenseBonuses {
-    pub armor: u8,
-    pub fortitude: u8,
-    pub mental: u8,
-    pub reflex: u8,
+    pub armor: i8,
+    pub fortitude: i8,
+    pub mental: i8,
+    pub reflex: i8,
 }
 
 pub struct WeaponProficiencies {
-    pub custom_weapon_groups: u8,
+    pub custom_weapon_groups: i8,
     pub specific_weapons: Option<Vec<equipment::Weapon>>,
     pub simple_weapons: bool,
 }
 
 #[derive(Debug)]
 pub struct ClassResources {
-    pub attunement_points: u8,
+    pub attunement_points: i8,
     pub defenses: ClassDefenseBonuses,
-    pub fatigue_tolerance: u8,
-    pub insight_points: u8,
-    pub skill_points: u8,
+    pub fatigue_tolerance: i8,
+    pub insight_points: i8,
+    pub skill_points: i8,
 }

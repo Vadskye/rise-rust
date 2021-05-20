@@ -3,7 +3,7 @@ use crate::classes::archetypes::ClassArchetype;
 
 pub struct RankAbility<'a> {
     pub description: &'a str,
-    pub rank: u8,
+    pub rank: i8,
     pub name: &'a str,
 }
 

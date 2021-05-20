@@ -77,7 +77,7 @@ fn generate_latex_defenses(class: &classes::Class) -> String {
     ", armor=defenses.armor, fortitude=defenses.fortitude, reflex=defenses.reflex, mental=defenses.mental, shorthand_name=class.shorthand_name()));
 }
 
-fn generate_labeled_english_number(val: u8, singular: &str, plural: &str) -> String {
+fn generate_labeled_english_number(val: i8, singular: &str, plural: &str) -> String {
     let converter = Numerics::builder().build();
     let english_number = converter.convert_number(val).unwrap();
     let suffix = if val == 1 { singular } else { plural };

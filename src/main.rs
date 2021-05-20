@@ -14,10 +14,10 @@ fn main() {
     // println!("Rogue! {}", rogue.to_latex());
 
     let mut creature = core_mechanics::creature::Creature::new(1);
-    println!("{}", creature.explain_combat_stats());
+    println!("{}", creature.to_latex());
     creature.set_base_attribute(&core_mechanics::attributes::STR, -1);
     creature.set_base_attribute(&core_mechanics::attributes::DEX, 4);
-    println!("{}", creature.explain_combat_stats());
+    println!("{}", creature.to_latex());
     creature.set_level(10);
-    println!("{}", creature.explain_combat_stats());
+    println!("{}", creature.to_latex());
 }

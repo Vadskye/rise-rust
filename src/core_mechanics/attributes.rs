@@ -40,7 +40,7 @@ impl Attribute {
         }
     }
 
-    pub fn calculate_total(base_value: i8, level: u8) -> i8 {
+    pub fn calculate_total(base_value: i8, level: i8) -> i8 {
         let slevel = level as i8;
         if base_value <= 0 {
             return base_value;
