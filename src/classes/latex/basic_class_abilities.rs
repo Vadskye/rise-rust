@@ -1,5 +1,5 @@
 use crate::classes;
-use crate::core_mechanics::attributes;
+use crate::core_mechanics::attributes::Attribute;
 use crate::latex_formatting;
 use numerics::Numerics;
 
@@ -159,7 +159,7 @@ fn generate_latex_class_skills(class: &classes::Class) -> String {
     // For each attribute, find all class skills for the current class that are based on that
     // attribute. Then, if there are any class skills for that attribute, modify `attribute_texts`
     // to list them.
-    for attr in attributes::all_attributes() {
+    for attr in Attribute::all() {
         let skills_for_attribute: Vec<String> = class_skills
             .iter()
             .filter(|skill| {

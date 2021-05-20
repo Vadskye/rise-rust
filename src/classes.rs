@@ -165,6 +165,10 @@ impl Class {
         }
     }
 
+    pub fn to_latex(&self) -> String {
+        latex::generate_latex_class_definition(self)
+    }
+
     pub fn armor_proficiencies(&self) -> Vec<equipment::ArmorUsageClass> {
         match self {
             Self::Barbarian => vec![
