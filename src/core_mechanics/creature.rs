@@ -27,11 +27,11 @@ impl Creature {
                 Attr: {attributes}
             ",
             attributes = format_creature_attributes(self).join(", "),
-            armor = self.calc_defense(&defenses::ARMOR),
-            fortitude = self.calc_defense(&defenses::FORT),
+            armor = self.calc_defense(defenses::ARMOR),
+            fortitude = self.calc_defense(defenses::FORT),
             hit_points = self.calc_hit_points(),
-            mental = self.calc_defense(&defenses::MENT),
-            reflex = self.calc_defense(&defenses::REF),
+            mental = self.calc_defense(defenses::MENT),
+            reflex = self.calc_defense(defenses::REF),
         );
     }
 }
@@ -67,7 +67,7 @@ pub trait CoreStatistics {
 impl CoreStatistics for Creature {
     fn calc_accuracy(&self) -> i8 {
         // note implicit floor due to integer storage
-        return self.level + self.get_base_attribute(&attributes::PER) / 2;
+        return self.level + self.get_base_attribute(attributes::PER) / 2;
     }
 
     fn calc_hit_points(&self) -> i32 {
@@ -96,7 +96,7 @@ impl CoreStatistics for Creature {
             _ => panic!("Invalid level {}", self.level),
         };
 
-        return hp_from_level + self.get_base_attribute(&attributes::CON) as i32;
+        return hp_from_level + self.get_base_attribute(attributes::CON) as i32;
     }
 }
 

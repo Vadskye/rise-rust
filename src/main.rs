@@ -17,8 +17,8 @@ fn main() {
 
     let mut barbarian = core_mechanics::character::Character::new(classes::Class::Barbarian, 1);
     println!("{}", barbarian.to_latex());
-    barbarian.set_base_attribute(&attributes::STR, -1);
-    barbarian.set_base_attribute(&attributes::DEX, 4);
+    barbarian.set_base_attribute(attributes::STR, -1);
+    barbarian.set_base_attribute(attributes::DEX, 4);
     println!("{}", barbarian.to_latex());
     barbarian.set_level(10);
     println!("{}", barbarian.to_latex());

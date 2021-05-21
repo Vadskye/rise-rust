@@ -11,10 +11,10 @@ pub enum Defense {
     Reflex,
 }
 
-pub static ARMOR: Defense = Defense::Armor;
-pub static FORT: Defense = Defense::Fortitude;
-pub static REF: Defense = Defense::Reflex;
-pub static MENT: Defense = Defense::Mental;
+pub static ARMOR: &Defense = &Defense::Armor;
+pub static FORT: &Defense = &Defense::Fortitude;
+pub static REF: &Defense = &Defense::Reflex;
+pub static MENT: &Defense = &Defense::Mental;
 
 impl Defense {
     pub fn name(&self) -> &str {

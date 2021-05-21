@@ -10,12 +10,12 @@ pub enum Attribute {
     Willpower,
 }
 
-pub static STR: Attribute = Attribute::Strength;
-pub static DEX: Attribute = Attribute::Dexterity;
-pub static CON: Attribute = Attribute::Constitution;
-pub static INT: Attribute = Attribute::Intelligence;
-pub static PER: Attribute = Attribute::Perception;
-pub static WIL: Attribute = Attribute::Willpower;
+pub static STR: &Attribute = &Attribute::Strength;
+pub static DEX: &Attribute = &Attribute::Dexterity;
+pub static CON: &Attribute = &Attribute::Constitution;
+pub static INT: &Attribute = &Attribute::Intelligence;
+pub static PER: &Attribute = &Attribute::Perception;
+pub static WIL: &Attribute = &Attribute::Willpower;
 
 impl Attribute {
     pub fn name(&self) -> &str {
