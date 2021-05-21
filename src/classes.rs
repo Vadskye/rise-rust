@@ -1,9 +1,10 @@
-pub mod archetypes;
 pub mod archetype_rank_abilities;
+pub mod archetypes;
 pub mod latex;
 
+use crate::core_mechanics::defenses::Defense;
 use crate::equipment;
-use crate::skills::{Skill, KnowledgeSubskill};
+use crate::skills::{KnowledgeSubskill, Skill};
 use std::fmt;
 
 pub enum Class {
@@ -22,7 +23,10 @@ impl Class {
     }
 
     pub fn archetypes(&self) -> Vec<archetypes::ClassArchetype> {
-        return archetypes::all_archetypes().into_iter().filter(|a| a.class().name() == self.name()).collect();
+        return archetypes::all_archetypes()
+            .into_iter()
+            .filter(|a| a.class().name() == self.name())
+            .collect();
     }
 
     pub fn alignment(&self) -> &str {
@@ -57,9 +61,14 @@ impl Class {
                 Skill::Deception,
                 Skill::Deduction,
                 Skill::Intimidate,
-                Skill::Knowledge(vec![KnowledgeSubskill::Arcana, KnowledgeSubskill::Local, KnowledgeSubskill::Religion, KnowledgeSubskill::Planes]),
+                Skill::Knowledge(vec![
+                    KnowledgeSubskill::Arcana,
+                    KnowledgeSubskill::Local,
+                    KnowledgeSubskill::Religion,
+                    KnowledgeSubskill::Planes,
+                ]),
                 Skill::Linguistics,
-                Skill::Medicine, 
+                Skill::Medicine,
                 Skill::Persuasion,
                 Skill::Profession,
                 Skill::SocialInsight,
@@ -77,7 +86,10 @@ impl Class {
                 Skill::Flexibility,
                 Skill::Intimidate,
                 Skill::Jump,
-                Skill::Knowledge(vec![KnowledgeSubskill::Dungeoneering, KnowledgeSubskill::Local]),
+                Skill::Knowledge(vec![
+                    KnowledgeSubskill::Dungeoneering,
+                    KnowledgeSubskill::Local,
+                ]),
                 Skill::Linguistics,
                 Skill::Perform,
                 Skill::Persuasion,
@@ -91,25 +103,25 @@ impl Class {
         }
     }
 
-    pub fn defenses(&self) -> ClassDefenseBonuses {
+    pub fn defense_bonus(&self, defense: &'static Defense) -> i8 {
         match self {
-            Self::Barbarian => ClassDefenseBonuses {
-                armor: 1,
-                fortitude: 7,
-                reflex: 5,
-                mental: 3,
+            Self::Barbarian => match defense {
+                Defense::Armor => 1,
+                Defense::Fortitude => 7,
+                Defense::Reflex => 5,
+                Defense::Mental => 3,
             },
-            Self::Cleric => ClassDefenseBonuses {
-                armor: 1,
-                fortitude: 5,
-                reflex: 3,
-                mental: 7,
+            Self::Cleric => match defense {
+                Defense::Armor => 1,
+                Defense::Fortitude => 5,
+                Defense::Reflex => 3,
+                Defense::Mental => 7,
             },
-            Self::Rogue => ClassDefenseBonuses {
-                armor: 1,
-                fortitude: 3,
-                reflex: 7,
-                mental: 5,
+            Self::Rogue => match defense {
+                Defense::Armor => 1,
+                Defense::Fortitude => 3,
+                Defense::Reflex => 7,
+                Defense::Mental => 5,
             },
         }
     }
@@ -135,17 +147,6 @@ impl Class {
             Self::Barbarian => "barbarian",
             Self::Cleric => "cleric",
             Self::Rogue => "rogue",
-        }
-    }
-
-    #[allow(dead_code)]
-    fn resources(&self) -> ClassResources {
-        ClassResources {
-            attunement_points: self.attunement_points(),
-            defenses: self.defenses(),
-            fatigue_tolerance: self.fatigue_tolerance(),
-            insight_points: self.insight_points(),
-            skill_points: self.skill_points(),
         }
     }
 

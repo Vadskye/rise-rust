@@ -46,16 +46,7 @@ impl creature::CoreStatistics for Character {
 }
 
 impl defenses::DefenseCalcs for Character {
-    fn calc_armor(&self) -> i8 {
-        return self.creature.calc_armor() + self.class.defenses().armor;
-    }
-    fn calc_fortitude(&self) -> i8 {
-        return self.creature.calc_fortitude() + self.class.defenses().fortitude;
-    }
-    fn calc_reflex(&self) -> i8 {
-        return self.creature.calc_reflex() + self.class.defenses().reflex;
-    }
-    fn calc_mental(&self) -> i8 {
-        return self.creature.calc_mental() + self.class.defenses().mental;
+    fn calc_defense(&self, defense: &'static defenses::Defense) -> i8 {
+        return self.creature.calc_defense(defense) + self.class.defense_bonus(defense);
     }
 }

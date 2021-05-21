@@ -1,5 +1,5 @@
 use crate::core_mechanics::attributes::{self, Attribute, AttributeCalcs};
-use crate::core_mechanics::defenses::DefenseCalcs;
+use crate::core_mechanics::defenses::{self, Defense, DefenseCalcs};
 use std::collections::HashMap;
 
 pub struct Creature {
@@ -27,11 +27,11 @@ impl Creature {
                 Attr: {attributes}
             ",
             attributes = format_creature_attributes(self).join(", "),
-            armor = self.calc_armor(),
-            fortitude = self.calc_fortitude(),
+            armor = self.calc_defense(&defenses::ARMOR),
+            fortitude = self.calc_defense(&defenses::FORT),
             hit_points = self.calc_hit_points(),
-            reflex = self.calc_reflex(),
-            mental = self.calc_mental(),
+            mental = self.calc_defense(&defenses::MENT),
+            reflex = self.calc_defense(&defenses::REF),
         );
     }
 }
@@ -101,20 +101,8 @@ impl CoreStatistics for Creature {
 }
 
 impl DefenseCalcs for Creature {
-    fn calc_armor(&self) -> i8 {
-        return self.level + self.get_base_attribute(&attributes::DEX);
-    }
-
-    fn calc_fortitude(&self) -> i8 {
-        return self.level + self.get_base_attribute(&attributes::CON);
-    }
-
-    fn calc_reflex(&self) -> i8 {
-        return self.level + self.get_base_attribute(&attributes::DEX);
-    }
-
-    fn calc_mental(&self) -> i8 {
-        return self.level + self.get_base_attribute(&attributes::WIL);
+    fn calc_defense(&self, defense: &'static Defense) -> i8 {
+        return self.level + self.get_base_attribute(defense.associated_attribute());
     }
 }
 

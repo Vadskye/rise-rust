@@ -1,5 +1,6 @@
 use crate::classes;
 use crate::core_mechanics::attributes::Attribute;
+use crate::core_mechanics::defenses;
 use crate::latex_formatting;
 use numerics::Numerics;
 
@@ -70,11 +71,19 @@ fn generate_latex_resources(class: &classes::Class) -> String {
 }
 
 fn generate_latex_defenses(class: &classes::Class) -> String {
-    let defenses = class.defenses();
-    return latex_formatting::latexify(format!("
-        \\cf<{shorthand_name}><Defenses>
-        You gain the following bonuses to your \\glossterm<defenses>: \\plus{armor} Armor, \\plus{fortitude} Fortitude, \\plus{reflex} Reflex, \\plus{mental} Mental
-    ", armor=defenses.armor, fortitude=defenses.fortitude, reflex=defenses.reflex, mental=defenses.mental, shorthand_name=class.shorthand_name()));
+    return latex_formatting::latexify(
+        format!(
+            "
+                \\cf<{shorthand_name}><Defenses>
+                You gain the following bonuses to your \\glossterm<defenses>: \\plus{armor} Armor, \\plus{fortitude} Fortitude, \\plus{reflex} Reflex, \\plus{mental} Mental
+            ",
+            armor=class.defense_bonus(&defenses::ARMOR),
+            fortitude=class.defense_bonus(&defenses::FORT),
+            reflex=class.defense_bonus(&defenses::REF),
+            mental=class.defense_bonus(&defenses::MENT),
+            shorthand_name=class.shorthand_name(),
+        )
+    );
 }
 
 fn generate_labeled_english_number(val: i8, singular: &str, plural: &str) -> String {
