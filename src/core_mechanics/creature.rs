@@ -1,4 +1,5 @@
-use crate::core_mechanics::attributes::{self, Attribute};
+use crate::core_mechanics::attributes::{self, Attribute, AttributeCalcs};
+use crate::core_mechanics::defenses::DefenseCalcs;
 use std::collections::HashMap;
 
 pub struct Creature {
@@ -15,26 +16,6 @@ impl Creature {
         };
     }
 
-    pub fn get_base_attribute(&self, attribute: &'static Attribute) -> i8 {
-        if let Some(a) = self.base_attributes.get(attribute) {
-            *a
-        } else {
-            0
-        }
-    }
-
-    pub fn calc_total_attribute(&self, attribute: &'static Attribute) -> i8 {
-        Attribute::calculate_total(self.get_base_attribute(attribute), self.level)
-    }
-
-    pub fn set_base_attribute(&mut self, attribute: &'static Attribute, value: i8) {
-        if let Some(a) = self.base_attributes.get_mut(attribute) {
-            *a = value;
-        } else {
-            self.base_attributes.insert(attribute, value);
-        }
-    }
-
     pub fn set_level(&mut self, level: i8) {
         self.level = level;
     }
@@ -42,36 +23,51 @@ impl Creature {
     pub fn to_latex(&self) -> String {
         return format!(
             "
-                : 
+                HP {hit_points}, AD {armor}, Fort {fortitude}, Ref {reflex}, Ment {mental}
                 Attr: {attributes}
             ",
             attributes = format_creature_attributes(self).join(", "),
+            armor = self.calc_armor(),
+            fortitude = self.calc_fortitude(),
+            hit_points = self.calc_hit_points(),
+            reflex = self.calc_reflex(),
+            mental = self.calc_mental(),
         );
     }
 }
 
-pub trait CreatureCalculation {
+impl AttributeCalcs for Creature {
+    fn get_base_attribute(&self, attribute: &'static Attribute) -> i8 {
+        if let Some(a) = self.base_attributes.get(attribute) {
+            *a
+        } else {
+            0
+        }
+    }
+
+    fn calc_total_attribute(&self, attribute: &'static Attribute) -> i8 {
+        Attribute::calculate_total(self.get_base_attribute(attribute), self.level)
+    }
+
+    fn set_base_attribute(&mut self, attribute: &'static Attribute, value: i8) {
+        if let Some(a) = self.base_attributes.get_mut(attribute) {
+            *a = value;
+        } else {
+            self.base_attributes.insert(attribute, value);
+        }
+    }
+}
+
+pub trait CoreStatistics {
     fn calc_accuracy(&self) -> i8;
-    fn calc_armor(&self) -> i8;
-    fn calc_fortitude(&self) -> i8;
     fn calc_hit_points(&self) -> i32;
-    fn calc_mental(&self) -> i8;
-    fn calc_reflex(&self) -> i8;
 }
 
 // Calculation functions
-impl CreatureCalculation for Creature {
+impl CoreStatistics for Creature {
     fn calc_accuracy(&self) -> i8 {
         // note implicit floor due to integer storage
         return self.level + self.get_base_attribute(&attributes::PER) / 2;
-    }
-
-    fn calc_armor(&self) -> i8 {
-        return self.level + self.get_base_attribute(&attributes::DEX);
-    }
-
-    fn calc_fortitude(&self) -> i8 {
-        return self.level + self.get_base_attribute(&attributes::CON);
     }
 
     fn calc_hit_points(&self) -> i32 {
@@ -101,6 +97,16 @@ impl CreatureCalculation for Creature {
         };
 
         return hp_from_level + self.get_base_attribute(&attributes::CON) as i32;
+    }
+}
+
+impl DefenseCalcs for Creature {
+    fn calc_armor(&self) -> i8 {
+        return self.level + self.get_base_attribute(&attributes::DEX);
+    }
+
+    fn calc_fortitude(&self) -> i8 {
+        return self.level + self.get_base_attribute(&attributes::CON);
     }
 
     fn calc_reflex(&self) -> i8 {

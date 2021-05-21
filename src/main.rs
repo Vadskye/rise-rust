@@ -5,6 +5,8 @@ mod equipment;
 mod latex_formatting;
 mod skills;
 
+use core_mechanics::attributes::{self, AttributeCalcs};
+
 fn main() {
     // let barbarian = classes::Class::Barbarian;
     // println!("Barbarian! {}", barbarian.to_latex());
@@ -13,11 +15,11 @@ fn main() {
     // let rogue = classes::Class::Rogue;
     // println!("Rogue! {}", rogue.to_latex());
 
-    let mut creature = core_mechanics::creature::Creature::new(1);
-    println!("{}", creature.to_latex());
-    creature.set_base_attribute(&core_mechanics::attributes::STR, -1);
-    creature.set_base_attribute(&core_mechanics::attributes::DEX, 4);
-    println!("{}", creature.to_latex());
-    creature.set_level(10);
-    println!("{}", creature.to_latex());
+    let mut barbarian = core_mechanics::character::Character::new(classes::Class::Barbarian, 1);
+    println!("{}", barbarian.to_latex());
+    barbarian.set_base_attribute(&attributes::STR, -1);
+    barbarian.set_base_attribute(&attributes::DEX, 4);
+    println!("{}", barbarian.to_latex());
+    barbarian.set_level(10);
+    println!("{}", barbarian.to_latex());
 }
