@@ -69,7 +69,7 @@ impl DefenseCalcs for Character {
 }
 
 impl ResourceCalcs for Character {
-    fn calc_resource(&self, resource: &'static resources::Resource) -> i32 {
+    fn calc_resource(&self, resource: &'static resources::Resource) -> i8 {
         return self.creature.calc_resource(resource) + self.class.resource_bonus(resource);
     }
 }

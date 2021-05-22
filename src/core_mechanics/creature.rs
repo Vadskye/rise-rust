@@ -134,10 +134,10 @@ fn format_creature_attributes(creature: &Creature) -> Vec<String> {
 }
 
 impl ResourceCalcs for Creature {
-    fn calc_resource(&self, resource: &'static resources::Resource) -> i32 {
+    fn calc_resource(&self, resource: &'static resources::Resource) -> i8 {
         match resource {
             resources::Resource::AttunementPoint => {
-                let mut ap_from_level: i32 = max(0, min(self.level as i32, 5) - 1);
+                let mut ap_from_level = max(0, min(self.level, 5) - 1);
                 if self.level >= 11 {
                     ap_from_level += 1;
                 };
@@ -147,40 +147,11 @@ impl ResourceCalcs for Creature {
                 return ap_from_level;
             }
             resources::Resource::FatigueTolerance => {
-                (self.get_base_attribute(attributes::CON)
-                    + self.get_base_attribute(attributes::WIL)) as i32
+                self.get_base_attribute(attributes::CON)
+                    + self.get_base_attribute(attributes::WIL)
             }
-            resources::Resource::HitPoint => {
-                let hp_from_level = match self.level {
-                    1 => 11,
-                    2 => 12,
-                    3 => 13,
-                    4 => 15,
-                    5 => 17,
-                    6 => 19,
-                    7 => 22,
-                    8 => 25,
-                    9 => 28,
-                    10 => 31,
-                    11 => 35,
-                    12 => 39,
-                    13 => 44,
-                    14 => 50,
-                    15 => 56,
-                    16 => 63,
-                    17 => 70,
-                    18 => 78,
-                    19 => 88,
-                    20 => 100,
-                    21 => 115,
-                    _ => panic!("Invalid level {}", self.level),
-                };
-                return (hp_from_level + self.calc_total_attribute(attributes::CON)) as i32;
-            }
-            resources::Resource::InsightPoint => self.get_base_attribute(attributes::INT) as i32,
-            resources::Resource::SkillPoint => {
-                (self.get_base_attribute(attributes::INT) as i32) * 2
-            },
+            resources::Resource::InsightPoint => self.get_base_attribute(attributes::INT),
+            resources::Resource::SkillPoint => (self.get_base_attribute(attributes::INT)) * 2,
         }
     }
 }

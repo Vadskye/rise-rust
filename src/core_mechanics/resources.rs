@@ -1,19 +1,17 @@
 pub trait ResourceCalcs {
     // hit points can get bigger than i8
-    fn calc_resource(&self, resource: &'static Resource) -> i32;
+    fn calc_resource(&self, resource: &'static Resource) -> i8;
 }
 
 pub enum Resource {
     AttunementPoint,
     FatigueTolerance,
-    HitPoint,
     InsightPoint,
     SkillPoint,
 }
 
 pub static AP: &Resource = &Resource::AttunementPoint;
 pub static FT: &Resource = &Resource::FatigueTolerance;
-pub static HP: &Resource = &Resource::HitPoint;
 pub static IP: &Resource = &Resource::InsightPoint;
 pub static SP: &Resource = &Resource::SkillPoint;
 
@@ -22,7 +20,6 @@ impl Resource {
         match self {
             Self::AttunementPoint => "attunement point",
             Self::FatigueTolerance => "fatigue tolerance",
-            Self::HitPoint => "hit point",
             Self::InsightPoint => "insight point",
             Self::SkillPoint => "skill point",
         }
