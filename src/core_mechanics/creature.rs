@@ -1,15 +1,17 @@
-use crate::core_mechanics::attributes::{self, Attribute, AttributeCalcs};
-use crate::core_mechanics::defenses::{self, Defense, DefenseCalcs};
+use crate::core_mechanics::attributes::{self, AttributeCalcs};
+use crate::core_mechanics::defenses::{self, DefenseCalcs};
+use crate::core_mechanics::resources::{self, ResourceCalcs};
+use std::cmp::{max, min};
 use std::collections::HashMap;
 
 pub struct Creature {
-    base_attributes: HashMap<&'static Attribute, i8>,
+    base_attributes: HashMap<&'static attributes::Attribute, i8>,
     pub level: i8,
 }
 
 impl Creature {
     pub fn new(level: i8) -> Creature {
-        let base_attributes = HashMap::<&Attribute, i8>::new();
+        let base_attributes = HashMap::<&attributes::Attribute, i8>::new();
         return Creature {
             base_attributes,
             level,
@@ -37,7 +39,7 @@ impl Creature {
 }
 
 impl AttributeCalcs for Creature {
-    fn get_base_attribute(&self, attribute: &'static Attribute) -> i8 {
+    fn get_base_attribute(&self, attribute: &'static attributes::Attribute) -> i8 {
         if let Some(a) = self.base_attributes.get(attribute) {
             *a
         } else {
@@ -45,11 +47,11 @@ impl AttributeCalcs for Creature {
         }
     }
 
-    fn calc_total_attribute(&self, attribute: &'static Attribute) -> i8 {
-        Attribute::calculate_total(self.get_base_attribute(attribute), self.level)
+    fn calc_total_attribute(&self, attribute: &'static attributes::Attribute) -> i8 {
+        attributes::Attribute::calculate_total(self.get_base_attribute(attribute), self.level)
     }
 
-    fn set_base_attribute(&mut self, attribute: &'static Attribute, value: i8) {
+    fn set_base_attribute(&mut self, attribute: &'static attributes::Attribute, value: i8) {
         if let Some(a) = self.base_attributes.get_mut(attribute) {
             *a = value;
         } else {
@@ -101,19 +103,19 @@ impl CoreStatistics for Creature {
 }
 
 impl DefenseCalcs for Creature {
-    fn calc_defense(&self, defense: &'static Defense) -> i8 {
+    fn calc_defense(&self, defense: &'static defenses::Defense) -> i8 {
         return self.level + self.get_base_attribute(defense.associated_attribute());
     }
 }
 
 pub struct CreatureAttribute {
-    attribute: &'static Attribute,
+    attribute: &'static attributes::Attribute,
     base: i8,
     total: i8,
 }
 
 fn format_creature_attributes(creature: &Creature) -> Vec<String> {
-    return Attribute::all()
+    return attributes::Attribute::all()
         .iter()
         .map(|attribute| {
             let base = creature.get_base_attribute(attribute);
@@ -129,4 +131,56 @@ fn format_creature_attributes(creature: &Creature) -> Vec<String> {
             }
         })
         .collect::<Vec<String>>();
+}
+
+impl ResourceCalcs for Creature {
+    fn calc_resource(&self, resource: &'static resources::Resource) -> i32 {
+        match resource {
+            resources::Resource::AttunementPoint => {
+                let mut ap_from_level: i32 = max(0, min(self.level as i32, 5) - 1);
+                if self.level >= 11 {
+                    ap_from_level += 1;
+                };
+                if self.level >= 17 {
+                    ap_from_level += 1;
+                };
+                return ap_from_level;
+            }
+            resources::Resource::FatigueTolerance => {
+                (self.get_base_attribute(attributes::CON)
+                    + self.get_base_attribute(attributes::WIL)) as i32
+            }
+            resources::Resource::HitPoint => {
+                let hp_from_level = match self.level {
+                    1 => 11,
+                    2 => 12,
+                    3 => 13,
+                    4 => 15,
+                    5 => 17,
+                    6 => 19,
+                    7 => 22,
+                    8 => 25,
+                    9 => 28,
+                    10 => 31,
+                    11 => 35,
+                    12 => 39,
+                    13 => 44,
+                    14 => 50,
+                    15 => 56,
+                    16 => 63,
+                    17 => 70,
+                    18 => 78,
+                    19 => 88,
+                    20 => 100,
+                    21 => 115,
+                    _ => panic!("Invalid level {}", self.level),
+                };
+                return (hp_from_level + self.calc_total_attribute(attributes::CON)) as i32;
+            }
+            resources::Resource::InsightPoint => self.get_base_attribute(attributes::INT) as i32,
+            resources::Resource::SkillPoint => {
+                (self.get_base_attribute(attributes::INT) as i32) * 2
+            },
+        }
+    }
 }

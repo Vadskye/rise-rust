@@ -1,4 +1,4 @@
-use crate::core_mechanics::attributes::{Attribute, DEX, CON, WIL};
+use crate::core_mechanics::attributes;
 
 pub trait DefenseCalcs {
     fn calc_defense(&self, defense: &'static Defense) -> i8;
@@ -35,12 +35,12 @@ impl Defense {
         }
     }
 
-    pub fn associated_attribute(&self) -> &'static Attribute {
+    pub fn associated_attribute(&self) -> &'static attributes::Attribute {
         match self {
-            Self::Armor => &DEX,
-            Self::Fortitude => &CON,
-            Self::Mental => &WIL,
-            Self::Reflex => &DEX,
+            Self::Armor => &attributes::DEX,
+            Self::Fortitude => &attributes::CON,
+            Self::Mental => &attributes::WIL,
+            Self::Reflex => &attributes::DEX,
         }
     }
 }

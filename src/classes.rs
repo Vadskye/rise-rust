@@ -3,6 +3,7 @@ pub mod archetypes;
 pub mod latex;
 
 use crate::core_mechanics::defenses::Defense;
+use crate::core_mechanics::resources::Resource;
 use crate::equipment;
 use crate::skills::{KnowledgeSubskill, Skill};
 use std::fmt;
@@ -147,6 +148,32 @@ impl Class {
             Self::Barbarian => "barbarian",
             Self::Cleric => "cleric",
             Self::Rogue => "rogue",
+        }
+    }
+
+    pub fn resource_bonus(&self, resource: &'static Resource) -> i32 {
+        match self {
+            Self::Barbarian => match resource {
+                Resource::AttunementPoint => 1,
+                Resource::FatigueTolerance => 4,
+                Resource::HitPoint => 0,
+                Resource::InsightPoint => 1,
+                Resource::SkillPoint => 9,
+            },
+            Self::Cleric => match resource {
+                Resource::AttunementPoint => 2,
+                Resource::FatigueTolerance => 1,
+                Resource::HitPoint => 0,
+                Resource::InsightPoint => 3,
+                Resource::SkillPoint => 6,
+            },
+            Self::Rogue => match resource {
+                Resource::AttunementPoint => 1,
+                Resource::FatigueTolerance => 2,
+                Resource::HitPoint => 0,
+                Resource::InsightPoint => 3,
+                Resource::SkillPoint => 12,
+            },
         }
     }
 

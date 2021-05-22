@@ -1,6 +1,8 @@
 use crate::classes::Class;
 use crate::core_mechanics::attributes::{Attribute, AttributeCalcs};
-use crate::core_mechanics::{creature, defenses};
+use crate::core_mechanics::defenses::DefenseCalcs;
+use crate::core_mechanics::resources::ResourceCalcs;
+use crate::core_mechanics::{creature, defenses, resources};
 
 pub struct Character {
     class: Class,
@@ -19,8 +21,23 @@ impl Character {
         self.creature.level = level;
     }
 
+    // Eventually, pulling latex from the creature won't work - a class can't modify a creature's
+    // HP. However, it's convenient for now.
     pub fn to_latex(&self) -> String {
-        return self.creature.to_latex();
+        return format!(
+            "
+                {creature_latex}
+                {class_name} {level}
+                AP {ap}, FT {ft}, IP {ip}, SP {sp}
+            ",
+            creature_latex = self.creature.to_latex().trim(),
+            class_name = self.class.name(),
+            level = self.creature.level,
+            ap = self.calc_resource(resources::AP),
+            ft = self.calc_resource(resources::FT),
+            ip = self.calc_resource(resources::IP),
+            sp = self.calc_resource(resources::SP),
+        );
     }
 }
 
@@ -45,8 +62,14 @@ impl creature::CoreStatistics for Character {
     }
 }
 
-impl defenses::DefenseCalcs for Character {
+impl DefenseCalcs for Character {
     fn calc_defense(&self, defense: &'static defenses::Defense) -> i8 {
         return self.creature.calc_defense(defense) + self.class.defense_bonus(defense);
+    }
+}
+
+impl ResourceCalcs for Character {
+    fn calc_resource(&self, resource: &'static resources::Resource) -> i32 {
+        return self.creature.calc_resource(resource) + self.class.resource_bonus(resource);
     }
 }

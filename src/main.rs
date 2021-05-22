@@ -19,6 +19,7 @@ fn main() {
     println!("{}", barbarian.to_latex());
     barbarian.set_base_attribute(attributes::STR, -1);
     barbarian.set_base_attribute(attributes::DEX, 4);
+    barbarian.set_base_attribute(attributes::INT, 2);
     println!("{}", barbarian.to_latex());
     barbarian.set_level(10);
     println!("{}", barbarian.to_latex());
