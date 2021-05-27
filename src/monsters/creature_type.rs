@@ -43,6 +43,16 @@ impl CreatureType {
         }
     }
 
+    pub fn from_string(text: String) -> &'static Self {
+        match text.as_str() {
+            "aberration" => ABERRATION,
+            "animal" => ANIMAL,
+            "planeforged" => PLANEFORGED,
+            "undead" => UNDEAD,
+            _ => panic!("Invalid creature type '{}'", text),
+        }
+    }
+
     pub fn name(&self) -> &str {
         match self {
             Self::Aberration => "aberration",

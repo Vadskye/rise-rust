@@ -87,14 +87,14 @@ pub enum WeaponGroup {
     Clublike,
 }
 
-impl WeaponGroup {
-    fn weapons(&self) -> Vec<Weapon> {
-        match self {
-            Self::Armor => vec![Weapon::ArmorSpikes],
-            Self::Axes => vec![Weapon::Battleaxe, Weapon::Greataxe],
-            Self::Blades => vec![Weapon::Broadsword, Weapon::Greataxe],
-            Self::Bows => vec![Weapon::Longbow],
-            Self::Clublike => vec![Weapon::Sap],
-        }
-    }
-}
+// impl WeaponGroup {
+//     fn weapons(&self) -> Vec<Weapon> {
+//         match self {
+//             Self::Armor => vec![Weapon::ArmorSpikes],
+//             Self::Axes => vec![Weapon::Battleaxe, Weapon::Greataxe],
+//             Self::Blades => vec![Weapon::Broadsword, Weapon::Greataxe],
+//             Self::Bows => vec![Weapon::Longbow],
+//             Self::Clublike => vec![Weapon::Sap],
+//         }
+//     }
+// }

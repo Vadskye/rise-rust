@@ -62,4 +62,15 @@ impl ChallengeRating {
             Self::Four => 3.0,
         }
     }
+
+    pub fn from_string(text: String) -> &'static Self {
+        match text.as_str() {
+            "0.5" => CRHALF,
+            "1" => CR1,
+            "2" => CR2,
+            "3" => CR3,
+            "4" => CR4,
+            _ => panic!("Invalid challenge rating '{}'", text),
+        }
+    }
 }

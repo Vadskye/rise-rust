@@ -1,13 +1,7 @@
-#![allow(dead_code)]
-mod classes;
-mod core_mechanics;
-mod equipment;
-mod latex_formatting;
-mod monsters;
-mod skills;
-
-use core_mechanics::attributes::{self, HasAttributes};
-use equipment::HasEquipment;
+use rise::core_mechanics::attributes::{self, HasAttributes};
+use rise::equipment::HasEquipment;
+use rise::monsters;
+use rise::equipment;
 
 fn main() {
     // let barbarian = classes::Class::Barbarian;
