@@ -2,6 +2,7 @@ pub mod attacks;
 pub mod attributes;
 pub mod character;
 pub mod creature;
+pub mod damage_absorption;
 pub mod damage_dice;
 pub mod defenses;
 pub mod resources;

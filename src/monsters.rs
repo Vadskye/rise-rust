@@ -3,9 +3,10 @@ pub mod creature_type;
 
 use crate::core_mechanics::attacks::AttackCalcs;
 use crate::core_mechanics::attributes::{Attribute, AttributeCalcs};
+use crate::core_mechanics::damage_absorption::DamageAbsorptionCalcs;
 use crate::core_mechanics::defenses::DefenseCalcs;
 use crate::core_mechanics::{creature, defenses, latex};
-use crate::equipment::weapons;
+use crate::equipment::{weapons, EquipmentCalcs};
 
 pub struct Monster {
     challenge_rating: &'static challenge_rating::ChallengeRating,
@@ -56,10 +57,6 @@ impl AttributeCalcs for Monster {
 }
 
 impl AttackCalcs for Monster {
-    fn add_weapon(&mut self, weapon: weapons::Weapon) {
-        self.creature.add_weapon(weapon);
-    }
-
     fn calc_accuracy(&self) -> i8 {
         return self.creature.calc_accuracy()
             + self.challenge_rating.accuracy_bonus()
@@ -80,16 +77,28 @@ impl AttackCalcs for Monster {
     fn calc_power(&self, is_magical: bool) -> i8 {
         return self.creature.calc_power(is_magical);
     }
+}
+
+impl EquipmentCalcs for Monster {
+    fn add_weapon(&mut self, weapon: weapons::Weapon) {
+        self.creature.add_weapon(weapon);
+    }
 
     fn weapons(&self) -> &Vec<weapons::Weapon> {
         return &self.creature.weapons();
     }
 }
 
-impl creature::CoreStatistics for Monster {
+impl DamageAbsorptionCalcs for Monster {
+    fn calc_damage_resistance(&self) -> i32 {
+        return ((self.creature.calc_damage_resistance() as f64)
+            * 2.0
+            * self.challenge_rating.dr_multiplier()) as i32;
+    }
     fn calc_hit_points(&self) -> i32 {
-        return ((self.creature.calc_hit_points() as f64) * self.challenge_rating.hp_multiplier())
-            as i32;
+        return ((self.creature.calc_hit_points() as f64)
+            * 1.5
+            * self.challenge_rating.hp_multiplier()) as i32;
     }
 }
 

@@ -1,14 +1,16 @@
 use crate::core_mechanics::attacks::{self, AttackCalcs};
 use crate::core_mechanics::attributes::{self, AttributeCalcs};
-use crate::core_mechanics::creature::CoreStatistics;
+use crate::core_mechanics::damage_absorption::DamageAbsorptionCalcs;
 use crate::core_mechanics::defenses::{self, DefenseCalcs};
+use crate::equipment::EquipmentCalcs;
 
-pub fn format_creature<T: AttackCalcs + AttributeCalcs + CoreStatistics + DefenseCalcs>(
+pub fn format_creature<T: AttackCalcs + AttributeCalcs + DamageAbsorptionCalcs + DefenseCalcs + EquipmentCalcs>(
     creature: &T,
 ) -> String {
     format!(
         "
-            HP {hit_points}, AD {armor}, Fort {fortitude}, Ref {reflex}, Ment {mental}
+            HP {hit_points}, DR {damage_resistance}
+            AD {armor}, Fort {fortitude}, Ref {reflex}, Ment {mental}
             {attacks}
             Attr: {attributes}
         ",
@@ -20,6 +22,7 @@ pub fn format_creature<T: AttackCalcs + AttributeCalcs + CoreStatistics + Defens
         attributes = format_creature_attributes(creature).join(", "),
         armor = creature.calc_defense(defenses::ARMOR),
         fortitude = creature.calc_defense(defenses::FORT),
+        damage_resistance = creature.calc_damage_resistance(),
         hit_points = creature.calc_hit_points(),
         mental = creature.calc_defense(defenses::MENT),
         reflex = creature.calc_defense(defenses::REF),

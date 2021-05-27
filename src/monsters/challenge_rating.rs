@@ -43,13 +43,23 @@ impl ChallengeRating {
         }
     }
 
+    pub fn dr_multiplier(&self) -> f64 {
+        match self {
+            Self::Half => 0.0,
+            Self::One => 0.0,
+            Self::Two => 1.0,
+            Self::Three => 2.0,
+            Self::Four => 4.0,
+        }
+    }
+
     pub fn hp_multiplier(&self) -> f64 {
         match self {
             Self::Half => 0.5,
             Self::One => 1.0,
             Self::Two => 1.0,
             Self::Three => 2.0,
-            Self::Four => 4.0,
+            Self::Four => 3.0,
         }
     }
 }

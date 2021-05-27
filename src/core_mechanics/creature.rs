@@ -1,9 +1,10 @@
-use crate::core_mechanics::attributes::{self, AttributeCalcs};
 use crate::core_mechanics::attacks::AttackCalcs;
-use crate::core_mechanics::latex;
+use crate::core_mechanics::attributes::{self, AttributeCalcs};
+use crate::core_mechanics::damage_absorption::DamageAbsorptionCalcs;
 use crate::core_mechanics::defenses::{self, DefenseCalcs};
+use crate::core_mechanics::latex;
 use crate::core_mechanics::resources::{self, ResourceCalcs};
-use crate::equipment::weapons;
+use crate::equipment::{EquipmentCalcs, weapons};
 use std::cmp::{max, min};
 use std::collections::HashMap;
 
@@ -54,12 +55,37 @@ impl AttributeCalcs for Creature {
     }
 }
 
-pub trait CoreStatistics {
-    fn calc_hit_points(&self) -> i32;
-}
-
 // Calculation functions
-impl CoreStatistics for Creature {
+impl DamageAbsorptionCalcs for Creature {
+    fn calc_damage_resistance(&self) -> i32 {
+        let dr_from_level = match self.level {
+            1 => 2,
+            2 => 3,
+            3 => 3,
+            4 => 3,
+            5 => 4,
+            6 => 4,
+            7 => 5,
+            8 => 6,
+            9 => 7,
+            10 => 8,
+            11 => 9,
+            12 => 10,
+            13 => 11,
+            14 => 12,
+            15 => 14,
+            16 => 15,
+            17 => 17,
+            18 => 19,
+            19 => 22,
+            20 => 25,
+            21 => 28,
+            _ => panic!("Invalid level {}", self.level),
+        };
+
+        return dr_from_level + (self.get_base_attribute(attributes::CON) as i32) / 2;
+    }
+
     fn calc_hit_points(&self) -> i32 {
         let hp_from_level = match self.level {
             1 => 11,
@@ -91,10 +117,6 @@ impl CoreStatistics for Creature {
 }
 
 impl AttackCalcs for Creature {
-    fn add_weapon(&mut self, weapon: weapons::Weapon) {
-        self.weapons.push(weapon);
-    }
-
     fn calc_accuracy(&self) -> i8 {
         // note implicit floor due to integer storage
         return self.level + self.get_base_attribute(attributes::PER) / 2;
@@ -106,10 +128,16 @@ impl AttackCalcs for Creature {
 
     fn calc_power(&self, is_magical: bool) -> i8 {
         if is_magical {
-            return self.calc_total_attribute(attributes::WIL) / 2
+            return self.calc_total_attribute(attributes::WIL) / 2;
         } else {
-            return self.calc_total_attribute(attributes::STR) / 2
+            return self.calc_total_attribute(attributes::STR) / 2;
         }
+    }
+}
+
+impl EquipmentCalcs for Creature {
+    fn add_weapon(&mut self, weapon: weapons::Weapon) {
+        self.weapons.push(weapon);
     }
 
     fn weapons(&self) -> &Vec<weapons::Weapon> {

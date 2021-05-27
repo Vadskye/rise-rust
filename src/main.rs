@@ -7,7 +7,7 @@ mod monsters;
 mod skills;
 
 use core_mechanics::attributes::{self, AttributeCalcs};
-use core_mechanics::attacks::AttackCalcs;
+use equipment::EquipmentCalcs;
 
 fn main() {
     // let barbarian = classes::Class::Barbarian;
