@@ -1,11 +1,11 @@
 use crate::classes::Class;
-use crate::core_mechanics::attacks::AttackCalcs;
-use crate::core_mechanics::attributes::{Attribute, AttributeCalcs};
-use crate::core_mechanics::damage_absorption::DamageAbsorptionCalcs;
-use crate::core_mechanics::defenses::DefenseCalcs;
-use crate::core_mechanics::resources::ResourceCalcs;
+use crate::core_mechanics::attacks::HasAttacks;
+use crate::core_mechanics::attributes::{Attribute, HasAttributes};
+use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
+use crate::core_mechanics::defenses::HasDefenses;
+use crate::core_mechanics::resources::HasResources;
 use crate::core_mechanics::{creature, defenses, latex, resources};
-use crate::equipment::{EquipmentCalcs, weapons};
+use crate::equipment::{HasEquipment, weapons};
 
 pub struct Character {
     class: &'static Class,
@@ -42,7 +42,7 @@ impl Character {
     }
 }
 
-impl AttributeCalcs for Character {
+impl HasAttributes for Character {
     fn get_base_attribute(&self, attribute: &'static Attribute) -> i8 {
         return self.creature.get_base_attribute(attribute);
     }
@@ -54,7 +54,7 @@ impl AttributeCalcs for Character {
     }
 }
 
-impl AttackCalcs for Character {
+impl HasAttacks for Character {
     fn calc_accuracy(&self) -> i8 {
         return self.creature.calc_accuracy();
     }
@@ -68,7 +68,7 @@ impl AttackCalcs for Character {
     }
 }
 
-impl EquipmentCalcs for Character {
+impl HasEquipment for Character {
     fn add_weapon(&mut self, weapon: weapons::Weapon) {
         self.creature.add_weapon(weapon);
     }
@@ -79,7 +79,7 @@ impl EquipmentCalcs for Character {
 }
 
 
-impl DamageAbsorptionCalcs for Character {
+impl HasDamageAbsorption for Character {
     fn calc_damage_resistance(&self) -> i32 {
         return self.creature.calc_damage_resistance();
     }
@@ -89,13 +89,13 @@ impl DamageAbsorptionCalcs for Character {
     }
 }
 
-impl DefenseCalcs for Character {
+impl HasDefenses for Character {
     fn calc_defense(&self, defense: &'static defenses::Defense) -> i8 {
         return self.creature.calc_defense(defense) + self.class.defense_bonus(defense);
     }
 }
 
-impl ResourceCalcs for Character {
+impl HasResources for Character {
     fn calc_resource(&self, resource: &'static resources::Resource) -> i8 {
         return self.creature.calc_resource(resource) + self.class.resource_bonus(resource);
     }

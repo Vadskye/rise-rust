@@ -1,10 +1,10 @@
-use crate::core_mechanics::attacks::{self, AttackCalcs};
-use crate::core_mechanics::attributes::{self, AttributeCalcs};
-use crate::core_mechanics::damage_absorption::DamageAbsorptionCalcs;
-use crate::core_mechanics::defenses::{self, DefenseCalcs};
-use crate::equipment::EquipmentCalcs;
+use crate::core_mechanics::attacks::{self, HasAttacks};
+use crate::core_mechanics::attributes::{self, HasAttributes};
+use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
+use crate::core_mechanics::defenses::{self, HasDefenses};
+use crate::equipment::HasEquipment;
 
-pub fn format_creature<T: AttackCalcs + AttributeCalcs + DamageAbsorptionCalcs + DefenseCalcs + EquipmentCalcs>(
+pub fn format_creature<T: HasAttacks + HasAttributes + HasDamageAbsorption + HasDefenses + HasEquipment>(
     creature: &T,
 ) -> String {
     format!(
@@ -29,7 +29,7 @@ pub fn format_creature<T: AttackCalcs + AttributeCalcs + DamageAbsorptionCalcs +
     )
 }
 
-fn format_creature_attributes(creature: &impl AttributeCalcs) -> Vec<String> {
+fn format_creature_attributes(creature: &impl HasAttributes) -> Vec<String> {
     return attributes::Attribute::all()
         .iter()
         .map(|attribute| {

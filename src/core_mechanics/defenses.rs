@@ -1,6 +1,6 @@
 use crate::core_mechanics::attributes;
 
-pub trait DefenseCalcs {
+pub trait HasDefenses {
     fn calc_defense(&self, defense: &'static Defense) -> i8;
 }
 

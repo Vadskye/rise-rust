@@ -71,7 +71,7 @@ impl PartialEq for Attribute {
     }
 }
 
-pub trait AttributeCalcs {
+pub trait HasAttributes {
     fn calc_total_attribute(&self, attribute: &'static Attribute) -> i8;
     fn get_base_attribute(&self, attribute: &'static Attribute) -> i8;
     fn set_base_attribute(&mut self, attribute: &'static Attribute, value: i8);

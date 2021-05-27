@@ -1,5 +1,4 @@
-pub trait ResourceCalcs {
-    // hit points can get bigger than i8
+pub trait HasResources {
     fn calc_resource(&self, resource: &'static Resource) -> i8;
 }
 

@@ -1,5 +1,5 @@
 use crate::core_mechanics::damage_dice;
-use crate::equipment::EquipmentCalcs;
+use crate::equipment::HasEquipment;
 use crate::latex_formatting;
 
 pub struct Attack {
@@ -9,7 +9,7 @@ pub struct Attack {
     name: String,
 }
 
-pub fn calc_attacks<T: AttackCalcs + EquipmentCalcs>(creature: &T) -> Vec<Attack> {
+pub fn calc_attacks<T: HasAttacks + HasEquipment>(creature: &T) -> Vec<Attack> {
     // TODO: combine maneuvers with weapons and handle non-weapon attacks
     return creature
         .weapons()
@@ -23,7 +23,7 @@ pub fn calc_attacks<T: AttackCalcs + EquipmentCalcs>(creature: &T) -> Vec<Attack
         .collect();
 }
 
-pub trait AttackCalcs {
+pub trait HasAttacks {
     fn calc_accuracy(&self) -> i8;
     fn calc_damage_increments(&self, is_strike: bool) -> i8;
     fn calc_power(&self, is_magical: bool) -> i8;

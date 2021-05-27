@@ -6,8 +6,8 @@ mod latex_formatting;
 mod monsters;
 mod skills;
 
-use core_mechanics::attributes::{self, AttributeCalcs};
-use equipment::EquipmentCalcs;
+use core_mechanics::attributes::{self, HasAttributes};
+use equipment::HasEquipment;
 
 fn main() {
     // let barbarian = classes::Class::Barbarian;

@@ -1,12 +1,12 @@
 pub mod challenge_rating;
 pub mod creature_type;
 
-use crate::core_mechanics::attacks::AttackCalcs;
-use crate::core_mechanics::attributes::{Attribute, AttributeCalcs};
-use crate::core_mechanics::damage_absorption::DamageAbsorptionCalcs;
-use crate::core_mechanics::defenses::DefenseCalcs;
+use crate::core_mechanics::attacks::HasAttacks;
+use crate::core_mechanics::attributes::{Attribute, HasAttributes};
+use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
+use crate::core_mechanics::defenses::HasDefenses;
 use crate::core_mechanics::{creature, defenses, latex};
-use crate::equipment::{weapons, EquipmentCalcs};
+use crate::equipment::{weapons, HasEquipment};
 
 pub struct Monster {
     challenge_rating: &'static challenge_rating::ChallengeRating,
@@ -44,7 +44,7 @@ impl Monster {
     }
 }
 
-impl AttributeCalcs for Monster {
+impl HasAttributes for Monster {
     fn get_base_attribute(&self, attribute: &'static Attribute) -> i8 {
         return self.creature.get_base_attribute(attribute);
     }
@@ -56,7 +56,7 @@ impl AttributeCalcs for Monster {
     }
 }
 
-impl AttackCalcs for Monster {
+impl HasAttacks for Monster {
     fn calc_accuracy(&self) -> i8 {
         return self.creature.calc_accuracy()
             + self.challenge_rating.accuracy_bonus()
@@ -79,7 +79,7 @@ impl AttackCalcs for Monster {
     }
 }
 
-impl EquipmentCalcs for Monster {
+impl HasEquipment for Monster {
     fn add_weapon(&mut self, weapon: weapons::Weapon) {
         self.creature.add_weapon(weapon);
     }
@@ -89,7 +89,7 @@ impl EquipmentCalcs for Monster {
     }
 }
 
-impl DamageAbsorptionCalcs for Monster {
+impl HasDamageAbsorption for Monster {
     fn calc_damage_resistance(&self) -> i32 {
         return ((self.creature.calc_damage_resistance() as f64)
             * 2.0
@@ -102,7 +102,7 @@ impl DamageAbsorptionCalcs for Monster {
     }
 }
 
-impl DefenseCalcs for Monster {
+impl HasDefenses for Monster {
     fn calc_defense(&self, defense: &'static defenses::Defense) -> i8 {
         return self.creature.calc_defense(defense)
             + self.creature_type.defense_bonus(defense)
