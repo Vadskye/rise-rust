@@ -29,3 +29,11 @@ pub fn uppercase_first_letter(text: &str) -> String {
         return text.to_string();
     }
 }
+
+pub fn modifier(val: i8) -> String {
+    if val >= 0 {
+        return format!("+{}", val)
+    } else {
+        return format!("-{}", val);
+    }
+}

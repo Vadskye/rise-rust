@@ -1,15 +1,16 @@
 pub struct DamageDice {
-    count: u8,
-    increments: u8,
-    size: u8,
+    count: i8,
+    increments: i8,
+    size: i8,
 }
 
-pub static D6: u8 = 4;
-pub static D8: u8 = 5;
-pub static D10: u8 = 6;
+// Commonly used damage dice for weapon and spell definitions
+pub static D6: i8 = 4;
+pub static D8: i8 = 5;
+pub static D10: i8 = 6;
 
 impl DamageDice {
-    pub fn new(increments: u8) -> DamageDice {
+    pub fn new(increments: i8) -> DamageDice {
         // 4d10+ has different scaling
         if increments >= 13 {
             return DamageDice {
@@ -20,7 +21,7 @@ impl DamageDice {
         }
 
         let mut increments = increments;
-        let mut count: u8 = 1;
+        let mut count: i8 = 1;
         while increments > 6 {
             increments -= 3;
             count *= 2;
@@ -38,11 +39,11 @@ impl DamageDice {
         return DamageDice { count, increments, size };
     }
 
-    pub fn add(&self, increments: u8) -> DamageDice {
+    pub fn add(&self, increments: i8) -> DamageDice {
         Self::new(self.increments + increments)
     }
 
-    pub fn format(&self) -> String {
+    pub fn to_string(&self) -> String {
         if self.size == 1 {
             return "1".to_string();
         } else {

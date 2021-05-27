@@ -1,13 +1,16 @@
 use crate::core_mechanics::attributes::{self, AttributeCalcs};
+use crate::core_mechanics::attacks::AttackCalcs;
 use crate::core_mechanics::latex;
 use crate::core_mechanics::defenses::{self, DefenseCalcs};
 use crate::core_mechanics::resources::{self, ResourceCalcs};
+use crate::equipment::weapons;
 use std::cmp::{max, min};
 use std::collections::HashMap;
 
 pub struct Creature {
     base_attributes: HashMap<&'static attributes::Attribute, i8>,
     pub level: i8,
+    pub weapons: Vec<weapons::Weapon>,
 }
 
 impl Creature {
@@ -16,6 +19,7 @@ impl Creature {
         return Creature {
             base_attributes,
             level,
+            weapons: vec![],
         };
     }
 
@@ -51,17 +55,11 @@ impl AttributeCalcs for Creature {
 }
 
 pub trait CoreStatistics {
-    fn calc_accuracy(&self) -> i8;
     fn calc_hit_points(&self) -> i32;
 }
 
 // Calculation functions
 impl CoreStatistics for Creature {
-    fn calc_accuracy(&self) -> i8 {
-        // note implicit floor due to integer storage
-        return self.level + self.get_base_attribute(attributes::PER) / 2;
-    }
-
     fn calc_hit_points(&self) -> i32 {
         let hp_from_level = match self.level {
             1 => 11,
@@ -92,16 +90,37 @@ impl CoreStatistics for Creature {
     }
 }
 
+impl AttackCalcs for Creature {
+    fn add_weapon(&mut self, weapon: weapons::Weapon) {
+        self.weapons.push(weapon);
+    }
+
+    fn calc_accuracy(&self) -> i8 {
+        // note implicit floor due to integer storage
+        return self.level + self.get_base_attribute(attributes::PER) / 2;
+    }
+
+    fn calc_damage_increments(&self, _is_strike: bool) -> i8 {
+        return 0;
+    }
+
+    fn calc_power(&self, is_magical: bool) -> i8 {
+        if is_magical {
+            return self.calc_total_attribute(attributes::WIL) / 2
+        } else {
+            return self.calc_total_attribute(attributes::STR) / 2
+        }
+    }
+
+    fn weapons(&self) -> &Vec<weapons::Weapon> {
+        return &self.weapons;
+    }
+}
+
 impl DefenseCalcs for Creature {
     fn calc_defense(&self, defense: &'static defenses::Defense) -> i8 {
         return self.level + self.get_base_attribute(defense.associated_attribute());
     }
-}
-
-pub struct CreatureAttribute {
-    attribute: &'static attributes::Attribute,
-    base: i8,
-    total: i8,
 }
 
 impl ResourceCalcs for Creature {

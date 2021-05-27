@@ -6,7 +6,8 @@ mod latex_formatting;
 mod monsters;
 mod skills;
 
-// use core_mechanics::attributes::{self, AttributeCalcs};
+use core_mechanics::attributes::{self, AttributeCalcs};
+use core_mechanics::attacks::AttackCalcs;
 
 fn main() {
     // let barbarian = classes::Class::Barbarian;
@@ -30,7 +31,10 @@ fn main() {
         monsters::creature_type::CreatureType::Animal,
         5,
     );
+    bear.set_base_attribute(attributes::STR, 4);
+    bear.add_weapon(equipment::weapons::Weapon::Bite);
     println!("{}", bear.to_latex());
-    bear.set_level(10);
+    bear.set_level(6);
+    bear.add_weapon(equipment::weapons::Weapon::Claw);
     println!("{}", bear.to_latex());
 }

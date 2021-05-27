@@ -4,7 +4,7 @@ pub mod latex;
 
 use crate::core_mechanics::defenses::Defense;
 use crate::core_mechanics::resources::Resource;
-use crate::equipment;
+use crate::equipment::{armor, weapons};
 use crate::skills::{KnowledgeSubskill, Skill};
 use std::fmt;
 
@@ -198,17 +198,17 @@ impl Class {
         latex::generate_latex_class_definition(self)
     }
 
-    pub fn armor_proficiencies(&self) -> Vec<equipment::ArmorUsageClass> {
+    pub fn armor_proficiencies(&self) -> Vec<armor::ArmorUsageClass> {
         match self {
             Self::Barbarian => vec![
-                equipment::ArmorUsageClass::Light,
-                equipment::ArmorUsageClass::Medium,
+                armor::ArmorUsageClass::Light,
+                armor::ArmorUsageClass::Medium,
             ],
             Self::Cleric => vec![
-                equipment::ArmorUsageClass::Light,
-                equipment::ArmorUsageClass::Medium,
+                armor::ArmorUsageClass::Light,
+                armor::ArmorUsageClass::Medium,
             ],
-            Self::Rogue => vec![equipment::ArmorUsageClass::Light],
+            Self::Rogue => vec![armor::ArmorUsageClass::Light],
         }
     }
 
@@ -226,7 +226,7 @@ impl Class {
             },
             Self::Rogue => WeaponProficiencies {
                 custom_weapon_groups: 1,
-                specific_weapons: Some(vec![equipment::Weapon::Sap]),
+                specific_weapons: Some(vec![weapons::Weapon::Sap]),
                 simple_weapons: true,
             },
         }
@@ -249,7 +249,7 @@ pub struct ClassDefenseBonuses {
 
 pub struct WeaponProficiencies {
     pub custom_weapon_groups: i8,
-    pub specific_weapons: Option<Vec<equipment::Weapon>>,
+    pub specific_weapons: Option<Vec<weapons::Weapon>>,
     pub simple_weapons: bool,
 }
 

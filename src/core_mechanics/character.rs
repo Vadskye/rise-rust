@@ -1,8 +1,10 @@
 use crate::classes::Class;
+use crate::core_mechanics::attacks::AttackCalcs;
 use crate::core_mechanics::attributes::{Attribute, AttributeCalcs};
 use crate::core_mechanics::defenses::DefenseCalcs;
 use crate::core_mechanics::resources::ResourceCalcs;
 use crate::core_mechanics::{creature, defenses, latex, resources};
+use crate::equipment::weapons;
 
 pub struct Character {
     class: &'static Class,
@@ -51,10 +53,29 @@ impl AttributeCalcs for Character {
     }
 }
 
-impl creature::CoreStatistics for Character {
+impl AttackCalcs for Character {
+    fn add_weapon(&mut self, weapon: weapons::Weapon) {
+        self.creature.add_weapon(weapon);
+    }
+
     fn calc_accuracy(&self) -> i8 {
         return self.creature.calc_accuracy();
     }
+
+    fn calc_damage_increments(&self, is_strike: bool) -> i8 {
+        return self.creature.calc_damage_increments(is_strike);
+    }
+
+    fn calc_power(&self, is_magical: bool) -> i8 {
+        return self.creature.calc_power(is_magical);
+    }
+
+    fn weapons(&self) -> &Vec<weapons::Weapon> {
+        return &self.creature.weapons();
+    }
+}
+
+impl creature::CoreStatistics for Character {
     fn calc_hit_points(&self) -> i32 {
         return self.creature.calc_hit_points();
     }

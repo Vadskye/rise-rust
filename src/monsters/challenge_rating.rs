@@ -23,6 +23,16 @@ impl ChallengeRating {
         }
     }
 
+    pub fn damage_increments(&self) -> i8 {
+        match self {
+            Self::Half => -2,
+            Self::One => -1,
+            Self::Two => 0,
+            Self::Three => 1,
+            Self::Four => 2,
+        }
+    }
+
     pub fn defense_bonus(&self) -> i8 {
         match self {
             Self::Half => 0,

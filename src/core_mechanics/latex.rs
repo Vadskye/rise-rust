@@ -1,13 +1,22 @@
+use crate::core_mechanics::attacks::{self, AttackCalcs};
 use crate::core_mechanics::attributes::{self, AttributeCalcs};
 use crate::core_mechanics::creature::CoreStatistics;
 use crate::core_mechanics::defenses::{self, DefenseCalcs};
 
-pub fn format_creature<T: AttributeCalcs + CoreStatistics + DefenseCalcs>(creature: &T) -> String {
+pub fn format_creature<T: AttackCalcs + AttributeCalcs + CoreStatistics + DefenseCalcs>(
+    creature: &T,
+) -> String {
     format!(
         "
             HP {hit_points}, AD {armor}, Fort {fortitude}, Ref {reflex}, Ment {mental}
+            {attacks}
             Attr: {attributes}
         ",
+        attacks = attacks::calc_attacks(creature)
+            .iter()
+            .map(|a| a.to_latex())
+            .collect::<Vec<String>>()
+            .join("; "),
         attributes = format_creature_attributes(creature).join(", "),
         armor = creature.calc_defense(defenses::ARMOR),
         fortitude = creature.calc_defense(defenses::FORT),
