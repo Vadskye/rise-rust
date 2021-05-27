@@ -55,7 +55,9 @@ impl AttributeCalcs for Monster {
 
 impl creature::CoreStatistics for Monster {
     fn calc_accuracy(&self) -> i8 {
-        return self.creature.calc_accuracy() + self.challenge_rating.accuracy_bonus();
+        return self.creature.calc_accuracy()
+            + self.challenge_rating.accuracy_bonus()
+            + (self.creature.level + 1) / 6;
     }
     fn calc_hit_points(&self) -> i32 {
         return ((self.creature.calc_hit_points() as f64) * self.challenge_rating.hp_multiplier())
@@ -65,6 +67,9 @@ impl creature::CoreStatistics for Monster {
 
 impl DefenseCalcs for Monster {
     fn calc_defense(&self, defense: &'static defenses::Defense) -> i8 {
-        return self.creature.calc_defense(defense) + self.creature_type.defense_bonus(defense) + self.challenge_rating.defense_bonus();
+        return self.creature.calc_defense(defense)
+            + self.creature_type.defense_bonus(defense)
+            + self.challenge_rating.defense_bonus()
+            + (self.creature.level + 3) / 6;
     }
 }
