@@ -1,8 +1,8 @@
 use crate::core_mechanics::attributes::{self, AttributeCalcs};
-use crate::core_mechanics::creature::{self, CoreStatistics};
+use crate::core_mechanics::creature::CoreStatistics;
 use crate::core_mechanics::defenses::{self, DefenseCalcs};
 
-pub fn format_creature(creature: &creature::Creature) -> String {
+pub fn format_creature<T: AttributeCalcs + CoreStatistics + DefenseCalcs>(creature: &T) -> String {
     format!(
         "
             HP {hit_points}, AD {armor}, Fort {fortitude}, Ref {reflex}, Ment {mental}
@@ -17,7 +17,7 @@ pub fn format_creature(creature: &creature::Creature) -> String {
     )
 }
 
-fn format_creature_attributes(creature: &creature::Creature) -> Vec<String> {
+fn format_creature_attributes(creature: &impl AttributeCalcs) -> Vec<String> {
     return attributes::Attribute::all()
         .iter()
         .map(|attribute| {

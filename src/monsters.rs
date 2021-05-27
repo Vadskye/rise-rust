@@ -3,7 +3,7 @@ pub mod creature_type;
 
 use crate::core_mechanics::attributes::{Attribute, AttributeCalcs};
 use crate::core_mechanics::defenses::DefenseCalcs;
-use crate::core_mechanics::{creature, defenses};
+use crate::core_mechanics::{creature, defenses, latex};
 
 pub struct Monster {
     challenge_rating: &'static challenge_rating::ChallengeRating,
@@ -28,15 +28,13 @@ impl Monster {
         self.creature.level = level;
     }
 
-    // Eventually, pulling latex from the creature won't work - a class can't modify a creature's
-    // HP. However, it's convenient for now.
     pub fn to_latex(&self) -> String {
         return format!(
             "
                 {creature_latex}
                 {creature_type} {level}
             ",
-            creature_latex = self.creature.to_latex().trim(),
+            creature_latex = latex::format_creature(self),
             creature_type = self.creature_type.name(),
             level = self.creature.level,
         );
@@ -67,6 +65,6 @@ impl creature::CoreStatistics for Monster {
 
 impl DefenseCalcs for Monster {
     fn calc_defense(&self, defense: &'static defenses::Defense) -> i8 {
-        return self.creature.calc_defense(defense) + self.creature_type.defense_bonus(defense);
+        return self.creature.calc_defense(defense) + self.creature_type.defense_bonus(defense) + self.challenge_rating.defense_bonus();
     }
 }

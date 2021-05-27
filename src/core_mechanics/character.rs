@@ -2,7 +2,7 @@ use crate::classes::Class;
 use crate::core_mechanics::attributes::{Attribute, AttributeCalcs};
 use crate::core_mechanics::defenses::DefenseCalcs;
 use crate::core_mechanics::resources::ResourceCalcs;
-use crate::core_mechanics::{creature, defenses, resources};
+use crate::core_mechanics::{creature, defenses, latex, resources};
 
 pub struct Character {
     class: &'static Class,
@@ -28,7 +28,7 @@ impl Character {
                 {class_name} {level}
                 AP {ap}, FT {ft}, IP {ip}, SP {sp}
             ",
-            creature_latex = self.creature.to_latex().trim(),
+            creature_latex = latex::format_creature(self),
             class_name = self.class.name(),
             level = self.creature.level,
             ap = self.calc_resource(resources::AP),
