@@ -14,6 +14,10 @@ pub enum Class {
     Rogue,
 }
 
+pub static BARBARIAN: &'static Class = &Class::Barbarian;
+pub static CLERIC: &'static Class = &Class::Cleric;
+pub static ROGUE: &'static Class = &Class::Rogue;
+
 impl Class {
     pub fn attunement_points(&self) -> i8 {
         match self {

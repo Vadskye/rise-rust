@@ -1,4 +1,5 @@
 use crate::core_mechanics::attributes::{self, AttributeCalcs};
+use crate::core_mechanics::latex;
 use crate::core_mechanics::defenses::{self, DefenseCalcs};
 use crate::core_mechanics::resources::{self, ResourceCalcs};
 use std::cmp::{max, min};
@@ -23,18 +24,7 @@ impl Creature {
     }
 
     pub fn to_latex(&self) -> String {
-        return format!(
-            "
-                HP {hit_points}, AD {armor}, Fort {fortitude}, Ref {reflex}, Ment {mental}
-                Attr: {attributes}
-            ",
-            attributes = format_creature_attributes(self).join(", "),
-            armor = self.calc_defense(defenses::ARMOR),
-            fortitude = self.calc_defense(defenses::FORT),
-            hit_points = self.calc_hit_points(),
-            mental = self.calc_defense(defenses::MENT),
-            reflex = self.calc_defense(defenses::REF),
-        );
+        return latex::format_creature(self);
     }
 }
 
@@ -114,25 +104,6 @@ pub struct CreatureAttribute {
     total: i8,
 }
 
-fn format_creature_attributes(creature: &Creature) -> Vec<String> {
-    return attributes::Attribute::all()
-        .iter()
-        .map(|attribute| {
-            let base = creature.get_base_attribute(attribute);
-            if base > 0 {
-                return format!(
-                    "{} {} ({})",
-                    attribute.shorthand_name(),
-                    creature.calc_total_attribute(attribute),
-                    base
-                );
-            } else {
-                return format!("{} {}", attribute.shorthand_name(), base);
-            }
-        })
-        .collect::<Vec<String>>();
-}
-
 impl ResourceCalcs for Creature {
     fn calc_resource(&self, resource: &'static resources::Resource) -> i8 {
         match resource {
@@ -147,8 +118,7 @@ impl ResourceCalcs for Creature {
                 return ap_from_level;
             }
             resources::Resource::FatigueTolerance => {
-                self.get_base_attribute(attributes::CON)
-                    + self.get_base_attribute(attributes::WIL)
+                self.get_base_attribute(attributes::CON) + self.get_base_attribute(attributes::WIL)
             }
             resources::Resource::InsightPoint => self.get_base_attribute(attributes::INT),
             resources::Resource::SkillPoint => (self.get_base_attribute(attributes::INT)) * 2,

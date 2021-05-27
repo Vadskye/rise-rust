@@ -5,12 +5,12 @@ use crate::core_mechanics::resources::ResourceCalcs;
 use crate::core_mechanics::{creature, defenses, resources};
 
 pub struct Character {
-    class: Class,
+    class: &'static Class,
     creature: creature::Creature,
 }
 
 impl Character {
-    pub fn new(class: Class, level: i8) -> Character {
+    pub fn new(class: &'static Class, level: i8) -> Character {
         return Character {
             class,
             creature: creature::Creature::new(level),
@@ -21,8 +21,6 @@ impl Character {
         self.creature.level = level;
     }
 
-    // Eventually, pulling latex from the creature won't work - a class can't modify a creature's
-    // HP. However, it's convenient for now.
     pub fn to_latex(&self) -> String {
         return format!(
             "
