@@ -12,6 +12,7 @@ pub enum Weapon {
     Longbow,
     Sap,
     Sickle,
+    Slam,
 }
 
 impl Weapon {
@@ -27,6 +28,7 @@ impl Weapon {
             Self::Longbow => 0,
             Self::Sap => 2,
             Self::Sickle => 1,
+            Self::Slam => 0,
         }
     }
 
@@ -42,6 +44,7 @@ impl Weapon {
             Self::Longbow => D8,
             Self::Sap => D6,
             Self::Sickle => D6,
+            Self::Slam => D10,
         };
         return damage_dice::DamageDice::new(increments);
     }
@@ -58,6 +61,7 @@ impl Weapon {
             Self::Longbow => "longbow",
             Self::Sap => "sap",
             Self::Sickle => "sickle",
+            Self::Slam => "slam",
         }
     }
 

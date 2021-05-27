@@ -2,7 +2,7 @@ pub mod challenge_rating;
 pub mod creature_type;
 
 use crate::core_mechanics::attacks::HasAttacks;
-use crate::core_mechanics::attributes::{Attribute, HasAttributes};
+use crate::core_mechanics::attributes::{self, Attribute, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::HasDefenses;
 use crate::core_mechanics::{creature, defenses, latex};
@@ -11,19 +11,47 @@ use crate::equipment::{weapons, HasEquipment};
 pub struct Monster {
     challenge_rating: &'static challenge_rating::ChallengeRating,
     creature: creature::Creature,
-    creature_type: creature_type::CreatureType,
+    creature_type: &'static creature_type::CreatureType,
 }
 
 impl Monster {
     pub fn new(
         challenge_rating: &'static challenge_rating::ChallengeRating,
-        creature_type: creature_type::CreatureType,
+        creature_type: &'static creature_type::CreatureType,
         level: i8,
     ) -> Monster {
         return Monster {
             challenge_rating,
             creature_type,
             creature: creature::Creature::new(level),
+        };
+    }
+
+    pub fn standard_monster(
+        challenge_rating: &'static challenge_rating::ChallengeRating,
+        level: i8,
+        starting_attribute: Option<i8>,
+        creature_type: Option<&'static creature_type::CreatureType>,
+    ) -> Monster {
+        let mut creature = creature::Creature::new(level);
+        creature.add_weapon(weapons::Weapon::Slam);
+        if let Some(a) = starting_attribute {
+            creature.set_base_attribute(attributes::STR, a);
+            creature.set_base_attribute(attributes::DEX, a);
+            creature.set_base_attribute(attributes::CON, a);
+            creature.set_base_attribute(attributes::INT, a);
+            creature.set_base_attribute(attributes::PER, a);
+            creature.set_base_attribute(attributes::WIL, a);
+        }
+        let creature_type = if let Some(a) = creature_type {
+            a
+        } else {
+            creature_type::PLANEFORGED
+        };
+        return Monster {
+            challenge_rating,
+            creature,
+            creature_type,
         };
     }
 
