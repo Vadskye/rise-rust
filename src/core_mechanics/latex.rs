@@ -28,7 +28,7 @@ pub fn format_creature<T: HasCreatureMechanics>(
     )
 }
 
-fn format_creature_attributes(creature: &impl HasAttributes) -> Vec<String> {
+pub fn format_creature_attributes(creature: &impl HasAttributes) -> Vec<String> {
     return attributes::Attribute::all()
         .iter()
         .map(|attribute| {

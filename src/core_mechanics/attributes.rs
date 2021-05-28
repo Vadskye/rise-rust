@@ -35,12 +35,12 @@ impl Attribute {
 
     pub fn shorthand_name(&self) -> &str {
         match self {
-            Self::Strength => "str",
-            Self::Dexterity => "dex",
-            Self::Constitution => "con",
-            Self::Intelligence => "int",
-            Self::Perception => "per",
-            Self::Willpower => "wil",
+            Self::Strength => "Str",
+            Self::Dexterity => "Dex",
+            Self::Constitution => "Con",
+            Self::Intelligence => "Int",
+            Self::Perception => "Per",
+            Self::Willpower => "Wil",
         }
     }
 

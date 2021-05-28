@@ -1,5 +1,6 @@
 // use clap::{App, Arg};
 use rise::monsters::monster_entry;
+use rise::monsters::creature_type;
 
 fn main() {
     // let matches = App::new("standard monster")
@@ -15,6 +16,8 @@ fn main() {
     // let output = matches.value_of("output").unwrap();
 
     let entries = monster_entry::generate_monster_entries();
-    let entries_latex: Vec<String> = entries.iter().map(|e| e.to_latex()).collect();
-    println!("{}", entries_latex.join("\n"));
+    for creature_type in vec![creature_type::ANIMAL] {
+        let entries_latex: Vec<String> = entries[creature_type].iter().map(|e| e.to_latex()).collect();
+        println!("{}\n{}", creature_type.latex_section_header(), entries_latex.join("\n"));
+    }
 }

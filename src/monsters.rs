@@ -4,12 +4,12 @@ pub mod creature_type;
 pub mod monster_entry;
 pub mod monster_group;
 
-use crate::core_mechanics::{attacks, creature, HasCreatureMechanics};
 use crate::core_mechanics::attacks::HasAttacks;
 use crate::core_mechanics::attributes::{self, Attribute, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::{self, HasDefenses};
 use crate::core_mechanics::resources::{self, HasResources};
+use crate::core_mechanics::{attacks, creature, HasCreatureMechanics};
 use crate::equipment::{weapons, HasEquipment};
 use crate::latex_formatting;
 
@@ -224,7 +224,7 @@ impl Monster {
             description = "", // TODO
             knowledge = "", // TODO
             content = self.latex_content().trim(),
-            footer = "", // TODO
+            footer = self.latex_footer().trim(), // TODO
             abilities = "", // TODO
         ));
     }
@@ -257,5 +257,56 @@ impl Monster {
                 .collect::<Vec<String>>()
                 .join(";\\par "),
         );
+    }
+
+    fn latex_footer(&self) -> String {
+        return format!(
+            "
+                \\begin<monsterfooter>
+                  \\pari \\textbf<Speeds> {speeds} \\monsep
+                    \\textbf<Space> {space} \\monsep
+                    \\textbf<Reach> {reach}
+                  \\pari \\textbf<Awareness> {awareness}
+                  \\pari \\textbf<Attributes> {attributes}
+                  % This is sometimes useful for debugging, but isn't actually useful information in general.
+                  % To the extent that raw accuracy or power is important, that should already be
+                  % included in more specific attacks or abilities.
+                  % \\pari \\textbf<Accuracy> {accuracy} \\monsep {power}
+                  \\pari \\textbf<Alignment> {alignment}
+                \\end<monsterfooter>
+            ",
+            speeds = "Land 30 ft.", // TODO
+            space = "5 ft.",        // TODO
+            reach = "5 ft.",        // TODO
+            // TODO: figure out skill training
+            awareness =
+                latex_formatting::modifier(self.creature.get_base_attribute(attributes::PER)),
+            attributes = self.latex_attributes(),
+            accuracy = latex_formatting::modifier(self.calc_accuracy()),
+            power = self.latex_power(),
+            alignment = latex_formatting::uppercase_first_letter("always true neutral"), // TODO
+        );
+    }
+
+    fn latex_power(&self) -> String {
+        let mundane_power = self.calc_power(false);
+        let magical_power = self.calc_power(true);
+        if mundane_power == magical_power {
+            return format!("\\textbf<Power> {}", mundane_power);
+        } else {
+            return format!(
+                "\\textbf<Mundane Power> {mundane} \\monsep \\textbf<Magical Power> {magical}",
+                mundane = mundane_power,
+                magical = magical_power
+            );
+        }
+    }
+
+    fn latex_attributes(&self) -> String {
+        return attributes::Attribute::all()
+            .iter()
+            .map(|a| format!("{} {}", a.shorthand_name(), self.calc_total_attribute(a)))
+            .collect::<Vec<String>>()
+            .join(", ");
     }
 }

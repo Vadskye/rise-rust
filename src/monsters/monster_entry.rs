@@ -1,7 +1,10 @@
-use crate::monsters::{animals, monster_group, Monster};
+use crate::monsters::{animals, creature_type, monster_group, Monster};
+use std::collections::HashMap;
 
-pub fn generate_monster_entries() -> Vec<MonsterEntry> {
-    return animals::animals();
+pub fn generate_monster_entries() -> HashMap<&'static creature_type::CreatureType, Vec<MonsterEntry>> {
+    let mut entries_by_type = HashMap::new();
+    entries_by_type.insert(creature_type::ANIMAL, animals::animals());
+    return entries_by_type;
 }
 
 pub enum MonsterEntry {

@@ -2,7 +2,9 @@ use crate::core_mechanics::defenses::{self, Defense};
 use crate::latex_formatting;
 use titlecase::titlecase;
 use std::fmt;
+use std::cmp::PartialEq;
 
+#[derive(Eq, Hash)]
 pub enum CreatureType {
     Aberration,
     Animal,
@@ -72,7 +74,7 @@ impl CreatureType {
     }
 
     pub fn latex_section_header(&self) -> String {
-        return format!(
+        return latex_formatting::latexify(format!(
             "
                 \\newpage
                 \\section<{plural_name_title}>
@@ -85,7 +87,7 @@ impl CreatureType {
             plural_name_title = titlecase(self.plural_name().as_str()),
             plural_name = self.plural_name(),
             defenses = self.latex_defenses(),
-        );
+        ));
     }
 
     fn latex_defenses(&self) -> String {
@@ -102,5 +104,11 @@ impl CreatureType {
 impl fmt::Display for CreatureType {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
         write!(f, "{}", self.name())
+    }
+}
+
+impl PartialEq for CreatureType {
+    fn eq(&self, other: &Self) -> bool {
+        return self.name() == other.name();
     }
 }
