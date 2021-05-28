@@ -37,7 +37,6 @@ pub fn run_combat<T: HasCreatureMechanics>(blue: Vec<&T>, red: Vec<&T>) -> Comba
                 .map(|a| calc_individual_dpr(*a, defender.0))
                 .sum(),
         );
-        println!("dpr {} {}", damage_per_round.0, damage_per_round.1);
         let damage_absorption = (
             (defender.0.calc_hit_points() + defender.0.calc_damage_resistance()) as f64,
             (defender.1.calc_hit_points() + defender.1.calc_damage_resistance()) as f64,
@@ -74,7 +73,6 @@ fn calc_individual_dpr<T: HasCreatureMechanics>(attacker: &T, defender: &T) -> f
     let mut best_damage_per_round = 0.0;
     for attack in attacks {
         let hit_probability = calculate_hit_probability(&attack, defender);
-        println!("hit prob {}", hit_probability);
         let average_damage_per_round = hit_probability
             * (attack.damage_dice.average_damage() + (attack.damage_modifier as f64));
         if average_damage_per_round > best_damage_per_round {
