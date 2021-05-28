@@ -103,9 +103,17 @@ impl HasAttacks for Monster {
         } else {
             0
         };
+        // A rank 3 spell can get a +1d damage bonus just from rank upgrades.
+        // This is a little overly specific, but it represents the idea that monsters are using
+        // more powerful spells and maneuvers at higher levels. The numbers are a little spiky for
+        // strikes, but this has to be at the same level as the strike damage upgrades - the whole
+        // point is that the strike upgrades are trying to keep pace with the automatic spell rank
+        // upgrades.
+        let special_attack_modifier = (self.creature.level - 1) / 6;
         return self.creature.calc_damage_increments(is_strike)
             + self.challenge_rating.damage_increments()
-            + level_modifier;
+            + level_modifier
+            + special_attack_modifier;
     }
 
     fn calc_power(&self, is_magical: bool) -> i8 {
