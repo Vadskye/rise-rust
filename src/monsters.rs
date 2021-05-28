@@ -109,7 +109,19 @@ impl HasAttacks for Monster {
     }
 
     fn calc_power(&self, is_magical: bool) -> i8 {
-        return self.creature.calc_power(is_magical);
+      let level_scaling = match self.creature.level / 3 {
+            0 => 0,
+            1 => 1,
+            2 => 2,
+            3 => 3,
+            4 => 4,
+            5 => 6,
+            6 => 8,
+            7 => 12,
+            8 => 16,
+            _ => panic!("Invalid level '{}'", self.creature.level),
+          };
+        return self.creature.calc_power(is_magical) + level_scaling;
     }
 }
 
