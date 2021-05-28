@@ -17,6 +17,10 @@ pub static INT: &Attribute = &Attribute::Intelligence;
 pub static PER: &Attribute = &Attribute::Perception;
 pub static WIL: &Attribute = &Attribute::Willpower;
 
+pub fn all_attributes() -> [&'static Attribute; 6] {
+    return [STR, DEX, CON, INT, PER, WIL];
+}
+
 impl Attribute {
     pub fn name(&self) -> &str {
         match self {

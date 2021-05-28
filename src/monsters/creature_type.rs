@@ -1,4 +1,6 @@
-use crate::core_mechanics::defenses::Defense;
+use crate::core_mechanics::defenses::{self, Defense};
+use crate::latex_formatting;
+use titlecase::titlecase;
 use std::fmt;
 
 pub enum CreatureType {
@@ -60,6 +62,40 @@ impl CreatureType {
             Self::Planeforged => "planeforged",
             Self::Undead => "undead",
         }
+    }
+
+    pub fn plural_name(&self) -> String {
+        match self {
+            Self::Undead => self.name().to_string(),
+            _ => format!("{}s", self.name()),
+        }
+    }
+
+    pub fn latex_section_header(&self) -> String {
+        return format!(
+            "
+                \\newpage
+                \\section<{plural_name_title}>
+
+                All {plural_name} have the following properties unless noted otherwise in their description:
+                \\begin<itemize>
+                    \\item {defenses}
+                \\end<itemize>
+            ",
+            plural_name_title = titlecase(self.plural_name().as_str()),
+            plural_name = self.plural_name(),
+            defenses = self.latex_defenses(),
+        );
+    }
+
+    fn latex_defenses(&self) -> String {
+        return format!(
+            "\\textbf<Defenses:> {armor} Armor, {fort} Fortitude, {ref} Reflex, {ment} Mental",
+            armor=latex_formatting::modifier(self.defense_bonus(defenses::ARMOR)),
+            fort=latex_formatting::modifier(self.defense_bonus(defenses::FORT)),
+            ref=latex_formatting::modifier(self.defense_bonus(defenses::REF)),
+            ment=latex_formatting::modifier(self.defense_bonus(defenses::MENT)),
+        );
     }
 }
 

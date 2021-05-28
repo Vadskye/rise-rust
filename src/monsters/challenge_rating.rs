@@ -85,4 +85,14 @@ impl ChallengeRating {
             _ => panic!("Invalid challenge rating '{}'", text),
         }
     }
+
+    pub fn to_string(&self) -> &str {
+        match self {
+             ChallengeRating::Half => "0.5",
+             ChallengeRating::One => "1",
+             ChallengeRating::Two => "2",
+             ChallengeRating::Three => "3",
+             ChallengeRating::Four => "4",
+        }
+    }
 }

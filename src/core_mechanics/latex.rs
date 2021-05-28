@@ -1,10 +1,9 @@
-use crate::core_mechanics::attacks::{self, HasAttacks};
+use crate::core_mechanics::attacks;
+use crate::core_mechanics::HasCreatureMechanics;
 use crate::core_mechanics::attributes::{self, HasAttributes};
-use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
-use crate::core_mechanics::defenses::{self, HasDefenses};
-use crate::equipment::HasEquipment;
+use crate::core_mechanics::defenses;
 
-pub fn format_creature<T: HasAttacks + HasAttributes + HasDamageAbsorption + HasDefenses + HasEquipment>(
+pub fn format_creature<T: HasCreatureMechanics>(
     creature: &T,
 ) -> String {
     format!(

@@ -11,6 +11,7 @@ use std::collections::HashMap;
 
 pub struct Creature {
     base_attributes: HashMap<&'static attributes::Attribute, i8>,
+    pub name: Option<String>,
     pub level: i8,
     pub weapons: Vec<weapons::Weapon>,
 }
@@ -21,12 +22,17 @@ impl Creature {
         return Creature {
             base_attributes,
             level,
+            name: None,
             weapons: vec![],
         };
     }
 
     pub fn set_level(&mut self, level: i8) {
         self.level = level;
+    }
+
+    pub fn set_name(&mut self, name: String) {
+        self.name = Some(name);
     }
 
     pub fn to_latex(&self) -> String {

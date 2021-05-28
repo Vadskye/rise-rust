@@ -1,18 +1,31 @@
+mod animals;
 pub mod challenge_rating;
 pub mod creature_type;
+pub mod monster_entry;
+pub mod monster_group;
 
+use crate::core_mechanics::{attacks, creature, HasCreatureMechanics};
 use crate::core_mechanics::attacks::HasAttacks;
 use crate::core_mechanics::attributes::{self, Attribute, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
-use crate::core_mechanics::defenses::HasDefenses;
+use crate::core_mechanics::defenses::{self, HasDefenses};
 use crate::core_mechanics::resources::{self, HasResources};
-use crate::core_mechanics::{creature, defenses, latex, HasCreatureMechanics};
 use crate::equipment::{weapons, HasEquipment};
+use crate::latex_formatting;
 
 pub struct Monster {
     challenge_rating: &'static challenge_rating::ChallengeRating,
     creature: creature::Creature,
     creature_type: &'static creature_type::CreatureType,
+}
+
+pub struct FullMonsterDefinition {
+    attributes: Vec<i8>,
+    challenge_rating: &'static challenge_rating::ChallengeRating,
+    creature_type: &'static creature_type::CreatureType,
+    level: i8,
+    name: &'static str,
+    weapons: Vec<weapons::Weapon>,
 }
 
 impl Monster {
@@ -25,6 +38,22 @@ impl Monster {
             challenge_rating,
             creature_type,
             creature: creature::Creature::new(level),
+        };
+    }
+
+    pub fn fully_defined(def: FullMonsterDefinition) -> Monster {
+        let mut creature = creature::Creature::new(def.level);
+        creature.set_name(def.name.to_string());
+        for (i, attribute) in attributes::all_attributes().iter().enumerate() {
+            creature.set_base_attribute(attribute, def.attributes[i]);
+        }
+        for weapon in def.weapons {
+            creature.add_weapon(weapon);
+        }
+        return Monster {
+            challenge_rating: def.challenge_rating,
+            creature_type: def.creature_type,
+            creature,
         };
     }
 
@@ -58,18 +87,6 @@ impl Monster {
 
     pub fn set_level(&mut self, level: i8) {
         self.creature.level = level;
-    }
-
-    pub fn to_latex(&self) -> String {
-        return format!(
-            "
-                {creature_latex}
-                {creature_type} {level}
-            ",
-            creature_latex = latex::format_creature(self),
-            creature_type = self.creature_type.name(),
-            level = self.creature.level,
-        );
     }
 }
 
@@ -117,7 +134,7 @@ impl HasAttacks for Monster {
     }
 
     fn calc_power(&self, is_magical: bool) -> i8 {
-      let level_scaling = match self.creature.level / 3 {
+        let level_scaling = match self.creature.level / 3 {
             0 => 0,
             1 => 1,
             2 => 2,
@@ -128,7 +145,7 @@ impl HasAttacks for Monster {
             7 => 12,
             8 => 16,
             _ => panic!("Invalid level '{}'", self.creature.level),
-          };
+        };
         return self.creature.calc_power(is_magical) + level_scaling;
     }
 }
@@ -173,3 +190,72 @@ impl HasResources for Monster {
 
 // No need for explicit funtions here - it's handled by the above functions
 impl HasCreatureMechanics for Monster {}
+
+// LaTeX conversion
+impl Monster {
+    pub fn to_section(&self, section_name: Option<&str>) -> String {
+        let section_name = section_name.unwrap_or("monsubsection");
+        let name = if let Some(ref n) = self.creature.name {
+            n
+        } else {
+            panic!("Monster has no name")
+        };
+        return latex_formatting::latexify(format!(
+            // TODO: some of these vspace values look unnecessary / conflicting
+            "
+                \\begin<{section_name}><{name}><{level}>[{cr}]
+                    \\vspace<-1em>\\spelltwocol<><{size} {type}>\\vspace<-1em>
+                    \\vspace<0em>
+
+                    {description}
+                    {knowledge}
+
+                    {content}
+                    {footer}
+                \\end<{section_name}>
+                {abilities}
+            ",
+            section_name = section_name,
+            name = name,
+            level = self.creature.level,
+            cr = self.challenge_rating.to_string(),
+            size = "Medium", // TODO
+            type = self.creature_type.name(),
+            description = "", // TODO
+            knowledge = "", // TODO
+            content = self.latex_content().trim(),
+            footer = "", // TODO
+            abilities = "", // TODO
+        ));
+    }
+
+    fn latex_content(&self) -> String {
+        return format!(
+            "
+                \\begin<spellcontent>
+                  \\begin<spelltargetinginfo>
+                    \\pari \\textbf<HP> {hp}
+                        \\monsep \\textbf<DR> {dr}
+                        \\monsep \\textbf<AD> {armor}
+                        \\monsep \\textbf<Fort> {fort}
+                        \\monsep \\textbf<Ref> {ref}
+                        \\monsep \\textbf<Ment> {ment}
+                    \\pari \\textbf<{strike_maybe_plural}> {strikes}
+                  \\end<spelltargetinginfo>
+                \\end<spellcontent>
+            ",
+            hp = self.calc_hit_points(),
+            dr = self.calc_damage_resistance(),
+            armor = self.calc_defense(defenses::ARMOR),
+            fort = self.calc_defense(defenses::FORT),
+            ref = self.calc_defense(defenses::REF),
+            ment = self.calc_defense(defenses::MENT),
+            strike_maybe_plural = if self.creature.weapons.len() > 1 { "Strikes" } else { "Strike" },
+            strikes = attacks::calc_attacks(self)
+                .iter()
+                .map(|a| a.to_latex())
+                .collect::<Vec<String>>()
+                .join(";\\par "),
+        );
+    }
+}

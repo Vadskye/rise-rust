@@ -37,7 +37,7 @@ impl Attack {
     pub fn to_latex(&self) -> String {
         return format!(
             "{name} {accuracy} ({damage_dice}{damage_modifier})",
-            name = self.name,
+            name = latex_formatting::uppercase_first_letter(self.name.as_str()),
             accuracy = latex_formatting::modifier(self.accuracy_modifier),
             damage_dice = self.damage_dice.to_string(),
             damage_modifier = latex_formatting::modifier(self.damage_modifier)
