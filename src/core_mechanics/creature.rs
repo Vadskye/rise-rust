@@ -4,7 +4,8 @@ use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::{self, HasDefenses};
 use crate::core_mechanics::latex;
 use crate::core_mechanics::resources::{self, HasResources};
-use crate::equipment::{HasEquipment, weapons};
+use crate::core_mechanics::HasCreatureMechanics;
+use crate::equipment::{weapons, HasEquipment};
 use std::cmp::{max, min};
 use std::collections::HashMap;
 
@@ -117,6 +118,10 @@ impl HasDamageAbsorption for Creature {
 }
 
 impl HasAttacks for Creature {
+    fn calc_damage_per_round_multiplier(&self) -> f64 {
+        return 1.0;
+    }
+
     fn calc_accuracy(&self) -> i8 {
         // note implicit floor due to integer storage
         return self.level + self.get_base_attribute(attributes::PER) / 2;
@@ -172,3 +177,6 @@ impl HasResources for Creature {
         }
     }
 }
+
+// No need for explicit funtions here - it's handled by the above functions
+impl HasCreatureMechanics for Creature {}

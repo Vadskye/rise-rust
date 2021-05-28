@@ -4,8 +4,8 @@ use crate::core_mechanics::attributes::{Attribute, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::HasDefenses;
 use crate::core_mechanics::resources::HasResources;
-use crate::core_mechanics::{creature, defenses, latex, resources};
-use crate::equipment::{HasEquipment, weapons};
+use crate::core_mechanics::{creature, defenses, latex, resources, HasCreatureMechanics};
+use crate::equipment::{weapons, HasEquipment};
 
 pub struct Character {
     class: &'static Class,
@@ -59,6 +59,10 @@ impl HasAttacks for Character {
         return self.creature.calc_accuracy();
     }
 
+    fn calc_damage_per_round_multiplier(&self) -> f64 {
+        return 1.0;
+    }
+
     fn calc_damage_increments(&self, is_strike: bool) -> i8 {
         return self.creature.calc_damage_increments(is_strike);
     }
@@ -77,7 +81,6 @@ impl HasEquipment for Character {
         return &self.creature.weapons();
     }
 }
-
 
 impl HasDamageAbsorption for Character {
     fn calc_damage_resistance(&self) -> i32 {
@@ -100,3 +103,6 @@ impl HasResources for Character {
         return self.creature.calc_resource(resource) + self.class.resource_bonus(resource);
     }
 }
+
+// No need for explicit funtions here - it's handled by the above functions
+impl HasCreatureMechanics for Character {}

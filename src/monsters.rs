@@ -5,7 +5,8 @@ use crate::core_mechanics::attacks::HasAttacks;
 use crate::core_mechanics::attributes::{self, Attribute, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::HasDefenses;
-use crate::core_mechanics::{creature, defenses, latex};
+use crate::core_mechanics::resources::{self, HasResources};
+use crate::core_mechanics::{creature, defenses, latex, HasCreatureMechanics};
 use crate::equipment::{weapons, HasEquipment};
 
 pub struct Monster {
@@ -91,6 +92,11 @@ impl HasAttacks for Monster {
             + (self.creature.level + 1) / 6;
     }
 
+    fn calc_damage_per_round_multiplier(&self) -> f64 {
+        return self.creature.calc_damage_per_round_multiplier()
+            * self.challenge_rating.damage_per_round_multiplier();
+    }
+
     fn calc_damage_increments(&self, is_strike: bool) -> i8 {
         let level_modifier = if is_strike {
             (self.creature.level - 1) / 3
@@ -138,3 +144,12 @@ impl HasDefenses for Monster {
             + (self.creature.level + 3) / 6;
     }
 }
+
+impl HasResources for Monster {
+    fn calc_resource(&self, resource: &'static resources::Resource) -> i8 {
+        return self.creature.calc_resource(resource);
+    }
+}
+
+// No need for explicit funtions here - it's handled by the above functions
+impl HasCreatureMechanics for Monster {}

@@ -50,4 +50,8 @@ impl DamageDice {
             return format!("{}d{}", self.count, self.size);
         }
     }
+
+    pub fn average_damage(&self) -> f64 {
+        return ((self.count * (self.size + 1)) as f64) / 2.0
+    }
 }

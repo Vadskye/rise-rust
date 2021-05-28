@@ -1,12 +1,14 @@
-use crate::core_mechanics::damage_dice;
+use crate::core_mechanics::{damage_dice, defenses};
 use crate::equipment::HasEquipment;
 use crate::latex_formatting;
 
 pub struct Attack {
-    accuracy_modifier: i8,
-    damage_dice: damage_dice::DamageDice,
-    damage_modifier: i8,
-    name: String,
+    pub accuracy_modifier: i8,
+    pub damage_dice: damage_dice::DamageDice,
+    pub damage_modifier: i8,
+    // TODO: support multiple defenses?
+    pub defense: &'static defenses::Defense,
+    pub name: String,
 }
 
 pub fn calc_attacks<T: HasAttacks + HasEquipment>(creature: &T) -> Vec<Attack> {
@@ -18,6 +20,7 @@ pub fn calc_attacks<T: HasAttacks + HasEquipment>(creature: &T) -> Vec<Attack> {
             accuracy_modifier: w.accuracy() + creature.calc_accuracy(),
             damage_dice: w.damage_dice().add(creature.calc_damage_increments(true)),
             damage_modifier: creature.calc_power(false),
+            defense: defenses::ARMOR,
             name: w.name().to_string(),
         })
         .collect();
@@ -26,6 +29,7 @@ pub fn calc_attacks<T: HasAttacks + HasEquipment>(creature: &T) -> Vec<Attack> {
 pub trait HasAttacks {
     fn calc_accuracy(&self) -> i8;
     fn calc_damage_increments(&self, is_strike: bool) -> i8;
+    fn calc_damage_per_round_multiplier(&self) -> f64;
     fn calc_power(&self, is_magical: bool) -> i8;
 }
 

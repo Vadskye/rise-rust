@@ -33,6 +33,18 @@ impl ChallengeRating {
         }
     }
 
+    // CR 3 and CR 4 monsters should be taking multiple actions per round, so their damage
+    // is higher than it would appear based purely on their damage dice.
+    pub fn damage_per_round_multiplier(&self) -> f64 {
+        match self {
+            Self::Half => 1.0,
+            Self::One => 1.0,
+            Self::Two => 1.0,
+            Self::Three => 1.5,
+            Self::Four => 2.0,
+        }
+    }
+
     pub fn defense_bonus(&self) -> i8 {
         match self {
             Self::Half => 0,
