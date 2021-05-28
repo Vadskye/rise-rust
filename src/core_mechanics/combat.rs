@@ -25,47 +25,41 @@ pub fn run_combat<T: HasCreatureMechanics>(blue: Vec<&T>, red: Vec<&T>) -> Comba
             red[living_red_index..].to_vec(),
         );
         let defender = (living.0[0], living.1[0]);
-        let damage_per_round: (f64, f64) = (
-            living
-                .0
-                .iter()
-                .map(|a| calc_individual_dpr(*a, defender.1))
-                .sum(),
-            living
-                .1
-                .iter()
-                .map(|a| calc_individual_dpr(*a, defender.0))
-                .sum(),
-        );
-        let damage_absorption = (
-            (defender.0.calc_hit_points() + defender.0.calc_damage_resistance()) as f64,
-            (defender.1.calc_hit_points() + defender.1.calc_damage_resistance()) as f64,
+        let rounds_to_live: (f64, f64) = (
+            calc_rounds_to_live(living.0, defender.1),
+            calc_rounds_to_live(living.1, defender.0),
         );
 
-        // In a real fight, rounds would be broken up into discrete units, but we'd also have to
-        // deal with the variance of high and low rolls. Dropping to quarter-round precision
-        // precision still leaves some awareness of the downsides of excess overkill while being
-        // more precise than true integer rounds
-        let rounds_to_survive = (
-            ((damage_absorption.0 / damage_per_round.0) * 4.0).round() / 4.0,
-            ((damage_absorption.1 / damage_per_round.1) * 4.0).round() / 4.0,
-        );
-        if rounds_to_survive.0 > rounds_to_survive.1 {
+        if rounds_to_live.0 > rounds_to_live.1 {
             living_red_index += 1;
-            rounds += rounds_to_survive.1;
-        } else if rounds_to_survive.0 < rounds_to_survive.1 {
+            rounds += rounds_to_live.1;
+        } else if rounds_to_live.0 < rounds_to_live.1 {
             living_blue_index += 1;
-            rounds += rounds_to_survive.0;
+            rounds += rounds_to_live.0;
         } else {
             living_blue_index += 1;
             living_red_index += 1;
-            rounds += rounds_to_survive.0;
+            rounds += rounds_to_live.0;
         }
         if living_blue_index == blue.len() || living_red_index == red.len() {
             break;
         }
     }
     return CombatResult { rounds };
+}
+
+fn calc_rounds_to_live<T: HasCreatureMechanics>(attackers: Vec<&T>, defender: &T) -> f64 {
+    let damage_per_round: f64 = attackers
+        .iter()
+        .map(|a| calc_individual_dpr(*a, defender))
+        .sum();
+    let damage_absorption = defender.calc_hit_points() + defender.calc_damage_resistance();
+    let rounds_to_survive = damage_absorption as f64 / damage_per_round;
+    // In a real fight, rounds would be broken up into discrete units, but we'd also have to
+    // deal with the variance of high and low rolls. Dropping to quarter-round precision
+    // precision still leaves some awareness of the downsides of excess overkill while being
+    // more precise than true integer rounds
+    return (rounds_to_survive * 4.0).round() / 4.0;
 }
 
 fn calc_individual_dpr<T: HasCreatureMechanics>(attacker: &T, defender: &T) -> f64 {
@@ -94,13 +88,20 @@ fn calculate_hit_probability<T: HasCreatureMechanics>(
     let mut crit_count = 0.0;
     let mut explosion_count = 0.0;
     loop {
-        let hit_probability: f64 = ((attack.accuracy_modifier as f64) + 11.0
-            - crit_count * 10.0
+        let hit_probability: f64 = ((attack.accuracy_modifier as f64) + 11.0 - crit_count * 10.0
             + explosion_count * 10.0
             - (defender.calc_defense(attack.defense) as f64))
             / 10.0;
-        let hit_probability = if hit_probability > 1.0 {1.0} else {hit_probability};
-        let hit_probability = if hit_probability < 0.0 {0.0} else {hit_probability};
+        let hit_probability = if hit_probability > 1.0 {
+            1.0
+        } else {
+            hit_probability
+        };
+        let hit_probability = if hit_probability < 0.0 {
+            0.0
+        } else {
+            hit_probability
+        };
         if hit_probability > 0.0 {
             crit_count += 1.0;
             total_hit_probability += hit_probability * f64::powf(0.1, explosion_count);
