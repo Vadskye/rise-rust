@@ -20,13 +20,6 @@ fn main() {
                 .takes_value(true),
         )
         .arg(
-            Arg::with_name("level")
-                .short("l")
-                .long("level")
-                .required(true)
-                .takes_value(true),
-        )
-        .arg(
             Arg::with_name("creature type")
                 .short("m")
                 .long("creature-type")
@@ -35,17 +28,18 @@ fn main() {
         .get_matches();
 
     let challenge_rating = matches.value_of("challenge rating").unwrap();
-    let level = matches.value_of("level").unwrap();
     let creature_type = matches.value_of("creature type").unwrap_or("planeforged");
     let starting_attribute = matches.value_of("starting attribute").unwrap_or("0");
 
-    let monster = Monster::standard_monster(
-        challenge_rating::ChallengeRating::from_string(challenge_rating.to_string()),
-        level.parse::<i8>().unwrap(),
-        Some(starting_attribute.parse::<i8>().unwrap()),
-        Some(creature_type::CreatureType::from_string(creature_type.to_string())),
-    );
+    for level in vec![2, 5, 8, 11, 14, 17, 20] {
+        let monster = Monster::standard_monster(
+            challenge_rating::ChallengeRating::from_string(challenge_rating.to_string()),
+            level,
+            Some(starting_attribute.parse::<i8>().unwrap()),
+            Some(creature_type::CreatureType::from_string(creature_type.to_string())),
+        );
+        println!("L{:0>2}: {}", level, combat::run_combat(vec![&monster], vec![&monster]));
+        // println!("L{:0<2}: {}", level, combat::run_combat(vec![&monster, &monster], vec![&monster, &monster]));
+    }
 
-    println!("{}", combat::run_combat(vec![&monster], vec![&monster]));
-    println!("{}", combat::run_combat(vec![&monster, &monster], vec![&monster, &monster]));
 }
