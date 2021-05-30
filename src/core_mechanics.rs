@@ -8,6 +8,8 @@ pub mod damage_dice;
 pub mod defenses;
 pub mod latex;
 pub mod resources;
+pub mod movement_modes;
+pub mod sizes;
 
 use crate::equipment::HasEquipment;
 

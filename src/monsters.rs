@@ -9,7 +9,7 @@ use crate::core_mechanics::attributes::{self, Attribute, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::{self, HasDefenses};
 use crate::core_mechanics::resources::{self, HasResources};
-use crate::core_mechanics::{attacks, creature, HasCreatureMechanics};
+use crate::core_mechanics::{attacks, creature, movement_modes, HasCreatureMechanics};
 use crate::equipment::{weapons, HasEquipment};
 use crate::latex_formatting;
 use std::collections::HashMap;
@@ -20,6 +20,7 @@ pub struct Monster {
     creature_type: &'static creature_type::CreatureType,
     description: Option<String>,
     knowledge: Option<HashMap<i8, String>>,
+    movement_modes: Vec<movement_modes::MovementMode>,
 }
 
 pub struct FullMonsterDefinition {
@@ -29,6 +30,7 @@ pub struct FullMonsterDefinition {
     description: Option<&'static str>,
     knowledge: Vec<(i8, &'static str)>,
     level: i8,
+    movement_modes: Option<Vec<movement_modes::MovementMode>>,
     name: &'static str,
     weapons: Vec<weapons::Weapon>,
 }
@@ -45,6 +47,7 @@ impl Monster {
             creature: creature::Creature::new(level),
             description: None,
             knowledge: None,
+            movement_modes: vec![],
         };
     }
 
@@ -76,6 +79,13 @@ impl Monster {
                 None
             },
             knowledge: knowledge_option,
+            movement_modes: if let Some(m) = def.movement_modes {
+                m
+            } else {
+                vec![movement_modes::MovementMode::Land(
+                    &movement_modes::SpeedCategory::Normal,
+                )]
+            },
         };
     }
 
@@ -106,6 +116,9 @@ impl Monster {
             creature_type,
             description: None,
             knowledge: None,
+            movement_modes: vec![movement_modes::MovementMode::Land(
+                &movement_modes::SpeedCategory::Normal,
+            )],
         };
     }
 
@@ -246,9 +259,9 @@ impl Monster {
             size = "Medium", // TODO
             type = self.creature_type.name(),
             description = self.description.as_deref().unwrap_or(""),
-            knowledge = self.latex_knowledge().trim(), // TODO
+            knowledge = self.latex_knowledge().trim(),
             content = self.latex_content().trim(),
-            footer = self.latex_footer().trim(), // TODO
+            footer = self.latex_footer().trim(),
             abilities = "", // TODO
         ));
     }
@@ -299,7 +312,9 @@ impl Monster {
                   \\pari \\textbf<Alignment> {alignment}
                 \\end<monsterfooter>
             ",
-            speeds = "Land 30 ft.", // TODO
+            speeds = self.movement_modes.iter().map(
+                |m| format!("{} {} ft.", m.name(), m.calc_speed(&self.creature.size))
+            ).collect::<Vec<String>>().join("; "),
             space = "5 ft.",        // TODO
             reach = "5 ft.",        // TODO
             // TODO: figure out skill training

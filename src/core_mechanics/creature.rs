@@ -3,8 +3,10 @@ use crate::core_mechanics::attributes::{self, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::{self, HasDefenses};
 use crate::core_mechanics::latex;
+use crate::core_mechanics::movement_modes;
 use crate::core_mechanics::resources::{self, HasResources};
 use crate::core_mechanics::HasCreatureMechanics;
+use crate::core_mechanics::sizes;
 use crate::equipment::{weapons, HasEquipment};
 use std::cmp::{max, min};
 use std::collections::HashMap;
@@ -13,6 +15,8 @@ pub struct Creature {
     base_attributes: HashMap<&'static attributes::Attribute, i8>,
     pub name: Option<String>,
     pub level: i8,
+    pub size: sizes::Size,
+    pub speeds: Vec<movement_modes::MovementMode>,
     pub weapons: Vec<weapons::Weapon>,
 }
 
@@ -23,6 +27,8 @@ impl Creature {
             base_attributes,
             level,
             name: None,
+            size: sizes::Size::Medium,
+            speeds: vec![],
             weapons: vec![],
         };
     }
@@ -33,6 +39,10 @@ impl Creature {
 
     pub fn set_name(&mut self, name: String) {
         self.name = Some(name);
+    }
+
+    pub fn set_size(&mut self, size: sizes::Size) {
+        self.size = size;
     }
 
     pub fn to_latex(&self) -> String {

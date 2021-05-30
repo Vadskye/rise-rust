@@ -2,6 +2,7 @@ use crate::equipment::weapons;
 use crate::monsters::challenge_rating::{CR1, CR3, CR4};
 use crate::monsters::creature_type::ANIMAL;
 use crate::monsters::monster_entry::MonsterEntry;
+use crate::core_mechanics::movement_modes::{MovementMode, SpeedCategory};
 use crate::monsters::{monster_group, FullMonsterDefinition, Monster};
 
 pub fn animals() -> Vec<MonsterEntry> {
@@ -24,6 +25,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                 "),
             ],
             level: 1,
+            movement_modes: None,
             name: "Baboon",
             weapons: vec![weapons::Weapon::Bite],
         },
@@ -45,6 +47,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                         "),
                     ],
                     level: 3,
+                    movement_modes: None,
                     name: "Black bear",
                     weapons: vec![weapons::Weapon::Bite, weapons::Weapon::Claw],
                 }),
@@ -58,6 +61,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                             Brown bears tend to be bad-tempered and territorial.
                         "),
                     ],
+                    movement_modes: None,
                     level: 5,
                     name: "Brown bear",
                     weapons: vec![weapons::Weapon::Bite, weapons::Weapon::Claw],
