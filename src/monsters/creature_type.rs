@@ -57,6 +57,17 @@ impl CreatureType {
         }
     }
 
+    // If knowledge subskills later become a first class concept, this should return those instead
+    // of strings.
+    pub fn knowledge(&self) -> &str {
+        match self {
+            Self::Aberration => "dungeoneering",
+            Self::Animal => "nature",
+            Self::Planeforged => "planes",
+            Self::Undead => "religion",
+        }
+    }
+
     pub fn name(&self) -> &str {
         match self {
             Self::Aberration => "aberration",

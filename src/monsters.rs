@@ -12,17 +12,22 @@ use crate::core_mechanics::resources::{self, HasResources};
 use crate::core_mechanics::{attacks, creature, HasCreatureMechanics};
 use crate::equipment::{weapons, HasEquipment};
 use crate::latex_formatting;
+use std::collections::HashMap;
 
 pub struct Monster {
     challenge_rating: &'static challenge_rating::ChallengeRating,
     creature: creature::Creature,
     creature_type: &'static creature_type::CreatureType,
+    description: Option<String>,
+    knowledge: Option<HashMap<i8, String>>,
 }
 
 pub struct FullMonsterDefinition {
     attributes: Vec<i8>,
     challenge_rating: &'static challenge_rating::ChallengeRating,
     creature_type: &'static creature_type::CreatureType,
+    description: Option<&'static str>,
+    knowledge: Vec<(i8, &'static str)>,
     level: i8,
     name: &'static str,
     weapons: Vec<weapons::Weapon>,
@@ -38,6 +43,8 @@ impl Monster {
             challenge_rating,
             creature_type,
             creature: creature::Creature::new(level),
+            description: None,
+            knowledge: None,
         };
     }
 
@@ -50,10 +57,25 @@ impl Monster {
         for weapon in def.weapons {
             creature.add_weapon(weapon);
         }
+        let base_knowledge_difficulty = def.level + 5;
+        let mut knowledge_option = None;
+        if def.knowledge.len() > 0 {
+            let mut knowledge = HashMap::new();
+            for (modifier, text) in def.knowledge {
+                knowledge.insert(base_knowledge_difficulty + modifier, text.to_string());
+            }
+            knowledge_option = Some(knowledge)
+        }
         return Monster {
             challenge_rating: def.challenge_rating,
             creature_type: def.creature_type,
             creature,
+            description: if let Some(d) = def.description {
+                Some(d.to_string())
+            } else {
+                None
+            },
+            knowledge: knowledge_option,
         };
     }
 
@@ -82,6 +104,8 @@ impl Monster {
             challenge_rating,
             creature,
             creature_type,
+            description: None,
+            knowledge: None,
         };
     }
 
@@ -221,8 +245,8 @@ impl Monster {
             cr = self.challenge_rating.to_string(),
             size = "Medium", // TODO
             type = self.creature_type.name(),
-            description = "", // TODO
-            knowledge = "", // TODO
+            description = self.description.as_deref().unwrap_or(""),
+            knowledge = self.latex_knowledge().trim(), // TODO
             content = self.latex_content().trim(),
             footer = self.latex_footer().trim(), // TODO
             abilities = "", // TODO
@@ -308,5 +332,24 @@ impl Monster {
             .map(|a| format!("{} {}", a.shorthand_name(), self.calc_total_attribute(a)))
             .collect::<Vec<String>>()
             .join(", ");
+    }
+
+    fn latex_knowledge(&self) -> String {
+        if let Some(ref knowledge) = self.knowledge {
+            return knowledge
+                .iter()
+                .map(|(difficulty, text)| {
+                    return format!(
+                        "\\parhead<Knowledge ({subskill}) {difficulty}> {text}",
+                        subskill = self.creature_type.knowledge(), // TODO
+                        difficulty = difficulty,
+                        text = text,
+                    );
+                })
+                .collect::<Vec<String>>()
+                .join("\n");
+        } else {
+            return "".to_string();
+        }
     }
 }
