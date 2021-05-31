@@ -1,8 +1,9 @@
-use crate::equipment::weapons;
-use crate::monsters::challenge_rating::{CR1, CR3, CR4};
-use crate::monsters::creature_type::ANIMAL;
-use crate::monsters::monster_entry::MonsterEntry;
 use crate::core_mechanics::movement_modes::{MovementMode, SpeedCategory};
+use crate::equipment::weapons;
+use crate::monsters::challenge_rating::ChallengeRating;
+use crate::monsters::creature_type::CreatureType::Animal;
+use crate::monsters::monster_entry::MonsterEntry;
+use crate::monsters::sizes::Size;
 use crate::monsters::{monster_group, FullMonsterDefinition, Monster};
 
 pub fn animals() -> Vec<MonsterEntry> {
@@ -10,13 +11,14 @@ pub fn animals() -> Vec<MonsterEntry> {
 
     monsters.push(MonsterEntry::Monster(Monster::fully_defined(
         FullMonsterDefinition {
+            alignment: "Always true neutral",
             attributes: vec![2, 2, 1, -8, 1, -1],
-            challenge_rating: CR1,
-            creature_type: ANIMAL,
+            challenge_rating: &ChallengeRating::One,
+            creature_type: &Animal,
             description: None,
             knowledge: vec![
                 (0, "
-                    A baboon is a primate adapted to life on the ground.
+                    A baboon is an aggressive primate adapted to life on the ground.
                     A typical baboon is the size of a big dog.
                 "),
                 (5, "
@@ -25,8 +27,37 @@ pub fn animals() -> Vec<MonsterEntry> {
                 "),
             ],
             level: 1,
-            movement_modes: None,
+            movement_modes: Some(vec![
+                MovementMode::Climb(&SpeedCategory::Normal),
+                MovementMode::Land(&SpeedCategory::Normal),
+            ]),
             name: "Baboon",
+            size: Size::Medium,
+            weapons: vec![weapons::Weapon::Bite],
+        },
+    )));
+
+    monsters.push(MonsterEntry::Monster(Monster::fully_defined(
+        FullMonsterDefinition {
+            alignment: "Always true neutral",
+            attributes: vec![-2, 2, 2, -8, 1, -1],
+            challenge_rating: &ChallengeRating::One,
+            creature_type: &Animal,
+            description: None,
+            knowledge: vec![
+                (0, "
+                    A badger is a furry animal with a squat, powerful body.
+                    Badgers can be tenacious in combat.
+                "),
+                (5, "
+                    Badgers have strong forelimbs that are armed with long claws for digging.
+                    A typical adult badger is 2 to 3 feet long and weighs 25 to 35 pounds.
+                "),
+            ],
+            level: 1,
+            movement_modes: None,
+            name: "Badger",
+            size: Size::Small,
             weapons: vec![weapons::Weapon::Bite],
         },
     )));
@@ -36,9 +67,10 @@ pub fn animals() -> Vec<MonsterEntry> {
             "Bears",
             vec![
                 Monster::fully_defined(FullMonsterDefinition {
+                    alignment: "Always true neutral",
                     attributes: vec![3, 0, 3, -8, 0, -1],
-                    challenge_rating: CR3,
-                    creature_type: ANIMAL,
+                    challenge_rating: &ChallengeRating::Three,
+                    creature_type: &Animal,
                     description: None,
                     knowledge: vec![
                         (0, "
@@ -49,12 +81,14 @@ pub fn animals() -> Vec<MonsterEntry> {
                     level: 3,
                     movement_modes: None,
                     name: "Black bear",
+                    size: Size::Medium,
                     weapons: vec![weapons::Weapon::Bite, weapons::Weapon::Claw],
                 }),
                 Monster::fully_defined(FullMonsterDefinition {
+                    alignment: "Always true neutral",
                     attributes: vec![4, 0, 3, -8, 0, -1],
-                    challenge_rating: CR4,
-                    creature_type: ANIMAL,
+                    challenge_rating: &ChallengeRating::Three,
+                    creature_type: &Animal,
                     description: Some("A brown bear's statistics can be used for almost any big bear, including a grizzly bear."),
                     knowledge: vec![
                         (0, "
@@ -64,11 +98,28 @@ pub fn animals() -> Vec<MonsterEntry> {
                     movement_modes: None,
                     level: 5,
                     name: "Brown bear",
+                    size: Size::Large,
                     weapons: vec![weapons::Weapon::Bite, weapons::Weapon::Claw],
                 }),
             ],
         ),
     ));
+
+    monsters.push(MonsterEntry::Monster(Monster::fully_defined(
+        FullMonsterDefinition {
+            alignment: "Always true neutral",
+            attributes: vec![-7, 3, -1, -7, 1, -2],
+            challenge_rating: &ChallengeRating::Half,
+            creature_type: &Animal,
+            description: None,
+            knowledge: vec![],
+            level: 1,
+            movement_modes: None,
+            name: "Cat",
+            size: Size::Small,
+            weapons: vec![weapons::Weapon::Bite],
+        },
+    )));
 
     return monsters;
 }

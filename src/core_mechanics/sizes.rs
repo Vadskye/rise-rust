@@ -24,4 +24,18 @@ impl Size {
             Size::Colossal => 70,
         }
     }
+
+    pub fn name(&self) -> &str {
+        match self {
+            Size::Fine => "Fine",
+            Size::Diminuitive => "Diminuitive",
+            Size::Tiny => "Tiny",
+            Size::Small => "Small",
+            Size::Medium => "Medium",
+            Size::Large => "Large",
+            Size::Huge => "Huge",
+            Size::Gargantuan => "Gargantuan",
+            Size::Colossal => "Colossal",
+        }
+    }
 }

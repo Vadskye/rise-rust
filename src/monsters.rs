@@ -9,12 +9,13 @@ use crate::core_mechanics::attributes::{self, Attribute, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::{self, HasDefenses};
 use crate::core_mechanics::resources::{self, HasResources};
-use crate::core_mechanics::{attacks, creature, movement_modes, HasCreatureMechanics};
+use crate::core_mechanics::{attacks, creature, movement_modes, HasCreatureMechanics, sizes};
 use crate::equipment::{weapons, HasEquipment};
 use crate::latex_formatting;
 use std::collections::HashMap;
 
 pub struct Monster {
+    alignment: Option<String>,
     challenge_rating: &'static challenge_rating::ChallengeRating,
     creature: creature::Creature,
     creature_type: &'static creature_type::CreatureType,
@@ -24,6 +25,7 @@ pub struct Monster {
 }
 
 pub struct FullMonsterDefinition {
+    alignment: &'static str,
     attributes: Vec<i8>,
     challenge_rating: &'static challenge_rating::ChallengeRating,
     creature_type: &'static creature_type::CreatureType,
@@ -32,6 +34,7 @@ pub struct FullMonsterDefinition {
     level: i8,
     movement_modes: Option<Vec<movement_modes::MovementMode>>,
     name: &'static str,
+    size: sizes::Size,
     weapons: Vec<weapons::Weapon>,
 }
 
@@ -42,6 +45,7 @@ impl Monster {
         level: i8,
     ) -> Monster {
         return Monster {
+            alignment: None,
             challenge_rating,
             creature_type,
             creature: creature::Creature::new(level),
@@ -69,7 +73,10 @@ impl Monster {
             }
             knowledge_option = Some(knowledge)
         }
+        creature.set_size(def.size);
+
         return Monster {
+            alignment: Some(def.alignment.to_owned()),
             challenge_rating: def.challenge_rating,
             creature_type: def.creature_type,
             creature,
@@ -111,6 +118,7 @@ impl Monster {
             creature_type::PLANEFORGED
         };
         return Monster {
+            alignment: None,
             challenge_rating,
             creature,
             creature_type,
@@ -256,7 +264,7 @@ impl Monster {
             name = name,
             level = self.creature.level,
             cr = self.challenge_rating.to_string(),
-            size = "Medium", // TODO
+            size = self.creature.size.name(),
             type = self.creature_type.name(),
             description = self.description.as_deref().unwrap_or(""),
             knowledge = self.latex_knowledge().trim(),
@@ -323,7 +331,9 @@ impl Monster {
             attributes = self.latex_attributes(),
             accuracy = latex_formatting::modifier(self.calc_accuracy()),
             power = self.latex_power(),
-            alignment = latex_formatting::uppercase_first_letter("always true neutral"), // TODO
+            alignment = latex_formatting::uppercase_first_letter(
+                self.alignment.as_deref().unwrap_or("")
+            ),
         );
     }
 
