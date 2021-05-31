@@ -22,4 +22,11 @@ impl MonsterEntry {
             panic!("Nonsensical monter entry");
         }
     }
+
+    pub fn name(&self) -> &str {
+        match self {
+            MonsterEntry::Monster(m) => m.creature.name.as_deref().unwrap_or(""),
+            MonsterEntry::MonsterGroup(m) => m.name.as_str(),
+        }
+    }
 }

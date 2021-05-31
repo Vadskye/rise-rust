@@ -17,7 +17,9 @@ fn main() {
 
     let entries = monster_entry::generate_monster_entries();
     for creature_type in vec![creature_type::CreatureType::Animal] {
-        let entries_latex: Vec<String> = entries[&creature_type].iter().map(|e| e.to_latex()).collect();
+        let mut entries: Vec<&monster_entry::MonsterEntry> = entries[&creature_type].iter().collect();
+        entries.sort_by(|a, b| a.name().cmp(b.name()));
+        let entries_latex: Vec<String> = entries.iter().map(|e| e.to_latex()).collect();
         println!("{}\n{}", creature_type.latex_section_header(), entries_latex.join("\n"));
     }
 }

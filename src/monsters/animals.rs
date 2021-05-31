@@ -12,6 +12,24 @@ pub fn animals() -> Vec<MonsterEntry> {
     monsters.push(MonsterEntry::Monster(Monster::fully_defined(
         FullMonsterDefinition {
             alignment: "Always true neutral",
+            attributes: vec![3, 0, 3, -8, 1, 0],
+            challenge_rating: ChallengeRating::Two,
+            creature_type: Animal,
+            description: None,
+            knowledge: vec![
+                (0, "Camels are known for their ability to travel long distances without food or water."),
+            ],
+            level: 1,
+            movement_modes: None,
+            name: "Camel",
+            size: Size::Small,
+            weapons: vec![weapons::Weapon::Bite],
+        },
+    )));
+
+    monsters.push(MonsterEntry::Monster(Monster::fully_defined(
+        FullMonsterDefinition {
+            alignment: "Always true neutral",
             attributes: vec![2, 2, 1, -8, 1, -1],
             challenge_rating: ChallengeRating::One,
             creature_type: Animal,

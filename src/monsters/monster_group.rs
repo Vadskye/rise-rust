@@ -4,7 +4,7 @@ use titlecase::titlecase;
 
 pub struct MonsterGroup {
     monsters: Vec<Monster>,
-    name: String,
+    pub name: String,
 }
 
 impl MonsterGroup {
