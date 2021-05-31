@@ -1,1 +1,2 @@
 edition = "2018"
+unstable_features = true
