@@ -256,21 +256,19 @@ impl Monster {
             panic!("Monster has no name")
         };
         return latex_formatting::latexify(format!(
-            // TODO: some of these vspace values look unnecessary / conflicting
             "
                 \\begin<{section_name}><{name}><{level}>[{cr}]
-                    \\vspace<-1em>\\spelltwocol<><{size} {type}>\\vspace<-1em>
-                    \\vspace<0em>
+                    \\monstersize{size_star}<{size} {type}>
 
                     {description}
                     {knowledge}
 
                     {content}
-                    {footer}
                 \\end<{section_name}>
                 {abilities}
             ",
             section_name = section_name,
+            size_star = if section_name == "monsubsubsection" { "*" } else { "" },
             name = name,
             level = self.creature.level,
             cr = self.challenge_rating.to_string(),
@@ -279,7 +277,6 @@ impl Monster {
             description = self.description.as_deref().unwrap_or(""),
             knowledge = self.latex_knowledge().trim(),
             content = self.latex_content().trim(),
-            footer = self.latex_footer().trim(),
             abilities = "", // TODO
         ));
     }
@@ -287,63 +284,66 @@ impl Monster {
     fn latex_content(&self) -> String {
         return format!(
             "
-                \\begin<spellcontent>
-                  \\begin<spelltargetinginfo>
-                    \\pari \\textbf<HP> {hp}
-                        \\monsep \\textbf<DR> {dr}
-                        \\monsep \\textbf<AD> {armor}
-                        \\monsep \\textbf<Fort> {fort}
-                        \\monsep \\textbf<Ref> {ref}
-                        \\monsep \\textbf<Ment> {ment}
+                \\begin<monsterstatistics>
+                    {defensive_statistics}
                     \\pari \\textbf<{strike_maybe_plural}> {strikes}
-                  \\end<spelltargetinginfo>
-                \\end<spellcontent>
+                    \\pari \\textbf<Movement> {movement_modes}{movement_skills}
+                    {space_and_reach}
+                    \\pari \\textbf<Senses> {awareness}
+                    \\rankline
+                    \\pari \\textbf<Attributes> {attributes}
+                    % This is sometimes useful for debugging, but isn't actually useful information in general.
+                    % To the extent that raw accuracy or power is important, that should already be
+                    % included in more specific attacks or abilities.
+                    % \\pari \\textbf<Accuracy> {accuracy} \\monsep {power}
+                    \\pari \\textbf<Alignment> {alignment}
+                \\end<monsterstatistics>
             ",
-            hp = self.calc_hit_points(),
-            dr = self.calc_damage_resistance(),
-            armor = self.calc_defense(defenses::ARMOR),
-            fort = self.calc_defense(defenses::FORT),
-            ref = self.calc_defense(defenses::REF),
-            ment = self.calc_defense(defenses::MENT),
+            defensive_statistics = self.latex_defensive_statistics(),
             strike_maybe_plural = if self.creature.weapons.len() > 1 { "Strikes" } else { "Strike" },
             strikes = attacks::calc_attacks(self)
                 .iter()
                 .map(|a| a.to_latex())
                 .collect::<Vec<String>>()
                 .join(";\\par "),
-        );
-    }
-
-    fn latex_footer(&self) -> String {
-        return format!(
-            "
-                \\begin<monsterfooter>
-                  \\pari \\textbf<Speeds> {speeds} \\monsep
-                    \\textbf<Space> {space} \\monsep
-                    \\textbf<Reach> {reach}
-                  \\pari \\textbf<Awareness> {awareness}
-                  \\pari \\textbf<Attributes> {attributes}
-                  % This is sometimes useful for debugging, but isn't actually useful information in general.
-                  % To the extent that raw accuracy or power is important, that should already be
-                  % included in more specific attacks or abilities.
-                  % \\pari \\textbf<Accuracy> {accuracy} \\monsep {power}
-                  \\pari \\textbf<Alignment> {alignment}
-                \\end<monsterfooter>
-            ",
-            speeds = self.movement_modes.iter().map(
+            movement_skills = "", // TODO
+            movement_modes = self.movement_modes.iter().map(
                 |m| format!("{} {} ft.", m.name(), m.calc_speed(&self.creature.size))
-            ).collect::<Vec<String>>().join("; "),
-            space = "5 ft.",        // TODO
-            reach = "5 ft.",        // TODO
+            ).collect::<Vec<String>>().join("\\monsep "),
             // TODO: figure out skill training
-            awareness =
-                latex_formatting::modifier(self.creature.get_base_attribute(attributes::PER)),
+            awareness = format!(
+                "Awareness {}", 
+                latex_formatting::modifier(self.creature.get_base_attribute(attributes::PER))
+            ),
             attributes = self.latex_attributes(),
             accuracy = latex_formatting::modifier(self.calc_accuracy()),
             power = self.latex_power(),
             alignment = latex_formatting::uppercase_first_letter(
                 self.alignment.as_deref().unwrap_or("")
             ),
+            space_and_reach = "", // TODO: only display for monsters with nonstandard space/reach
+        );
+    }
+
+    fn latex_defensive_statistics(&self) -> String {
+        return format!(
+            "
+                \\pari \\textbf<HP> {hp}
+                    \\monsep \\textbf<DR> {dr}
+                    {immunities}
+                \\pari \\textbf<Defenses>
+                    Armor {armor}
+                    \\monsep Fort {fort}
+                    \\monsep Ref {ref}
+                    \\monsep Ment {ment}
+            ",
+            hp = self.calc_hit_points(),
+            immunities = "", // TODO
+            dr = self.calc_damage_resistance(),
+            armor = self.calc_defense(defenses::ARMOR),
+            fort = self.calc_defense(defenses::FORT),
+            ref = self.calc_defense(defenses::REF),
+            ment = self.calc_defense(defenses::MENT),
         );
     }
 
@@ -371,12 +371,13 @@ impl Monster {
 
     fn latex_knowledge(&self) -> String {
         if let Some(ref knowledge) = self.knowledge {
-            let knowledge_keys = knowledge.keys().collect::<Vec<&i8>>();
+            let mut knowledge_keys = knowledge.keys().collect::<Vec<&i8>>();
+            knowledge_keys.sort();
             return knowledge_keys
                 .iter()
                 .map(|difficulty| {
                     return format!(
-                        "\\parhead<Knowledge ({subskill}) {difficulty}> {text}",
+                        "\\par Knowledge ({subskill}) {difficulty}: {text}",
                         subskill = self.creature_type.knowledge(), // TODO
                         difficulty = difficulty,
                         text = knowledge[difficulty],

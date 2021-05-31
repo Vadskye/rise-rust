@@ -22,7 +22,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             level: 1,
             movement_modes: None,
             name: "Camel",
-            size: Size::Small,
+            size: Size::Medium,
             weapons: vec![weapons::Weapon::Bite],
         },
     )));
