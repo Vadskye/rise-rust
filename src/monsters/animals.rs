@@ -23,7 +23,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             movement_modes: None,
             name: "Camel",
             size: Size::Medium,
-            weapons: vec![weapons::Weapon::Bite],
+            weapons: vec![weapons::Weapon::MonsterBite],
         },
     )));
 
@@ -51,7 +51,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             ]),
             name: "Baboon",
             size: Size::Medium,
-            weapons: vec![weapons::Weapon::Bite],
+            weapons: vec![weapons::Weapon::MonsterBite],
         },
     )));
 
@@ -76,7 +76,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             movement_modes: None,
             name: "Badger",
             size: Size::Small,
-            weapons: vec![weapons::Weapon::Bite],
+            weapons: vec![weapons::Weapon::MonsterClaws],
         },
     )));
 
@@ -100,7 +100,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                     movement_modes: None,
                     name: "Black bear",
                     size: Size::Medium,
-                    weapons: vec![weapons::Weapon::Bite, weapons::Weapon::Claw],
+                    weapons: vec![weapons::Weapon::MonsterBite, weapons::Weapon::MonsterClaws],
                 }),
                 Monster::fully_defined(FullMonsterDefinition {
                     alignment: "Always true neutral",
@@ -117,7 +117,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                     level: 5,
                     name: "Brown bear",
                     size: Size::Large,
-                    weapons: vec![weapons::Weapon::Bite, weapons::Weapon::Claw],
+                    weapons: vec![weapons::Weapon::MonsterBite, weapons::Weapon::MonsterClaws],
                 }),
             ],
         ),
@@ -135,7 +135,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             movement_modes: None,
             name: "Cat",
             size: Size::Small,
-            weapons: vec![weapons::Weapon::Bite],
+            weapons: vec![weapons::Weapon::MonsterBite],
         },
     )));
 
@@ -155,7 +155,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                         movement_modes: None,
                         name: "Wild dog",
                         size: Size::Medium,
-                        weapons: vec![weapons::Weapon::Bite],
+                        weapons: vec![weapons::Weapon::MonsterBite],
                     },
                 ),
                 Monster::fully_defined(
@@ -175,7 +175,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                         movement_modes: None,
                         name: "Riding dog",
                         size: Size::Medium,
-                        weapons: vec![weapons::Weapon::Bite],
+                        weapons: vec![weapons::Weapon::MonsterBite],
                     },
                 ),
             ],

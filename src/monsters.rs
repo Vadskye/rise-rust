@@ -13,6 +13,7 @@ use crate::core_mechanics::{attacks, creature, movement_modes, sizes, HasCreatur
 use crate::equipment::{weapons, HasEquipment};
 use crate::latex_formatting;
 use std::collections::HashMap;
+use titlecase::titlecase;
 
 pub struct Monster {
     alignment: Option<String>,
@@ -251,7 +252,7 @@ impl Monster {
     pub fn to_section(&self, section_name: Option<&str>) -> String {
         let section_name = section_name.unwrap_or("monsubsection");
         let name = if let Some(ref n) = self.creature.name {
-            n
+            titlecase(n)
         } else {
             panic!("Monster has no name")
         };
@@ -265,6 +266,7 @@ impl Monster {
 
                     {content}
                 \\end<{section_name}>
+                \\monsterabilitiesheader<$Name>
                 {abilities}
             ",
             section_name = section_name,
@@ -277,8 +279,10 @@ impl Monster {
             description = self.description.as_deref().unwrap_or(""),
             knowledge = self.latex_knowledge().trim(),
             content = self.latex_content().trim(),
-            abilities = "", // TODO
-        ));
+            abilities = self.latex_abilities().trim(), // TODO
+        ))
+            .replace("$name", self.creature.lowercase_name().as_deref().unwrap_or(""))
+            .replace("$Name", titlecase(self.creature.name.as_deref().unwrap_or("")).as_str());
     }
 
     fn latex_content(&self) -> String {
@@ -286,7 +290,6 @@ impl Monster {
             "
                 \\begin<monsterstatistics>
                     {defensive_statistics}
-                    \\pari \\textbf<{strike_maybe_plural}> {strikes}
                     \\pari \\textbf<Movement> {movement_modes}{movement_skills}
                     {space_and_reach}
                     \\pari \\textbf<Senses> {awareness}
@@ -300,12 +303,6 @@ impl Monster {
                 \\end<monsterstatistics>
             ",
             defensive_statistics = self.latex_defensive_statistics(),
-            strike_maybe_plural = if self.creature.weapons.len() > 1 { "Strikes" } else { "Strike" },
-            strikes = attacks::calc_attacks(self)
-                .iter()
-                .map(|a| a.to_latex())
-                .collect::<Vec<String>>()
-                .join(";\\par "),
             movement_skills = "", // TODO
             movement_modes = self.movement_modes.iter().map(
                 |m| format!("{} {} ft.", m.name(), m.calc_speed(&self.creature.size))
@@ -388,5 +385,13 @@ impl Monster {
         } else {
             return "".to_string();
         }
+    }
+
+    fn latex_abilities(&self) -> String {
+        return attacks::calc_attacks(self)
+                .iter()
+                .map(|a| a.latex_ability_block())
+                .collect::<Vec<String>>()
+                .join("\\par ");
     }
 }

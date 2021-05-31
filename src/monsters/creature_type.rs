@@ -89,6 +89,7 @@ impl CreatureType {
                 \\begin<itemize>
                     \\item {defenses}
                 \\end<itemize>
+                \\vspace<0.5em>
             ",
             plural_name_title = titlecase(self.plural_name().as_str()),
             plural_name = self.plural_name(),

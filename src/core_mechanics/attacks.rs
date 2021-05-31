@@ -34,13 +34,53 @@ pub trait HasAttacks {
 }
 
 impl Attack {
-    pub fn to_latex(&self) -> String {
+    pub fn latex_shorthand(&self) -> String {
         return format!(
             "{name} {accuracy} ({damage_dice}{damage_modifier})",
             name = latex_formatting::uppercase_first_letter(self.name.as_str()),
             accuracy = latex_formatting::modifier(self.accuracy_modifier),
             damage_dice = self.damage_dice.to_string(),
             damage_modifier = latex_formatting::modifier(self.damage_modifier)
+        );
+    }
+
+    pub fn latex_ability_block(&self) -> String {
+        let ability_components: Vec<Option<String>> =
+            vec![Some(self.latex_type_prefix()), Some(self.latex_effect())];
+        let ability_components = ability_components
+            .iter()
+            .filter(|c| c.is_some())
+            .map(|c| c.as_deref().unwrap())
+            .collect::<Vec<&str>>();
+        return format!(
+            "
+                \\begin<{ability_environment}><{name}>
+                    {ability_components}
+                \\end<{ability_environment}>
+            ",
+            ability_environment = "freeability", // TODO
+            ability_components = ability_components.join("\n\\rankline\n\n\\noindent "),
+            name = latex_formatting::uppercase_first_letter(self.name.as_str()),
+        );
+    }
+
+    fn latex_type_prefix(&self) -> String {
+        // TODO: take into account tags and usage time
+        String::from("Instant")
+    }
+
+    fn latex_effect(&self) -> String {
+        return format!(
+            "
+                The $name makes a strike with a {accuracy} accuracy bonus.
+                \\hit {damage} damage.
+            ",
+            accuracy = latex_formatting::modifier(self.accuracy_modifier),
+            damage = format!(
+                "{}{}",
+                self.damage_dice.to_string(),
+                latex_formatting::modifier(self.damage_modifier)
+            ),
         );
     }
 }

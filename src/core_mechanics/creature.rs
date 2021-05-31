@@ -41,6 +41,14 @@ impl Creature {
         self.name = Some(name);
     }
 
+    pub fn lowercase_name(&self) -> Option<String> {
+        if let Some(n) = &self.name {
+            return Some(n.to_lowercase());
+        } else {
+            return None;
+        }
+    }
+
     pub fn set_size(&mut self, size: sizes::Size) {
         self.size = size;
     }

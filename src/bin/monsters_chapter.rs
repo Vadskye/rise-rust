@@ -15,16 +15,8 @@ fn main() {
     //     .get_matches();
     // let output = matches.value_of("output").unwrap();
 
-    let entries = monster_entry::generate_monster_entries();
-    for creature_type in vec![creature_type::CreatureType::Animal] {
-        let mut entries: Vec<&monster_entry::MonsterEntry> =
-            entries[&creature_type].iter().collect();
-        entries.sort_by(|a, b| a.name().unwrap_or("").cmp(b.name().unwrap_or("")));
-        let entries_latex: Vec<String> = entries.iter().map(|e| e.to_latex()).collect();
-        println!(
-            "{}\n{}",
-            creature_type.latex_section_header(),
-            entries_latex.join("\n")
-        );
-    }
+    let mut entries = monster_entry::generate_monster_entries();
+    entries.sort_by(|a, b| a.name().unwrap_or("").cmp(b.name().unwrap_or("")));
+    let entries_latex: Vec<String> = entries.iter().map(|e| e.to_latex()).collect();
+    println!("{}", entries_latex.join("\n"));
 }
