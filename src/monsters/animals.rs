@@ -14,7 +14,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             alignment: "Always true neutral",
             attributes: vec![2, 2, 1, -8, 1, -1],
             challenge_rating: ChallengeRating::One,
-            creature_type: &Animal,
+            creature_type: Animal,
             description: None,
             knowledge: vec![
                 (0, "
@@ -42,7 +42,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             alignment: "Always true neutral",
             attributes: vec![-2, 2, 2, -8, 1, -1],
             challenge_rating: ChallengeRating::One,
-            creature_type: &Animal,
+            creature_type: Animal,
             description: None,
             knowledge: vec![
                 (0, "
@@ -70,7 +70,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                     alignment: "Always true neutral",
                     attributes: vec![3, 0, 3, -8, 0, -1],
                     challenge_rating: ChallengeRating::Three,
-                    creature_type: &Animal,
+                    creature_type: Animal,
                     description: None,
                     knowledge: vec![
                         (0, "
@@ -88,7 +88,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                     alignment: "Always true neutral",
                     attributes: vec![4, 0, 3, -8, 0, -1],
                     challenge_rating: ChallengeRating::Three,
-                    creature_type: &Animal,
+                    creature_type: Animal,
                     description: Some("A brown bear's statistics can be used for almost any big bear, including a grizzly bear."),
                     knowledge: vec![
                         (0, "
@@ -110,7 +110,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             alignment: "Always true neutral",
             attributes: vec![-7, 3, -1, -7, 1, -2],
             challenge_rating: ChallengeRating::Half,
-            creature_type: &Animal,
+            creature_type: Animal,
             description: None,
             knowledge: vec![],
             level: 1,

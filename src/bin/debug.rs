@@ -22,7 +22,7 @@ fn main() {
 
     let mut bear = monsters::Monster::new(
         monsters::challenge_rating::ChallengeRating::Three,
-        monsters::creature_type::ANIMAL,
+        monsters::creature_type::CreatureType::Animal,
         5,
     );
     bear.set_base_attribute(attributes::STR, 4);

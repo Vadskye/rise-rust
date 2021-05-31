@@ -12,11 +12,6 @@ pub enum CreatureType {
     Undead,
 }
 
-pub static ABERRATION: &CreatureType = &CreatureType::Aberration;
-pub static ANIMAL: &CreatureType = &CreatureType::Animal;
-pub static PLANEFORGED: &CreatureType = &CreatureType::Planeforged;
-pub static UNDEAD: &CreatureType = &CreatureType::Undead;
-
 impl CreatureType {
     pub fn defense_bonus(&self, defense: &'static Defense) -> i8 {
         match self {
@@ -47,12 +42,12 @@ impl CreatureType {
         }
     }
 
-    pub fn from_string(text: String) -> &'static Self {
+    pub fn from_string(text: String) -> Self {
         match text.as_str() {
-            "aberration" => ABERRATION,
-            "animal" => ANIMAL,
-            "planeforged" => PLANEFORGED,
-            "undead" => UNDEAD,
+            "aberration" => CreatureType::Aberration,
+            "animal" => CreatureType::Animal,
+            "planeforged" => CreatureType::Planeforged,
+            "undead" => CreatureType::Undead,
             _ => panic!("Invalid creature type '{}'", text),
         }
     }

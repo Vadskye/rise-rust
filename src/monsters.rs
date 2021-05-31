@@ -18,7 +18,7 @@ pub struct Monster {
     alignment: Option<String>,
     challenge_rating: challenge_rating::ChallengeRating,
     creature: creature::Creature,
-    creature_type: &'static creature_type::CreatureType,
+    creature_type: creature_type::CreatureType,
     description: Option<String>,
     knowledge: Option<HashMap<i8, String>>,
     movement_modes: Vec<movement_modes::MovementMode>,
@@ -28,7 +28,7 @@ pub struct FullMonsterDefinition {
     alignment: &'static str,
     attributes: Vec<i8>,
     challenge_rating: challenge_rating::ChallengeRating,
-    creature_type: &'static creature_type::CreatureType,
+    creature_type: creature_type::CreatureType,
     description: Option<&'static str>,
     knowledge: Vec<(i8, &'static str)>,
     level: i8,
@@ -41,7 +41,7 @@ pub struct FullMonsterDefinition {
 impl Monster {
     pub fn new(
         challenge_rating: challenge_rating::ChallengeRating,
-        creature_type: &'static creature_type::CreatureType,
+        creature_type: creature_type::CreatureType,
         level: i8,
     ) -> Monster {
         return Monster {
@@ -100,7 +100,7 @@ impl Monster {
         challenge_rating: challenge_rating::ChallengeRating,
         level: i8,
         starting_attribute: Option<i8>,
-        creature_type: Option<&'static creature_type::CreatureType>,
+        creature_type: Option<creature_type::CreatureType>,
     ) -> Monster {
         let mut creature = creature::Creature::new(level);
         creature.add_weapon(weapons::Weapon::Slam);
@@ -115,7 +115,7 @@ impl Monster {
         let creature_type = if let Some(a) = creature_type {
             a
         } else {
-            creature_type::PLANEFORGED
+            creature_type::CreatureType::Planeforged
         };
         return Monster {
             alignment: None,
