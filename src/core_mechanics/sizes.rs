@@ -20,8 +20,8 @@ impl Size {
             Size::Medium => 30,
             Size::Large => 40,
             Size::Huge => 50,
-            Size::Gargantuan => 60,
-            Size::Colossal => 70,
+            Size::Gargantuan => 70,
+            Size::Colossal => 100,
         }
     }
 

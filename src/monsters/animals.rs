@@ -121,5 +121,48 @@ pub fn animals() -> Vec<MonsterEntry> {
         },
     )));
 
+    monsters.push(MonsterEntry::MonsterGroup(
+        monster_group::MonsterGroup::new(
+            "Dogs",
+            vec![
+                Monster::fully_defined(
+                    FullMonsterDefinition {
+                        alignment: "Always true neutral",
+                        attributes: vec![0, 1, 0, -7, 1, -1],
+                        challenge_rating: ChallengeRating::One,
+                        creature_type: Animal,
+                        description: None,
+                        knowledge: vec![],
+                        level: 1,
+                        movement_modes: None,
+                        name: "Wild dog",
+                        size: Size::Medium,
+                        weapons: vec![weapons::Weapon::Bite],
+                    },
+                ),
+                Monster::fully_defined(
+                    FullMonsterDefinition {
+                        alignment: "Always true neutral",
+                        attributes: vec![1, 1, 1, -7, 1, -1],
+                        challenge_rating: ChallengeRating::One,
+                        creature_type: Animal,
+                        description: None,
+                        knowledge: vec![
+                            (0, "
+                                A riding dog is bred for speed and endurance.
+                                Riding dogs are sometimes used as battle mounts by halflings and gnomes.
+                            "),
+                        ],
+                        level: 2,
+                        movement_modes: None,
+                        name: "Riding dog",
+                        size: Size::Medium,
+                        weapons: vec![weapons::Weapon::Bite],
+                    },
+                ),
+            ],
+        ),
+    ));
+
     return monsters;
 }

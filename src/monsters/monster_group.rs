@@ -16,6 +16,8 @@ impl MonsterGroup {
     }
 
     pub fn to_latex(&self) -> String {
+        let mut monsters: Vec<&Monster> = self.monsters.iter().collect();
+        monsters.sort_by(|a, b| a.creature.name.cmp(&b.creature.name));
         // TODO: include general description and/or knowledge checks
         return latex_formatting::latexify(format!(
             "
@@ -23,8 +25,7 @@ impl MonsterGroup {
                 {monsters}
             ",
             name = titlecase(self.name.as_str()),
-            monsters = self
-                .monsters
+            monsters = monsters
                 .iter()
                 .map(|m| m.to_section(Some("monsubsubsection")))
                 .collect::<Vec<String>>()
