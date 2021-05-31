@@ -1,7 +1,7 @@
 use rise::core_mechanics::attributes::{self, HasAttributes};
+use rise::equipment;
 use rise::equipment::HasEquipment;
 use rise::monsters;
-use rise::equipment;
 
 fn main() {
     // let barbarian = classes::Class::Barbarian;
@@ -21,14 +21,14 @@ fn main() {
     // println!("{}", barbarian.to_latex());
 
     let mut bear = monsters::Monster::new(
-        monsters::challenge_rating::CR3,
+        monsters::challenge_rating::ChallengeRating::Three,
         monsters::creature_type::ANIMAL,
         5,
     );
     bear.set_base_attribute(attributes::STR, 4);
     bear.add_weapon(equipment::weapons::Weapon::Bite);
-    println!("{}", bear.to_latex());
+    println!("{}", bear.to_section(None));
     bear.set_level(6);
     bear.add_weapon(equipment::weapons::Weapon::Claw);
-    println!("{}", bear.to_latex());
+    println!("{}", bear.to_section(None));
 }

@@ -6,12 +6,6 @@ pub enum ChallengeRating {
     Four,
 }
 
-pub static CRHALF: &ChallengeRating = &ChallengeRating::Half;
-pub static CR1: &ChallengeRating = &ChallengeRating::One;
-pub static CR2: &ChallengeRating = &ChallengeRating::Two;
-pub static CR3: &ChallengeRating = &ChallengeRating::Three;
-pub static CR4: &ChallengeRating = &ChallengeRating::Four;
-
 impl ChallengeRating {
     pub fn accuracy_bonus(&self) -> i8 {
         match self {
@@ -75,13 +69,13 @@ impl ChallengeRating {
         }
     }
 
-    pub fn from_string(text: String) -> &'static Self {
+    pub fn from_string(text: String) -> Self {
         match text.as_str() {
-            "0.5" => CRHALF,
-            "1" => CR1,
-            "2" => CR2,
-            "3" => CR3,
-            "4" => CR4,
+            "0.5" => ChallengeRating::Half,
+            "1" => ChallengeRating::One,
+            "2" => ChallengeRating::Two,
+            "3" => ChallengeRating::Three,
+            "4" => ChallengeRating::Four,
             _ => panic!("Invalid challenge rating '{}'", text),
         }
     }

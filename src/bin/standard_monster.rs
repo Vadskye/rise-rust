@@ -44,5 +44,5 @@ fn main() {
         Some(starting_attribute.parse::<i8>().unwrap()),
         Some(creature_type::CreatureType::from_string(creature_type.to_string())),
     );
-    println!("{}", monster.to_latex());
+    println!("{}", monster.to_section(None));
 }

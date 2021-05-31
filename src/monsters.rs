@@ -16,7 +16,7 @@ use std::collections::HashMap;
 
 pub struct Monster {
     alignment: Option<String>,
-    challenge_rating: &'static challenge_rating::ChallengeRating,
+    challenge_rating: challenge_rating::ChallengeRating,
     creature: creature::Creature,
     creature_type: &'static creature_type::CreatureType,
     description: Option<String>,
@@ -27,7 +27,7 @@ pub struct Monster {
 pub struct FullMonsterDefinition {
     alignment: &'static str,
     attributes: Vec<i8>,
-    challenge_rating: &'static challenge_rating::ChallengeRating,
+    challenge_rating: challenge_rating::ChallengeRating,
     creature_type: &'static creature_type::CreatureType,
     description: Option<&'static str>,
     knowledge: Vec<(i8, &'static str)>,
@@ -40,7 +40,7 @@ pub struct FullMonsterDefinition {
 
 impl Monster {
     pub fn new(
-        challenge_rating: &'static challenge_rating::ChallengeRating,
+        challenge_rating: challenge_rating::ChallengeRating,
         creature_type: &'static creature_type::CreatureType,
         level: i8,
     ) -> Monster {
@@ -97,7 +97,7 @@ impl Monster {
     }
 
     pub fn standard_monster(
-        challenge_rating: &'static challenge_rating::ChallengeRating,
+        challenge_rating: challenge_rating::ChallengeRating,
         level: i8,
         starting_attribute: Option<i8>,
         creature_type: Option<&'static creature_type::CreatureType>,
