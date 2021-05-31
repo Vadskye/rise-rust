@@ -9,7 +9,7 @@ use crate::core_mechanics::attributes::{self, Attribute, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::{self, HasDefenses};
 use crate::core_mechanics::resources::{self, HasResources};
-use crate::core_mechanics::{attacks, creature, movement_modes, HasCreatureMechanics, sizes};
+use crate::core_mechanics::{attacks, creature, movement_modes, sizes, HasCreatureMechanics};
 use crate::equipment::{weapons, HasEquipment};
 use crate::latex_formatting;
 use std::collections::HashMap;
@@ -172,10 +172,20 @@ impl HasAttacks for Monster {
         // point is that the strike upgrades are trying to keep pace with the automatic spell rank
         // upgrades.
         let special_attack_modifier = (self.creature.level - 1) / 6;
+
+        // TODO: this logic doesn't take into account some non-bite handless natural weapons
+        let weapons = self.creature.weapons();
+        let no_hands_modifier = if weapons.len() == 1 && weapons[0].name() == "bite" {
+            1
+        } else {
+            0
+        };
+
         return self.creature.calc_damage_increments(is_strike)
             + self.challenge_rating.damage_increments()
             + level_modifier
-            + special_attack_modifier;
+            + special_attack_modifier
+            + no_hands_modifier;
     }
 
     fn calc_power(&self, is_magical: bool) -> i8 {
@@ -361,14 +371,15 @@ impl Monster {
 
     fn latex_knowledge(&self) -> String {
         if let Some(ref knowledge) = self.knowledge {
-            return knowledge
+            let knowledge_keys = knowledge.keys().collect::<Vec<&i8>>();
+            return knowledge_keys
                 .iter()
-                .map(|(difficulty, text)| {
+                .map(|difficulty| {
                     return format!(
                         "\\parhead<Knowledge ({subskill}) {difficulty}> {text}",
                         subskill = self.creature_type.knowledge(), // TODO
                         difficulty = difficulty,
-                        text = text,
+                        text = knowledge[difficulty],
                     );
                 })
                 .collect::<Vec<String>>()
