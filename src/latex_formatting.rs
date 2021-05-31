@@ -1,9 +1,23 @@
+use regex::Regex;
+
 pub fn latexify(text: String) -> String {
-    return text
+    let text = text
         .replace("<", "{")
         .replace(">", "}")
+        .replace(" + ", "\\add")
         // TODO: this is an incredibly stupid hack
         .replace("}{\\lcol}", ">{\\lcol}");
+
+    let plus = Regex::new(r"\+(\d)").unwrap();
+    let text = plus.replace_all(text.as_str(), r"\plus$1");
+
+    let sub = Regex::new(r" - (\d)").unwrap();
+    let text = sub.replace_all(text.as_ref(), r"\sub $1");
+
+    let minus = Regex::new(r"-(\d)").unwrap();
+    let text = minus.replace_all(text.as_ref(), r"\minus$1");
+
+    return text.to_string();
 }
 
 pub fn join_string_list(strings: &[&str]) -> Option<String> {
@@ -34,6 +48,6 @@ pub fn modifier(val: i8) -> String {
     if val >= 0 {
         return format!("+{}", val)
     } else {
-        return format!("-{}", val);
+        return format!("{}", val);
     }
 }
