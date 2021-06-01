@@ -1,28 +1,45 @@
-use crate::core_mechanics::{damage_dice, defenses};
-use crate::equipment::HasEquipment;
+use crate::core_mechanics::{damage_dice, defenses, HasCreatureMechanics};
+use crate::equipment::{HasEquipment, weapons};
 use crate::latex_formatting;
 
-pub struct Attack {
-    pub accuracy_modifier: i8,
-    pub damage_dice: damage_dice::DamageDice,
-    pub damage_modifier: i8,
-    // TODO: support multiple defenses?
-    pub defense: &'static defenses::Defense,
-    pub name: String,
+pub struct StrikeAttackDefinition {
+    accuracy_modifier: i8,
+    damage_dice_increments: i8,
+    damage_modifier: i8,
+    defense: &'static defenses::Defense,
+    is_magical: bool,
+    name: String,
+    weapon: weapons::Weapon,
 }
 
-pub fn calc_attacks<T: HasAttacks + HasEquipment>(creature: &T) -> Vec<Attack> {
+pub struct StandaloneAttackDefinition {
+    accuracy_modifier: i8,
+    damage_dice: damage_dice::DamageDice,
+    damage_modifier: i8,
+    defense: &'static defenses::Defense,
+    is_magical: bool,
+    name: String,
+}
+
+pub enum Attack {
+    StrikeAttack(StrikeAttackDefinition),
+    StandaloneAttack(StandaloneAttackDefinition),
+}
+
+pub fn calc_strikes<T: HasAttacks + HasEquipment>(creature: &T) -> Vec<Attack> {
     // TODO: combine maneuvers with weapons and handle non-weapon attacks
     return creature
         .weapons()
         .iter()
-        .map(|w| Attack {
-            accuracy_modifier: w.accuracy() + creature.calc_accuracy(),
-            damage_dice: w.damage_dice().add(creature.calc_damage_increments(true)),
-            damage_modifier: creature.calc_power(false),
+        .map(|w| Attack::StrikeAttack(StrikeAttackDefinition {
+            accuracy_modifier: 0,
+            damage_dice_increments: 0,
+            damage_modifier: 0,
             defense: defenses::ARMOR,
+            is_magical: false,
             name: w.name().to_string(),
-        })
+            weapon: *w,
+        }))
         .collect();
 }
 
@@ -34,19 +51,60 @@ pub trait HasAttacks {
 }
 
 impl Attack {
-    pub fn latex_shorthand(&self) -> String {
+    pub fn latex_shorthand<T: HasCreatureMechanics>(&self, creature: &T) -> String {
         return format!(
             "{name} {accuracy} ({damage_dice}{damage_modifier})",
-            name = latex_formatting::uppercase_first_letter(self.name.as_str()),
-            accuracy = latex_formatting::modifier(self.accuracy_modifier),
-            damage_dice = self.damage_dice.to_string(),
-            damage_modifier = latex_formatting::modifier(self.damage_modifier)
+            name = latex_formatting::uppercase_first_letter(self.name()),
+            accuracy = latex_formatting::modifier(self.calc_accuracy(creature)),
+            damage_dice = self.calc_damage_dice(creature).to_string(),
+            damage_modifier = latex_formatting::modifier(self.calc_damage_modifier(creature))
         );
     }
 
-    pub fn latex_ability_block(&self) -> String {
+    pub fn name(&self) -> &str {
+        match self {
+            Attack::StrikeAttack(d) => d.name.as_str(),
+            Attack::StandaloneAttack(d) => d.name.as_str(),
+        }
+    }
+
+    pub fn defense(&self) -> &'static defenses::Defense {
+        match self {
+            Attack::StrikeAttack(d) => d.defense,
+            Attack::StandaloneAttack(d) => d.defense,
+        }
+    }
+}
+
+// Calculation functions
+impl Attack {
+    pub fn calc_accuracy<T: HasCreatureMechanics>(&self, creature: &T) -> i8 {
+        match self {
+            Attack::StrikeAttack(d) => d.accuracy_modifier + d.weapon.accuracy() + creature.calc_accuracy(),
+            Attack::StandaloneAttack(d) => d.accuracy_modifier + creature.calc_accuracy(),
+        }
+    }
+
+    pub fn calc_damage_dice<T: HasCreatureMechanics>(&self, creature: &T) -> damage_dice::DamageDice {
+        match self {
+            Attack::StrikeAttack(d) => d.weapon.damage_dice().add(d.damage_dice_increments + creature.calc_damage_increments(true)),
+            Attack::StandaloneAttack(d) => d.damage_dice.add(creature.calc_damage_increments(false)),
+        }
+    }
+
+    pub fn calc_damage_modifier<T: HasCreatureMechanics>(&self, creature: &T) -> i8 {
+        match self {
+            Attack::StrikeAttack(d) => d.damage_modifier + creature.calc_power(d.is_magical),
+            Attack::StandaloneAttack(d) => d.damage_modifier + creature.calc_power(d.is_magical),
+        }
+    }
+}
+
+// LaTeX generation functions
+impl Attack{
+    pub fn latex_ability_block<T: HasCreatureMechanics>(&self, creature: &T) -> String {
         let ability_components: Vec<Option<String>> =
-            vec![Some(self.latex_type_prefix()), Some(self.latex_effect())];
+            vec![Some(self.latex_type_prefix()), Some(self.latex_effect(creature))];
         let ability_components = ability_components
             .iter()
             .filter(|c| c.is_some())
@@ -60,7 +118,7 @@ impl Attack {
             ",
             ability_environment = "freeability", // TODO
             ability_components = ability_components.join("\n\\rankline\n\n\\noindent "),
-            name = latex_formatting::uppercase_first_letter(self.name.as_str()),
+            name = latex_formatting::uppercase_first_letter(self.name()),
         );
     }
 
@@ -69,17 +127,17 @@ impl Attack {
         String::from("Instant")
     }
 
-    fn latex_effect(&self) -> String {
+    fn latex_effect<T: HasCreatureMechanics>(&self, creature: &T) -> String {
         return format!(
             "
                 The $name makes a strike with a {accuracy} accuracy bonus.
                 \\hit {damage} damage.
             ",
-            accuracy = latex_formatting::modifier(self.accuracy_modifier),
+            accuracy = latex_formatting::modifier(self.calc_accuracy(creature)),
             damage = format!(
                 "{}{}",
-                self.damage_dice.to_string(),
-                latex_formatting::modifier(self.damage_modifier)
+                self.calc_damage_dice(creature).to_string(),
+                latex_formatting::modifier(self.calc_damage_modifier(creature))
             ),
         );
     }

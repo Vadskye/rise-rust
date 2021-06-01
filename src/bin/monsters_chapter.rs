@@ -1,5 +1,4 @@
 // use clap::{App, Arg};
-use rise::monsters::creature_type;
 use rise::monsters::monster_entry;
 
 fn main() {

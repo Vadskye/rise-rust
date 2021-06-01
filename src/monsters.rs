@@ -388,9 +388,9 @@ impl Monster {
     }
 
     fn latex_abilities(&self) -> String {
-        return attacks::calc_attacks(self)
+        return attacks::calc_strikes(self)
                 .iter()
-                .map(|a| a.latex_ability_block())
+                .map(|a| a.latex_ability_block(self))
                 .collect::<Vec<String>>()
                 .join("\\par ");
     }

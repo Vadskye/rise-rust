@@ -1,4 +1,4 @@
-use crate::monsters::{animals, creature_type, monster_group, Monster};
+use crate::monsters::{animals, monster_group, Monster};
 
 pub fn generate_monster_entries() -> Vec<MonsterEntry> {
     let mut entries: Vec<MonsterEntry> = vec![];

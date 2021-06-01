@@ -13,9 +13,9 @@ pub fn format_creature<T: HasCreatureMechanics>(
             {attacks}
             Attr: {attributes}
         ",
-        attacks = attacks::calc_attacks(creature)
+        attacks = attacks::calc_strikes(creature)
             .iter()
-            .map(|a| a.latex_shorthand())
+            .map(|a| a.latex_shorthand(creature))
             .collect::<Vec<String>>()
             .join("; "),
         attributes = format_creature_attributes(creature).join(", "),

@@ -1,6 +1,7 @@
 use crate::core_mechanics::damage_dice::{self, D10, D6, D8};
 use std::fmt;
 
+#[derive(Copy, Clone)]
 pub enum Weapon {
     ArmorSpikes,
     Battleaxe,
