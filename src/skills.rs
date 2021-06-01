@@ -104,11 +104,15 @@ impl Skill {
     pub fn titled_name_with_subskills(&self) -> String {
         match self {
             Self::Knowledge(subskills) => {
-                let subskill_names: Vec<&str> = subskills.iter().map(|subskill| subskill.name()).collect();
-                return format!(
-                    "Knowledge ({})",
-                    subskill_names.join(", ")
-                );
+                if subskills.len() == KnowledgeSubskill::all().len() {
+                    return String::from("Knowledge (all kinds, taken individually)");
+                } else {
+                    let subskill_names: Vec<&str> = subskills.iter().map(|subskill| subskill.name()).collect();
+                    return format!(
+                        "Knowledge ({})",
+                        subskill_names.join(", ")
+                    );
+                }
             },
             _ => titlecase(self.name()),
         }
@@ -133,6 +137,19 @@ pub enum KnowledgeSubskill {
 }
 
 impl KnowledgeSubskill {
+    pub fn all() -> Vec<KnowledgeSubskill> {
+        return vec![
+            KnowledgeSubskill::Arcana,
+            KnowledgeSubskill::Dungeoneering,
+            KnowledgeSubskill::Engineering,
+            KnowledgeSubskill::Geography,
+            KnowledgeSubskill::Local,
+            KnowledgeSubskill::Nature,
+            KnowledgeSubskill::Planes,
+            KnowledgeSubskill::Religion,
+        ];
+    }
+
     pub fn name(&self) -> &str {
         match self {
             Self::Arcana => "arcana",

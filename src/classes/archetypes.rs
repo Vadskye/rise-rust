@@ -1,5 +1,6 @@
 use crate::classes::Class;
 use crate::classes::archetype_rank_abilities;
+use titlecase::titlecase;
 
 pub enum ClassArchetype {
     // Barbarian
@@ -104,6 +105,33 @@ impl ClassArchetype {
             Self::JackOfAllTrades => "This archetype improves your skills.",
             Self::SuaveScoundrel => "This archetype improves your deceptiveness and helps you make use of that talent in combat.",
         }
+    }
+}
+
+// LaTeX generation
+impl ClassArchetype {
+    pub fn latex_description(
+        &self,
+        class_shorthand: &str,
+    ) -> String {
+        return format!(
+            "
+                \\newpage
+                \\subsection<{archetype_name}>
+                {short_description}
+
+                {rank_abilities}
+            ",
+            archetype_name = titlecase(self.name()),
+            rank_abilities = self
+                .rank_abilities()
+                .iter()
+                .flatten()
+                .map(|a| a.latex_class_feature(class_shorthand).trim().to_string())
+                .collect::<Vec<String>>()
+                .join("\n\n"),
+            short_description = self.short_description(),
+        );
     }
 }
 

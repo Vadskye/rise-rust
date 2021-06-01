@@ -146,7 +146,7 @@ impl Attack {
                 \\end<{ability_environment}>
             ",
             ability_environment = "freeability", // TODO
-            ability_components = ability_components.join("\n\\rankline\n\n\\noindent "),
+            ability_components = ability_components.join("\n\\rankline "),
             ability_type = "Instant", // TODO
             name = latex_formatting::uppercase_first_letter(self.name()),
         );

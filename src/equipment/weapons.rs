@@ -14,6 +14,7 @@ pub enum Weapon {
     MonsterBite,
     MonsterClaws,
     Sap,
+    Scimitar,
     Sickle,
     Slam,
 }
@@ -32,6 +33,7 @@ impl Weapon {
             Self::MonsterBite => 0,
             Self::MonsterClaws => 4,
             Self::Sap => 2,
+            Self::Scimitar => 0,
             Self::Sickle => 1,
             Self::Slam => 0,
         }
@@ -50,6 +52,7 @@ impl Weapon {
             Self::MonsterBite => D10,
             Self::MonsterClaws => D6,
             Self::Sap => D6,
+            Self::Scimitar => D8,
             Self::Sickle => D6,
             Self::Slam => D10,
         };
@@ -69,6 +72,7 @@ impl Weapon {
             Self::MonsterBite => "bite",
             Self::MonsterClaws => "claws",
             Self::Sap => "sap",
+            Self::Scimitar => "scimitar",
             Self::Sickle => "sickle",
             Self::Slam => "slam",
         }
@@ -93,7 +97,10 @@ pub enum WeaponGroup {
     Axes,
     Blades,
     Bows,
+    Crossbows,
     Clublike,
+    Monk,
+    Thrown,
 }
 
 // impl WeaponGroup {

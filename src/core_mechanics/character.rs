@@ -8,12 +8,12 @@ use crate::core_mechanics::{creature, defenses, latex, resources, HasCreatureMec
 use crate::equipment::{weapons, HasEquipment};
 
 pub struct Character {
-    class: &'static Class,
+    class: Class,
     creature: creature::Creature,
 }
 
 impl Character {
-    pub fn new(class: &'static Class, level: i8) -> Character {
+    pub fn new(class: Class, level: i8) -> Character {
         return Character {
             class,
             creature: creature::Creature::new(level),

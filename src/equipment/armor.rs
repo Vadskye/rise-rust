@@ -7,6 +7,10 @@ pub enum ArmorUsageClass {
 }
 
 impl ArmorUsageClass {
+    pub fn all() -> Vec<Self> {
+        return vec![ArmorUsageClass::Light, ArmorUsageClass::Medium, ArmorUsageClass::Heavy];
+    }
+
     pub fn name(&self) -> &str {
         match self {
             Self::Light => "light",
