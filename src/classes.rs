@@ -669,8 +669,7 @@ impl Class {
     // TODO: organize this in a way that makes sense
     fn latex_suffix(&self) -> &str {
         match self {
-            Self::Cleric => {
-                r"
+            Self::Cleric => r"
                 \newpage
                 \subsection{Cleric Domain Abilities}\label{Cleric Domain Abilities}
                     These domain abilities can be granted by the \textit{domain influence} cleric archetype.
@@ -1033,8 +1032,17 @@ impl Class {
                 \subsection{Ex-Clerics}
                     If you grossly violate the code of conduct required by your deity, you lose all spells and magical cleric class abilities.
                     You cannot regain those abilities until you atone for your transgressions to your deity.
-            "
-            }
+            ",
+            Self::Druid => r"
+                \subsection{Ex-Druids}
+                    A druid who ceases to revere nature or who changes to a prohibited alignment loses all \glossterm{magical} druid class abilities.
+                    They cannot thereafter gain levels as a druid until they atone for their transgressions.
+            ",
+            Self::Paladin => r"
+                \subsection{Ex-Paladins}
+                    If you cease to follow your devoted alignment, you lose all \glossterm{magical} paladin class abilities.
+                    If your atone for your misdeeds and resume the service of your devoted alignment, you can regain your abilities.
+            ",
             _ => "",
         }
     }

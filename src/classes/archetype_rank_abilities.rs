@@ -52,11 +52,59 @@ pub fn archetype_rank_abilities(archetype: &ClassArchetype) -> Vec<RankAbility> 
         ClassArchetype::DomainInfluence => cleric::domain_influence(),
         ClassArchetype::Healer => cleric::healer(),
         ClassArchetype::Preacher => cleric::preacher(),
+        // Druid
+        ClassArchetype::Elementalist => druid::elementalist(),
+        ClassArchetype::NatureMagic => druid::nature_magic(),
+        ClassArchetype::NatureSpellMastery => druid::nature_spell_mastery(),
+        ClassArchetype::Shifter => druid::shifter(),
+        ClassArchetype::Wildspeaker => druid::wildspeaker(),
+        // Fighter
+        ClassArchetype::CombatDiscipline => fighter::combat_discipline(),
+        ClassArchetype::EquipmentTraining => fighter::equipment_training(),
+        ClassArchetype::MartialMastery => fighter::martial_mastery(),
+        ClassArchetype::Sentinel => fighter::sentinel(),
+        ClassArchetype::Tactician => fighter::tactician(),
+        // Monk
+        ClassArchetype::Airdancer => monk::airdancer(),
+        ClassArchetype::EsotericWarrior => monk::esoteric_warrior(),
+        ClassArchetype::Ki => monk::ki(),
+        ClassArchetype::PerfectedForm => monk::perfected_form(),
+        ClassArchetype::TranscendentSage => monk::transcendent_sage(),
+        // Paladin
+        ClassArchetype::DevotedParagon => paladin::devoted_paragon(),
+        ClassArchetype::PaladinDivineMagic => paladin::divine_magic(),
+        ClassArchetype::DivineSpellExpertise => paladin::divine_spell_expertise(),
+        ClassArchetype::StalwartGuardian => paladin::stalwart_guardian(),
+        ClassArchetype::ZealousWarrior => paladin::zealous_warrior(),
+        // Ranger
+        ClassArchetype::Beastmaster => ranger::beastmaster(),
+        ClassArchetype::BoundaryWarden => ranger::boundary_warden(),
+        ClassArchetype::Huntmaster => ranger::huntmaster(),
+        ClassArchetype::Scout => ranger::scout(),
+        ClassArchetype::WildernessWarrior => ranger::wilderness_warrior(),
         // Rogue
         ClassArchetype::Assassin => rogue::assassin(),
         ClassArchetype::BardicMusic => rogue::bardic_music(),
         ClassArchetype::CombatTrickster => rogue::combat_trickster(),
         ClassArchetype::JackOfAllTrades => rogue::jack_of_all_trades(),
         ClassArchetype::SuaveScoundrel => rogue::suave_scoundrel(),
+        // Sorcerer
+        ClassArchetype::SorcererArcaneMagic => sorcerer::arcane_magic(),
+        ClassArchetype::SorcererArcaneSpellMastery => sorcerer::arcane_spell_mastery(),
+        ClassArchetype::DraconicMagic => sorcerer::draconic_magic(),
+        ClassArchetype::InnateArcanist => sorcerer::innate_arcanist(),
+        ClassArchetype::WildMagic => sorcerer::wild_magic(),
+        // Warlock
+        ClassArchetype::BlessingsOfTheAbyss => warlock::blessings_of_the_abyss(),
+        ClassArchetype::KeeperOfForbiddenKnowledge => warlock::keeper_of_forbidden_knowledge(),
+        ClassArchetype::PactMagic => warlock::pact_magic(),
+        ClassArchetype::PactSpellMastery => warlock::pact_spell_mastery(),
+        ClassArchetype::SoulkeepersChosen => warlock::soulkeepers_chosen(),
+        // Wizard
+        ClassArchetype::Alchemist => wizard::alchemist(),
+        ClassArchetype::WizardArcaneMagic => wizard::arcane_magic(),
+        ClassArchetype::WizardArcaneSpellMastery => wizard::arcane_spell_mastery(),
+        ClassArchetype::ArcaneScholar => wizard::arcane_scholar(),
+        ClassArchetype::SchoolSpecialist => wizard::school_specialist(),
     }
 }

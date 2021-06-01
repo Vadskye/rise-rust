@@ -337,7 +337,7 @@ pub fn primal_warrior<'a>() -> Vec<RankAbility<'a>> {
             name: "Greater Primal Might",
             rank: 6,
             description: r"
-                The bonuses from your \textit{primal might} ability increases to \plus2.
+                The bonuses from your \textit{primal might} ability increase to \plus2.
             ",
         },
         RankAbility {
