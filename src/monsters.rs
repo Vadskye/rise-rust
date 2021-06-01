@@ -258,7 +258,7 @@ impl HasResources for Monster {
     }
 }
 
-// No need for explicit funtions here - it's handled by the above functions
+// No need for explicit functions here - it's handled by the above functions
 impl HasCreatureMechanics for Monster {}
 
 // LaTeX conversion

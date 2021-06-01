@@ -131,29 +131,32 @@ impl Attack {
 impl Attack {
     pub fn latex_ability_block<T: HasCreatureMechanics>(&self, creature: &T) -> String {
         let ability_components: Vec<Option<String>> = vec![
-            Some(self.latex_type_prefix()),
+            Some(self.latex_tags()),
             Some(self.latex_effect(creature)),
         ];
         let ability_components = ability_components
             .iter()
             .filter(|c| c.is_some())
-            .map(|c| c.as_deref().unwrap())
+            .map(|c| c.as_deref().unwrap().trim())
             .collect::<Vec<&str>>();
         return format!(
             "
-                \\begin<{ability_environment}><{name}>
+                \\begin<{ability_environment}><{name}>[{ability_type}]
                     {ability_components}
                 \\end<{ability_environment}>
             ",
             ability_environment = "freeability", // TODO
             ability_components = ability_components.join("\n\\rankline\n\n\\noindent "),
+            ability_type = "Instant", // TODO
             name = latex_formatting::uppercase_first_letter(self.name()),
         );
     }
 
-    fn latex_type_prefix(&self) -> String {
+    // This should always return a string; even if there are no tags, we want a rankline after the
+    // top section.
+    fn latex_tags(&self) -> String {
         // TODO: take into account tags and usage time
-        String::from("Instant")
+        return String::from("");
     }
 
     fn latex_effect<T: HasCreatureMechanics>(&self, creature: &T) -> String {
