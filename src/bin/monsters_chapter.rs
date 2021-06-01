@@ -14,6 +14,7 @@ fn main() {
     //     .get_matches();
     // let output = matches.value_of("output").unwrap();
 
+    // TODO: generate table of contents entries for A-Z
     let mut entries = monster_entry::generate_monster_entries();
     entries.sort_by(|a, b| a.name().unwrap_or("").cmp(b.name().unwrap_or("")));
     let entries_latex: Vec<String> = entries.iter().map(|e| e.to_latex()).collect();

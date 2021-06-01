@@ -21,7 +21,7 @@ impl MonsterGroup {
         // TODO: include general description and/or knowledge checks
         return latex_formatting::latexify(format!(
             "
-                \\section<{name}>
+                \\section*<{name}>
                 {monsters}
             ",
             name = titlecase(self.name.as_str()),
