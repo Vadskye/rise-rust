@@ -22,6 +22,7 @@ impl MonsterGroup {
         return latex_formatting::latexify(format!(
             "
                 \\section*<{name}>
+                \\vspace<0.5em>
                 {monsters}
             ",
             name = titlecase(self.name.as_str()),
