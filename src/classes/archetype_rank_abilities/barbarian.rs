@@ -1,78 +1,78 @@
 use crate::classes::archetype_rank_abilities::RankAbility;
 
-pub fn battleforged_resilience<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn battleforged_resilience<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![RankAbility {
+        RankAbility {
             name: "Resilient Recovery",
             rank: 0,
             description: r"
                 You regain a quarter of your maximum \\glossterm{damage resistance} when you use the \textit{recover} ability (see \pcref{Recover}).
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Battle-Scarred",
             rank: 1,
             description: r"
                 You gain a bonus equal to twice your rank in this archetype to your \glossterm{damage resistance} (see \pcref{Damage Resistance}).
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Unbattered Resilience",
             rank: 2,
             description: r"
                 At the end of each round, if another creature dealt you damage that round, you regain \glossterm{damage resistance} equal to twice your rank in this archetype.
                 This cannot increase your damage resistance above half of your maximum damage resistance.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Resilient Recovery",
             rank: 3,
             description: r"
                 The damage resistance you regain with your \textit{resilient recovery} ability increases to half your maximum damage resistance.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Limitless Recovery",
             rank: 4,
             description: r"
                 You can use the \textit{recover} action an additional time before you take a \glossterm{short rest}.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Battle-Scarred",
             rank: 5,
             description: r"
                 The bonus from your \textit{battle-scarred} ability increases to three times your rank in this archetype.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Unbattered Resilience",
             rank: 6,
             description: r"
                 The amount of damage resistance you regain with your \textit{unbattered resilience} ability increases to three times your rank in this archetype.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Instant Recovery",
             rank: 7,
             description: r"
                 Once per \glossterm{short rest}, you can use the \textit{recover} ability as a \glossterm{minor action} instead of as a standard action.
             ",
-        }],
+        },
     ];
 }
 
-pub fn battlerager<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn battlerager<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![RankAbility {
+        RankAbility {
             name: "Insensible Anger",
             rank: 0,
             description: r"
                 You reduce your maximum hit points by an amount equal to your rank in this archetype.
                 In exchange, you gain a bonus to your \glossterm{damage resistance} equal to twice your rank in this archetype (minimum 1).
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Rage",
             rank: 1,
             description: r"
@@ -100,8 +100,8 @@ pub fn battlerager<'a>() -> Vec<Vec<RankAbility<'a>>> {
                     \rank{7} The power bonus increases to \plus16.
                 \end{durationability}
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Enraged Strike",
             rank: 2,
             description: r"
@@ -116,49 +116,49 @@ pub fn battlerager<'a>() -> Vec<Vec<RankAbility<'a>>> {
                     \rank{6} The damage bonus increases to \plus4d.
                 \end{instantability}
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Insensible Anger",
             rank: 3,
             description: r"
                  The damage resistance bonus from your \textit{insensible anger} ability increases to three times your rank in this archetype.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Rage",
             rank: 4,
             description: r"
                 You gain a \plus1 bonus to \glossterm{accuracy} during your \textit{rage} ability.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Immutable Anger",
             rank: 5,
             description: r"
                 You become immune to hostile \abilitytag{Emotion} effects.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Supreme Insensible Anger",
             rank: 6,
             description: r"
                  The damage resistance bonus from your \textit{insensible anger} ability increases to four times your rank in this archetype.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Supreme Rage",
             rank: 7,
             description: r"
                 When you use your \textit{rage} ability, you can grow by one \glossterm{size category}.
                 In addition, the \glossterm{accuracy} bonus from your \textit{greater rage} ability increases to \plus2.
             ",
-        }],
+        },
     ];
 }
 
-pub fn outland_savage<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn outland_savage<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![RankAbility {
+        RankAbility {
             name: "Savage Rush",
             rank: 0,
             description: r"
@@ -166,16 +166,16 @@ pub fn outland_savage<'a>() -> Vec<Vec<RankAbility<'a>>> {
         You treat those spaces as \glossterm{difficult terrain}, which causes to you to move at half speed.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Fast Movement",
             rank: 1,
             description: r"
          You gain a \plus5 foot bonus to your speed with all of your \glossterm{movement modes}.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Savage Precision",
             rank: 2,
             description: r"
@@ -183,34 +183,32 @@ pub fn outland_savage<'a>() -> Vec<Vec<RankAbility<'a>>> {
         In addition, you gain a \plus1 bonus to \glossterm{accuracy} with those abilities and with the \textit{shove} ability.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Savage Force",
             rank: 3,
             description: r"
          You gain a \plus1d bonus to your damage with all weapons.
 
                 ",
-        }],
-        vec![
-            RankAbility {
-                name: "Greater Fast Movement",
-                rank: 4,
-                description: r"
-             The speed bonus from your \textit{fast movement} ability increases to \plus10 feet.
-
-                    ",
-            },
-            RankAbility {
-                name: "Greater Savage Rush",
-                rank: 4,
-                description: r"
-         Your \textit{savage rush} ability no longer causes you to treat spaces occupied by enemies as difficult terrain.
+        },
+        RankAbility {
+            name: "Greater Fast Movement",
+            rank: 4,
+            description: r"
+         The speed bonus from your \textit{fast movement} ability increases to \plus10 feet.
 
                 ",
-            },
-        ],
-        vec![RankAbility {
+        },
+        RankAbility {
+            name: "Greater Savage Rush",
+            rank: 4,
+            description: r"
+     Your \textit{savage rush} ability no longer causes you to treat spaces occupied by enemies as difficult terrain.
+
+                ",
+        },
+        RankAbility {
             name: "Greater Savage Precision",
             rank: 5,
             description: r"
@@ -219,36 +217,36 @@ pub fn outland_savage<'a>() -> Vec<Vec<RankAbility<'a>>> {
         You may treat all weapons you wield as if they had the chosen weapon tag.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Savage Force",
             rank: 6,
             description: r"
          The bonus from your \textit{savage force} ability increases to \plus2d.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Supreme Fast Movement",
             rank: 7,
             description: r"
          The speed bonus from your \textit{fast movement} ability increases to \plus15 feet.
 
                 ",
-        }],
+        },
     ];
 }
 
-pub fn primal_warrior<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn primal_warrior<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![RankAbility {
+        RankAbility {
             name: "Primal Might",
             rank: 0,
             description: r"
                  You gain a \plus1 bonus to Strength-based \glossterm{checks} and Constitution-based \glossterm{checks}.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Combat Styles",
             rank: 1,
             description: r"
@@ -265,123 +263,111 @@ pub fn primal_warrior<'a>() -> Vec<Vec<RankAbility<'a>>> {
                     you can exchange any number of maneuvers you know for other maneuvers,
                     including maneuvers of the higher rank.
             ",
-        }],
-        vec![
-            RankAbility {
-                name: "Combat Style Rank",
-                rank: 2,
-                description: r"
-                    You become a rank 2 combat style user.
-                    This gives you access to maneuvers that require a minimum rank of 2.
-                ",
-            },
-            RankAbility {
-                name: "Primal Force",
-                rank: 2,
-                description: r"
-                    You gain a \plus1d bonus to your damage with all weapons.
-                ",
-            },
-        ],
-        vec![
-            RankAbility {
-                name: "Combat Style Rank",
-                rank: 3,
-                description: r"
-                    You become a rank 3 combat style user.
-                    This gives you access to maneuvers that require a minimum rank of 3.
-                ",
-            },
-            RankAbility {
-                name: "Glancing Strikes",
-                rank: 3,
-                description: r"
-                    Whenever you miss by 2 or less with a \glossterm{strike}, the target takes half damage from the strike.
-                    This is called a \glossterm{glancing blow}.
-                ",
-            },
-        ],
-        vec![
-            RankAbility {
-                name: "Combat Style Rank",
-                rank: 4,
-                description: r"
-                    You become a rank 4 combat style user.
-                    This gives you access to maneuvers that require a minimum rank of 4.
-                ",
-            },
-            RankAbility {
-                name: "Primal Maneuver",
-                rank: 4,
-                description: r"
-                    You learn an additional \glossterm{maneuver} from a combat style you have access to (see \pcref{Combat Styles}).
-                ",
-            },
-        ],
-        vec![
-            RankAbility {
-                name: "Combat Style Rank",
-                rank: 5,
-                description: r"
-                    You become a rank 5 combat style user.
-                    This gives you access to maneuvers that require a minimum rank of 5.
-                ",
-            },
-            RankAbility {
-                name: "Greater Primal Force",
-                rank: 5,
-                description: r"
-                    The bonus from your \textit{primal force} ability increases to \plus2d.
-                ",
-            },
-        ],
-        vec![
-            RankAbility {
-                name: "Combat Style Rank",
-                rank: 6,
-                description: r"
-                    You become a rank 6 combat style user.
-                    This gives you access to maneuvers that require a minimum rank of 6.
-                ",
-            },
-            RankAbility {
-                name: "Greater Primal Might",
-                rank: 6,
-                description: r"
-                    The bonuses from your \textit{primal might} ability increases to \plus2.
-                ",
-            },
-        ],
-        vec![
-            RankAbility {
-                name: "Combat Style Rank",
-                rank: 7,
-                description: r"
-                    You become a rank 7 combat style user.
-                    This gives you access to maneuvers that require a minimum rank of 7.
-                ",
-            },
-            RankAbility {
-                name: "Primal Maneuver",
-                rank: 7,
-                description: r"
-                    You learn an additional \glossterm{maneuver} from a combat style you have access to (see \pcref{Combat Styles}).
-                ",
-            },
-        ],
+        },
+        RankAbility {
+            name: "Combat Style Rank (2)",
+            rank: 2,
+            description: r"
+                You become a rank 2 combat style user.
+                This gives you access to maneuvers that require a minimum rank of 2.
+            ",
+        },
+        RankAbility {
+            name: "Primal Force",
+            rank: 2,
+            description: r"
+                You gain a \plus1d bonus to your damage with all weapons.
+            ",
+        },
+        RankAbility {
+            name: "Combat Style Rank (3)",
+            rank: 3,
+            description: r"
+                You become a rank 3 combat style user.
+                This gives you access to maneuvers that require a minimum rank of 3.
+            ",
+        },
+        RankAbility {
+            name: "Glancing Strikes",
+            rank: 3,
+            description: r"
+                Whenever you miss by 2 or less with a \glossterm{strike}, the target takes half damage from the strike.
+                This is called a \glossterm{glancing blow}.
+            ",
+        },
+        RankAbility {
+            name: "Combat Style Rank (4)",
+            rank: 4,
+            description: r"
+                You become a rank 4 combat style user.
+                This gives you access to maneuvers that require a minimum rank of 4.
+            ",
+        },
+        RankAbility {
+            name: "Primal Maneuver",
+            rank: 4,
+            description: r"
+                You learn an additional \glossterm{maneuver} from a combat style you have access to (see \pcref{Combat Styles}).
+            ",
+        },
+        RankAbility {
+            name: "Combat Style Rank (5)",
+            rank: 5,
+            description: r"
+                You become a rank 5 combat style user.
+                This gives you access to maneuvers that require a minimum rank of 5.
+            ",
+        },
+        RankAbility {
+            name: "Greater Primal Force",
+            rank: 5,
+            description: r"
+                The bonus from your \textit{primal force} ability increases to \plus2d.
+            ",
+        },
+        RankAbility {
+            name: "Combat Style Rank (6)",
+            rank: 6,
+            description: r"
+                You become a rank 6 combat style user.
+                This gives you access to maneuvers that require a minimum rank of 6.
+            ",
+        },
+        RankAbility {
+            name: "Greater Primal Might",
+            rank: 6,
+            description: r"
+                The bonuses from your \textit{primal might} ability increases to \plus2.
+            ",
+        },
+        RankAbility {
+            name: "Combat Style Rank (7)",
+            rank: 7,
+            description: r"
+                You become a rank 7 combat style user.
+                This gives you access to maneuvers that require a minimum rank of 7.
+            ",
+        },
+        RankAbility {
+            name: "Primal Maneuver",
+            rank: 7,
+            description: r"
+                You learn an additional \glossterm{maneuver} from a combat style you have access to (see \pcref{Combat Styles}).
+            ",
+        },
     ];
 }
 
-pub fn totemist<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn totemist<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![RankAbility {
+        RankAbility {
             name: "Animal Instincts",
             rank: 0,
             description: r"
                 You gain a \plus2 bonus to Reflex defense and \glossterm{initiative} checks.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Totem Animal",
             rank: 1,
             description: r"
@@ -404,23 +390,23 @@ pub fn totemist<'a>() -> Vec<Vec<RankAbility<'a>>> {
                 \subcf{Wolf} At the start of each round, you may choose one of your \glossterm{allies}.
                 That creature gains a \plus1 bonus to \glossterm{accuracy} during that round as long as it is adjacent to you.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Feral Explosion",
             rank: 2,
             description: r"
                 Whenever you \glossterm{explode} with an attack roll, you gain a \plus2 \glossterm{accuracy} bonus with the attack.
                 This bonus stacks with itself if you explode multiple times with the same attack roll.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Totemic Force",
             rank: 3,
             description: r"
                 You gain a \plus1d bonus to your damage with all weapons.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Totem Animal",
             rank: 4,
             description: r"
@@ -441,23 +427,23 @@ pub fn totemist<'a>() -> Vec<Vec<RankAbility<'a>>> {
 
                 \subcf{Wolf} You gain a \plus5 foot bonus to your speed with all of your \glossterm{movement modes}.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Feral Explosion",
             rank: 5,
             description: r"
                 Your first die you roll for each attack roll \glossterm{explodes} on a 9 in addition to the normal explosion on a 10.
                 This does not affect additional rolls with exploding dice.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Totemic Force",
             rank: 6,
             description: r"
                 The bonus from your \textit{totemic force} ability increases to \plus2d.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Supreme Totem Animal",
             rank: 7,
             description: r"
@@ -477,6 +463,6 @@ pub fn totemist<'a>() -> Vec<Vec<RankAbility<'a>>> {
 
                 \subcf{Wolf} The accuracy bonus increases to \plus2.
             ",
-        }],
+        },
     ];
 }

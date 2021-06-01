@@ -38,7 +38,7 @@ impl RankAbility<'_> {
     }
 }
 
-pub fn archetype_rank_abilities(archetype: &ClassArchetype) -> Vec<Vec<RankAbility>> {
+pub fn archetype_rank_abilities(archetype: &ClassArchetype) -> Vec<RankAbility> {
     match archetype {
         // Barbarian
         ClassArchetype::BattleforgedResilience => barbarian::battleforged_resilience(),

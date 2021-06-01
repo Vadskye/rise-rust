@@ -1,8 +1,8 @@
 use crate::classes::archetype_rank_abilities::RankAbility;
 
-pub fn divine_magic<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn divine_magic<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![RankAbility {
+        RankAbility {
             name: "Cantrips",
             rank: 0,
             description: r"
@@ -15,8 +15,8 @@ pub fn divine_magic<'a>() -> Vec<Vec<RankAbility<'a>>> {
                 Divine spells require \glossterm{verbal components} to cast (see \pcref{Casting Components}).
                 For details about mystic spheres and casting spells, see \pcref{Spell and Ritual Mechanics}.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Spellcasting",
             rank: 1,
             description: r"
@@ -30,96 +30,90 @@ pub fn divine_magic<'a>() -> Vec<Vec<RankAbility<'a>>> {
                     including spells of the higher rank.
                 All of those spells must be from divine mystic spheres you have access to.
             ",
-        }],
-        vec![
-            RankAbility {
-                name: "Spell Rank",
-                rank: 2,
-                description: r"
-                    You become a rank 2 divine spellcaster.
-                    This gives you access to spells that require a minimum rank of 2.
-                ",
-            },
-            RankAbility {
-                name: "Spell Knowledge",
-                rank: 2,
-                description: r"
-                    You learn an additional divine \glossterm{spell} from a \glossterm{mystic sphere} you have access to.
-                ",
-            },
-        ],
-        vec![RankAbility {
+        },
+        RankAbility {
+            name: "Spell Rank",
+            rank: 2,
+            description: r"
+                You become a rank 2 divine spellcaster.
+                This gives you access to spells that require a minimum rank of 2.
+            ",
+        },
+        RankAbility {
+            name: "Spell Knowledge",
+            rank: 2,
+            description: r"
+                You learn an additional divine \glossterm{spell} from a \glossterm{mystic sphere} you have access to.
+            ",
+        },
+        RankAbility {
             name: "Spell Rank",
             rank: 3,
             description: r"
                 You become a rank 3 divine spellcaster.
                 This gives you access to spells that require a minimum rank of 3 and can improve the effectiveness of your existing spells.
             ",
-        }],
-        vec![
-            RankAbility {
-                name: "Spell Rank",
-                rank: 4,
-                description: r"
-                    You become a rank 4 divine spellcaster.
-                    This gives you access to spells that require a minimum rank of 4 and can improve the effectiveness of your existing spells.
-                ",
-            },
-            RankAbility {
-                name: "Spell Knowledge",
-                rank: 4,
-                description: r"
-                    You learn an additional divine \glossterm{spell} from a \glossterm{mystic sphere} you have access to.
-                ",
-            },
-        ],
-        vec![RankAbility {
+        },
+        RankAbility {
+            name: "Spell Rank",
+            rank: 4,
+            description: r"
+                You become a rank 4 divine spellcaster.
+                This gives you access to spells that require a minimum rank of 4 and can improve the effectiveness of your existing spells.
+            ",
+        },
+        RankAbility {
+            name: "Spell Knowledge",
+            rank: 4,
+            description: r"
+                You learn an additional divine \glossterm{spell} from a \glossterm{mystic sphere} you have access to.
+            ",
+        },
+        RankAbility {
             name: "Spell Rank",
             rank: 5,
             description: r"
                 You become a rank 5 divine spellcaster.
                 This gives you access to spells that require a minimum rank of 5 and can improve the effectiveness of your existing spells.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Spell Rank",
             rank: 6,
             description: r"
                 You become a rank 6 divine spellcaster.
                 This gives you access to spells that require a minimum rank of 6 and can improve the effectiveness of your existing spells.
             ",
-        }],
-        vec![
-            RankAbility {
-                name: "Spell Rank",
-                rank: 7,
-                description: r"
-                    You become a rank 7 divine spellcaster.
-                    This gives you access to spells that require a minimum rank of 7 and can improve the effectiveness of your existing spells.
-                ",
-            },
-            RankAbility {
-                name: "Spell Knowledge",
-                rank: 7,
-                description: r"
-                    You learn an additional divine \glossterm{spell} from a \glossterm{mystic sphere} you have access to.
-                ",
-            },
-        ],
+        },
+        RankAbility {
+            name: "Spell Rank",
+            rank: 7,
+            description: r"
+                You become a rank 7 divine spellcaster.
+                This gives you access to spells that require a minimum rank of 7 and can improve the effectiveness of your existing spells.
+            ",
+        },
+        RankAbility {
+            name: "Spell Knowledge",
+            rank: 7,
+            description: r"
+                You learn an additional divine \glossterm{spell} from a \glossterm{mystic sphere} you have access to.
+            ",
+        },
     ];
 }
 
-pub fn divine_spell_mastery<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn divine_spell_mastery<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![RankAbility {
+        RankAbility {
             name: "Mystic Sphere",
             rank: 0,
             description: r"
          You gain access to an additional divine \glossterm{mystic sphere}, including all \glossterm{cantrips} from that sphere.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Mystic Insight",
             rank: 1,
             description: r"
@@ -144,16 +138,16 @@ pub fn divine_spell_mastery<'a>() -> Vec<Vec<RankAbility<'a>>> {
                 You can choose this ability multiple times, choosing a different spell each time.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Divine Guidance",
             rank: 2,
             description: r"
          Once per \glossterm{long rest}, you may use the \textit{desperate exertion} ability without increasing your \glossterm{fatigue level} to affect a divine spell you cast (see \pcref{Desperate Exertion}).
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Wellspring of Power",
             rank: 3,
             description: r"
@@ -161,84 +155,82 @@ pub fn divine_spell_mastery<'a>() -> Vec<Vec<RankAbility<'a>>> {
         You gain a \plus2 bonus to your \glossterm{magical} \glossterm{power}.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Mystic Insight",
             rank: 4,
             description: r"
                 You gain an additional \textit{mystic insight} ability.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Divine Guidance",
             rank: 5,
             description: r"
          You can use your \textit{divine guidance} ability once per \glossterm{short rest} instead of once per long rest.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Wellspring of Power",
             rank: 6,
             description: r"
                 The bonus from your \textit{wellspring of power} ability increases to \plus6.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Mystic Insight",
             rank: 7,
             description: r"
                 You gain an additional \textit{mystic insight} ability.
             ",
-        }],
+        },
     ];
 }
 
-pub fn domain_influence<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn domain_influence<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![
-            RankAbility {
-                name: "Domains",
-                rank: 0,
-                description: r"
-                    You choose two domains which represent your personal spiritual inclinations.
-                    You must choose your domains from among those your deity offers.
-                    The domains are listed below.
+        RankAbility {
+            name: "Domains",
+            rank: 0,
+            description: r"
+                You choose two domains which represent your personal spiritual inclinations.
+                You must choose your domains from among those your deity offers.
+                The domains are listed below.
 
-                    \begin{itemize}
-                        \item{Air}
-                        \item{Chaos}
-                        \item{Death}
-                        \item{Destruction}
-                        \item{Earth}
-                        \item{Evil}
-                        \item{Fire}
-                        \item{Good}
-                        \item{Knowledge}
-                        \item{Law}
-                        \item{Life}
-                        \item{Magic}
-                        \item{Protection}
-                        \item{Strength}
-                        \item{Travel}
-                        \item{Trickery}
-                        \item{War}
-                        \item{Water}
-                        \item{Wild}
-                    \end{itemize}
-                ",
-            },
-            RankAbility {
-                name: "Domain Gift",
-                rank: 0,
-                description: r"
-                    Each domain has a corresponding \textit{domain gift}.
-                    A domain gift is a passive ability that reinforces your ability to embody your domain.
-                    You gain the \textit{domain gift} for one of your domains (see \pcref{Cleric Domain Abilities}).
-                ",
-            },
-        ],
-        vec![RankAbility {
+                \begin{itemize}
+                    \item{Air}
+                    \item{Chaos}
+                    \item{Death}
+                    \item{Destruction}
+                    \item{Earth}
+                    \item{Evil}
+                    \item{Fire}
+                    \item{Good}
+                    \item{Knowledge}
+                    \item{Law}
+                    \item{Life}
+                    \item{Magic}
+                    \item{Protection}
+                    \item{Strength}
+                    \item{Travel}
+                    \item{Trickery}
+                    \item{War}
+                    \item{Water}
+                    \item{Wild}
+                \end{itemize}
+            ",
+        },
+        RankAbility {
+            name: "Domain Gift",
+            rank: 0,
+            description: r"
+                Each domain has a corresponding \textit{domain gift}.
+                A domain gift is a passive ability that reinforces your ability to embody your domain.
+                You gain the \textit{domain gift} for one of your domains (see \pcref{Cleric Domain Abilities}).
+            ",
+        },
+        RankAbility {
             name: "Domain Gift",
             rank: 1,
             description: r"
@@ -246,8 +238,8 @@ pub fn domain_influence<'a>() -> Vec<Vec<RankAbility<'a>>> {
         You gain the \textit{domain gift} for another one of your domains.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Domain Aspect",
             rank: 2,
             description: r"
@@ -257,8 +249,8 @@ pub fn domain_influence<'a>() -> Vec<Vec<RankAbility<'a>>> {
         You gain the \textit{domain aspect} ability for one of your domains (see \pcref{Cleric Domain Abilities}).
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Domain Aspect",
             rank: 3,
             description: r"
@@ -266,8 +258,8 @@ pub fn domain_influence<'a>() -> Vec<Vec<RankAbility<'a>>> {
         You gain the \textit{domain aspect} for another one of your domains.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Domain Essence",
             rank: 4,
             description: r"
@@ -276,8 +268,8 @@ pub fn domain_influence<'a>() -> Vec<Vec<RankAbility<'a>>> {
         You gain the \textit{domain essence} for both of your domains (see \pcref{Cleric Domain Abilities}).
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Miracle",
             rank: 5,
             description: r"
@@ -290,8 +282,8 @@ pub fn domain_influence<'a>() -> Vec<Vec<RankAbility<'a>>> {
         If you perform an extraordinary service for your deity, you can gain the ability to request an additional miracle that week.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Domain Mastery",
             rank: 6,
             description: r"
@@ -300,20 +292,20 @@ pub fn domain_influence<'a>() -> Vec<Vec<RankAbility<'a>>> {
         You gain the \textit{domain mastery} for one of your domains (see \pcref{Cleric Domain Abilities}).
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Domain Mastery",
             rank: 7,
             description: r"
                 You gain the \textit{domain mastery} for another one of your domains.
             ",
-        }],
+        },
     ];
 }
 
-pub fn healer<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn healer<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![RankAbility {
+        RankAbility {
             name: "Desperate Healing",
             rank: 0,
             description: r"
@@ -322,8 +314,8 @@ pub fn healer<'a>() -> Vec<Vec<RankAbility<'a>>> {
         In addition, using the \textit{desperate exertion} ability to affect a roll using the Medicine skill only causes you to increase your \glossterm{fatigue level} by one instead of two.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Restoration",
             rank: 1,
             description: r"
@@ -347,8 +339,8 @@ pub fn healer<'a>() -> Vec<Vec<RankAbility<'a>>> {
         \end{instantability}
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Healer's Grace",
             rank: 2,
             description: r"
@@ -356,8 +348,8 @@ pub fn healer<'a>() -> Vec<Vec<RankAbility<'a>>> {
         Whenever you attack or deal damage to a living creature, you lose this bonus until the end of the next round.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Divine Healing",
             rank: 3,
             description: r"
@@ -377,23 +369,23 @@ pub fn healer<'a>() -> Vec<Vec<RankAbility<'a>>> {
         \end{instantability}
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Called to the Needy",
             rank: 4,
             description: r"
          At the end of each phase, if a living \glossterm{ally} within \distrange of you gained a \glossterm{vital wound} during that phse, you can \glossterm{teleport} into the unoccupied square closest to that creature.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Healer's Grace",
             rank: 5,
             description: r"
                 The bonus from your \textit{healer's grace} ability increases to \plus2.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Revivify",
             rank: 6,
             description: r"
@@ -409,20 +401,20 @@ pub fn healer<'a>() -> Vec<Vec<RankAbility<'a>>> {
         \end{instantability}
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Called to the Needy",
             rank: 7,
             description: r"
                 You can use your \textit{called to the needy} ability to teleport to allies that lost \glossterm{hit points} in addition to allies that gained vital wounds.
             ",
-        }],
+        },
     ];
 }
 
-pub fn preacher<'a>() -> Vec<Vec<RankAbility<'a>>> {
+pub fn preacher<'a>() -> Vec<RankAbility<'a>> {
     return vec![
-        vec![RankAbility {
+        RankAbility {
             name: "Practiced Persuasion",
             rank: 0,
             description: r"
@@ -430,8 +422,8 @@ pub fn preacher<'a>() -> Vec<Vec<RankAbility<'a>>> {
         In addition, using the \textit{desperate exertion} ability to affect a roll using the Persuasion skill only causes you to increase your \glossterm{fatigue level} by one instead of two.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Denounce the Heathens",
             rank: 1,
             description: r"
@@ -448,8 +440,8 @@ pub fn preacher<'a>() -> Vec<Vec<RankAbility<'a>>> {
         \end{instantability}
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Inspiring Oration",
             rank: 2,
             description: r"
@@ -457,8 +449,8 @@ pub fn preacher<'a>() -> Vec<Vec<RankAbility<'a>>> {
         You must generally say inspiring words every few rounds to grant your allies this effect, though they can be brief, so this does not take an action.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Bless the Worthy",
             rank: 3,
             description: r"
@@ -474,8 +466,8 @@ pub fn preacher<'a>() -> Vec<Vec<RankAbility<'a>>> {
         \end{instantability}
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Practiced Persuasion",
             rank: 4,
             description: r"
@@ -483,8 +475,8 @@ pub fn preacher<'a>() -> Vec<Vec<RankAbility<'a>>> {
         In addition, you can use the \textit{desperate exertion} ability any number of times to affect the same Persuasion check.
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Condemn the Fearful",
             rank: 5,
             description: r"
@@ -499,15 +491,15 @@ pub fn preacher<'a>() -> Vec<Vec<RankAbility<'a>>> {
         \end{instantability}
 
                 ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Greater Inspiring Oration",
             rank: 6,
             description: r"
                 The bonus from your \textit{inspiring oration} ability increases to \plus4.
             ",
-        }],
-        vec![RankAbility {
+        },
+        RankAbility {
             name: "Convert the Irresolute",
             rank: 7,
             description: r"
@@ -519,6 +511,6 @@ pub fn preacher<'a>() -> Vec<Vec<RankAbility<'a>>> {
                     At the end of that time, if its Willpower is 0 or lower, it changes its mind and begins worshipping your deity permanently if it is capable of doing so.
                 \end{instantability}
             ",
-        }],
+        },
     ];
 }

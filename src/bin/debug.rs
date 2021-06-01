@@ -2,14 +2,15 @@ use rise::core_mechanics::attributes::{self, HasAttributes};
 use rise::equipment;
 use rise::equipment::HasEquipment;
 use rise::monsters;
+use rise::classes;
 
 fn main() {
-    // let barbarian = classes::Class::Barbarian;
-    // println!("Barbarian! {}", barbarian.to_latex());
+    let barbarian = classes::Class::Barbarian;
+    println!("Barbarian! {}", barbarian.latex_section());
     // let cleric = classes::Class::Cleric;
-    // println!("Cleric! {}", cleric.to_latex());
+    // println!("Cleric! {}", cleric.latex_section());
     // let rogue = classes::Class::Rogue;
-    // println!("Rogue! {}", rogue.to_latex());
+    // println!("Rogue! {}", rogue.latex_section());
 
     // let mut barbarian = core_mechanics::character::Character::new(classes::BARBARIAN, 1);
     // println!("{}", barbarian.to_latex());
@@ -20,15 +21,15 @@ fn main() {
     // barbarian.set_level(10);
     // println!("{}", barbarian.to_latex());
 
-    let mut bear = monsters::Monster::new(
-        monsters::challenge_rating::ChallengeRating::Three,
-        monsters::creature_type::CreatureType::Animal,
-        5,
-    );
-    bear.set_base_attribute(attributes::STR, 4);
-    bear.add_weapon(equipment::weapons::Weapon::Bite);
-    println!("{}", bear.to_section(None));
-    bear.set_level(6);
-    bear.add_weapon(equipment::weapons::Weapon::Claw);
-    println!("{}", bear.to_section(None));
+    // let mut bear = monsters::Monster::new(
+    //     monsters::challenge_rating::ChallengeRating::Three,
+    //     monsters::creature_type::CreatureType::Animal,
+    //     5,
+    // );
+    // bear.set_base_attribute(attributes::STR, 4);
+    // bear.add_weapon(equipment::weapons::Weapon::Bite);
+    // println!("{}", bear.to_section(None));
+    // bear.set_level(6);
+    // bear.add_weapon(equipment::weapons::Weapon::Claw);
+    // println!("{}", bear.to_section(None));
 }

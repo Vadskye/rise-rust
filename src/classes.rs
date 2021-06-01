@@ -638,17 +638,23 @@ impl Class {
     fn generate_ability_names_by_archetype_rank(&self) -> Vec<String> {
         let mut abilities_by_rank_and_archetype: Vec<Vec<String>> = Vec::new();
         for archetype in self.archetypes() {
-            for (rank, rank_abilities) in archetype.rank_abilities().iter().enumerate() {
+            let rank_abilities = archetype.rank_abilities();
+            for rank in 0..7 {
+                let abilities_at_rank: Vec<&archetype_rank_abilities::RankAbility> = rank_abilities
+                    .iter()
+                    .filter(|a| a.rank == rank as i8)
+                    .collect();
                 if abilities_by_rank_and_archetype.get(rank).is_none() {
                     abilities_by_rank_and_archetype.push(Vec::new());
                 }
                 abilities_by_rank_and_archetype[rank].push(
                     latex_formatting::uppercase_first_letter(
-                        &rank_abilities
+                        &abilities_at_rank
                             .iter()
                             .map(|a| a.name.to_owned())
                             .collect::<Vec<String>>()
-                            .join(", "),
+                            .join(", ")
+                            .to_lowercase(),
                     ),
                 );
             }

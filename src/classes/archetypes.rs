@@ -70,7 +70,7 @@ impl ClassArchetype {
         }
     }
 
-    pub fn rank_abilities(&self) -> Vec<Vec<archetype_rank_abilities::RankAbility>> {
+    pub fn rank_abilities(&self) -> Vec<archetype_rank_abilities::RankAbility> {
         return archetype_rank_abilities::archetype_rank_abilities(self);
     }
 
@@ -126,7 +126,6 @@ impl ClassArchetype {
             rank_abilities = self
                 .rank_abilities()
                 .iter()
-                .flatten()
                 .map(|a| a.latex_class_feature(class_shorthand).trim().to_string())
                 .collect::<Vec<String>>()
                 .join("\n\n"),
