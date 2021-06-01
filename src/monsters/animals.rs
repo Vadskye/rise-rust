@@ -4,6 +4,7 @@ use crate::monsters::challenge_rating::ChallengeRating;
 use crate::monsters::creature_type::CreatureType::Animal;
 use crate::monsters::monster_entry::MonsterEntry;
 use crate::monsters::sizes::Size;
+use crate::core_mechanics::{attacks, defenses};
 use crate::monsters::{monster_group, FullMonsterDefinition, Monster};
 
 pub fn animals() -> Vec<MonsterEntry> {
@@ -23,6 +24,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             movement_modes: None,
             name: "Camel",
             size: Size::Medium,
+            special_attacks: None,
             weapons: vec![weapons::Weapon::MonsterBite],
         },
     )));
@@ -51,6 +53,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             ]),
             name: "Baboon",
             size: Size::Medium,
+            special_attacks: None,
             weapons: vec![weapons::Weapon::MonsterBite],
         },
     )));
@@ -63,19 +66,26 @@ pub fn animals() -> Vec<MonsterEntry> {
             creature_type: Animal,
             description: None,
             knowledge: vec![
-                (0, "
+                (
+                    0,
+                    "
                     A badger is a furry animal with a squat, powerful body.
                     Badgers can be tenacious in combat.
-                "),
-                (5, "
+                ",
+                ),
+                (
+                    5,
+                    "
                     Badgers have strong forelimbs that are armed with long claws for digging.
                     A typical adult badger is 2 to 3 feet long and weighs 25 to 35 pounds.
-                "),
+                ",
+                ),
             ],
             level: 1,
             movement_modes: None,
             name: "Badger",
             size: Size::Small,
+            special_attacks: None,
             weapons: vec![weapons::Weapon::MonsterClaws],
         },
     )));
@@ -100,6 +110,18 @@ pub fn animals() -> Vec<MonsterEntry> {
                     movement_modes: None,
                     name: "Black bear",
                     size: Size::Medium,
+                    special_attacks: Some(vec![
+                        attacks::Attack::new_strike(attacks::StrikeAttackDefinition {
+                            accuracy_modifier: 0,
+                            damage_dice_increments: 1,
+                            damage_modifier: 1,
+                            defense: defenses::ARMOR,
+                            is_magical: false,
+                            power_multiplier: 1.0,
+                            name: String::from("Super Bite"),
+                            weapon: weapons::Weapon::MonsterBite,
+                        }),
+                    ]),
                     weapons: vec![weapons::Weapon::MonsterBite, weapons::Weapon::MonsterClaws],
                 }),
                 Monster::fully_defined(FullMonsterDefinition {
@@ -117,6 +139,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                     level: 5,
                     name: "Brown bear",
                     size: Size::Large,
+                    special_attacks: None,
                     weapons: vec![weapons::Weapon::MonsterBite, weapons::Weapon::MonsterClaws],
                 }),
             ],
@@ -135,6 +158,7 @@ pub fn animals() -> Vec<MonsterEntry> {
             movement_modes: None,
             name: "Cat",
             size: Size::Small,
+            special_attacks: None,
             weapons: vec![weapons::Weapon::MonsterBite],
         },
     )));
@@ -155,6 +179,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                         movement_modes: None,
                         name: "Wild dog",
                         size: Size::Medium,
+                        special_attacks: None,
                         weapons: vec![weapons::Weapon::MonsterBite],
                     },
                 ),
@@ -175,6 +200,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                         movement_modes: None,
                         name: "Riding dog",
                         size: Size::Medium,
+                        special_attacks: None,
                         weapons: vec![weapons::Weapon::MonsterBite],
                     },
                 ),

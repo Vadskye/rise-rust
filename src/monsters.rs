@@ -23,6 +23,7 @@ pub struct Monster {
     description: Option<String>,
     knowledge: Option<HashMap<i8, String>>,
     movement_modes: Vec<movement_modes::MovementMode>,
+    special_attacks: Option<Vec<attacks::Attack>>,
 }
 
 pub struct FullMonsterDefinition {
@@ -36,6 +37,7 @@ pub struct FullMonsterDefinition {
     movement_modes: Option<Vec<movement_modes::MovementMode>>,
     name: &'static str,
     size: sizes::Size,
+    special_attacks: Option<Vec<attacks::Attack>>,
     weapons: Vec<weapons::Weapon>,
 }
 
@@ -53,6 +55,7 @@ impl Monster {
             description: None,
             knowledge: None,
             movement_modes: vec![],
+            special_attacks: None,
         };
     }
 
@@ -94,6 +97,7 @@ impl Monster {
                     &movement_modes::SpeedCategory::Normal,
                 )]
             },
+            special_attacks: def.special_attacks,
         };
     }
 
@@ -128,6 +132,7 @@ impl Monster {
             movement_modes: vec![movement_modes::MovementMode::Land(
                 &movement_modes::SpeedCategory::Normal,
             )],
+            special_attacks: None,
         };
     }
 
@@ -388,7 +393,15 @@ impl Monster {
     }
 
     fn latex_abilities(&self) -> String {
-        return attacks::calc_strikes(self)
+        let attacks: Vec<attacks::Attack> = attacks::calc_strikes(self);
+        let mut attacks: Vec<&attacks::Attack> = attacks.iter().collect();
+        if let Some(special_attacks) = self.special_attacks.as_ref() {
+            for a in special_attacks {
+                attacks.push(a);
+            }
+        }
+
+        return attacks
                 .iter()
                 .map(|a| a.latex_ability_block(self))
                 .collect::<Vec<String>>()
