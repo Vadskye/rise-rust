@@ -13,7 +13,7 @@ pub fn format_creature<T: HasCreatureMechanics>(
             {attacks}
             Attr: {attributes}
         ",
-        attacks = attacks::calc_strikes(creature)
+        attacks = attacks::Attack::calc_strikes(creature)
             .iter()
             .map(|a| a.latex_shorthand(creature))
             .collect::<Vec<String>>()

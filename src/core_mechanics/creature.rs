@@ -1,4 +1,4 @@
-use crate::core_mechanics::attacks::HasAttacks;
+use crate::core_mechanics::attacks::{self, HasAttacks};
 use crate::core_mechanics::attributes::{self, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::{self, HasDefenses};
@@ -17,6 +17,7 @@ pub struct Creature {
     pub level: i8,
     pub size: sizes::Size,
     pub speeds: Vec<movement_modes::MovementMode>,
+    pub special_attacks: Option<Vec<attacks::Attack>>,
     pub weapons: Vec<weapons::Weapon>,
 }
 
@@ -28,6 +29,7 @@ impl Creature {
             level,
             name: None,
             size: sizes::Size::Medium,
+            special_attacks: None,
             speeds: vec![],
             weapons: vec![],
         };
@@ -142,6 +144,25 @@ impl HasDamageAbsorption for Creature {
 }
 
 impl HasAttacks for Creature {
+    fn add_special_attack(&mut self, attack: attacks::Attack) {
+        if self.special_attacks.is_none() {
+            self.special_attacks = Some(vec![]);
+        }
+        if let Some(ref mut a) = self.special_attacks {
+            a.push(attack);
+        }
+    }
+
+    fn calc_all_attacks(&self) -> Vec<attacks::Attack> {
+        let mut strikes = attacks::Attack::calc_strikes(self);
+        if let Some(ref special_attacks) = self.special_attacks {
+            for a in special_attacks {
+                strikes.push(a.clone());
+            }
+        }
+        return strikes;
+    }
+
     fn calc_damage_per_round_multiplier(&self) -> f64 {
         return 1.0;
     }

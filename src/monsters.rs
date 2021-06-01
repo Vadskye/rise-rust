@@ -23,7 +23,6 @@ pub struct Monster {
     description: Option<String>,
     knowledge: Option<HashMap<i8, String>>,
     movement_modes: Vec<movement_modes::MovementMode>,
-    special_attacks: Option<Vec<attacks::Attack>>,
 }
 
 pub struct FullMonsterDefinition {
@@ -55,7 +54,6 @@ impl Monster {
             description: None,
             knowledge: None,
             movement_modes: vec![],
-            special_attacks: None,
         };
     }
 
@@ -78,6 +76,11 @@ impl Monster {
             knowledge_option = Some(knowledge)
         }
         creature.set_size(def.size);
+        if let Some(special_attacks) = def.special_attacks {
+            for a in special_attacks {
+                creature.add_special_attack(a);
+            }
+        }
 
         return Monster {
             alignment: Some(def.alignment.to_owned()),
@@ -97,7 +100,6 @@ impl Monster {
                     &movement_modes::SpeedCategory::Normal,
                 )]
             },
-            special_attacks: def.special_attacks,
         };
     }
 
@@ -132,7 +134,6 @@ impl Monster {
             movement_modes: vec![movement_modes::MovementMode::Land(
                 &movement_modes::SpeedCategory::Normal,
             )],
-            special_attacks: None,
         };
     }
 
@@ -154,6 +155,14 @@ impl HasAttributes for Monster {
 }
 
 impl HasAttacks for Monster {
+    fn add_special_attack(&mut self, attack: attacks::Attack) {
+        self.creature.add_special_attack(attack);
+    }
+
+    fn calc_all_attacks(&self) -> Vec<attacks::Attack> {
+        return self.creature.calc_all_attacks();
+    }
+
     fn calc_accuracy(&self) -> i8 {
         return self.creature.calc_accuracy()
             + self.challenge_rating.accuracy_bonus()
@@ -393,9 +402,9 @@ impl Monster {
     }
 
     fn latex_abilities(&self) -> String {
-        let attacks: Vec<attacks::Attack> = attacks::calc_strikes(self);
+        let attacks: Vec<attacks::Attack> = attacks::Attack::calc_strikes(self);
         let mut attacks: Vec<&attacks::Attack> = attacks.iter().collect();
-        if let Some(special_attacks) = self.special_attacks.as_ref() {
+        if let Some(special_attacks) = self.creature.special_attacks.as_ref() {
             for a in special_attacks {
                 attacks.push(a);
             }

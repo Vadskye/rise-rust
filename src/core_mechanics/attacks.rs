@@ -2,6 +2,7 @@ use crate::core_mechanics::{damage_dice, defenses, HasCreatureMechanics};
 use crate::equipment::{weapons, HasEquipment};
 use crate::latex_formatting;
 
+#[derive(Clone)]
 pub struct StrikeAttackDefinition {
     pub accuracy_modifier: i8,
     pub damage_dice_increments: i8,
@@ -13,6 +14,7 @@ pub struct StrikeAttackDefinition {
     pub weapon: weapons::Weapon,
 }
 
+#[derive(Clone)]
 pub struct StandaloneAttackDefinition {
     pub accuracy_modifier: i8,
     pub damage_dice: damage_dice::DamageDice,
@@ -23,32 +25,15 @@ pub struct StandaloneAttackDefinition {
     pub power_multiplier: f64,
 }
 
+#[derive(Clone)]
 pub enum Attack {
     StrikeAttack(StrikeAttackDefinition),
     StandaloneAttack(StandaloneAttackDefinition),
 }
 
-pub fn calc_strikes<T: HasAttacks + HasEquipment>(creature: &T) -> Vec<Attack> {
-    // TODO: combine maneuvers with weapons and handle non-weapon attacks
-    return creature
-        .weapons()
-        .iter()
-        .map(|w| {
-            Attack::StrikeAttack(StrikeAttackDefinition {
-                accuracy_modifier: 0,
-                damage_dice_increments: 0,
-                damage_modifier: 0,
-                defense: defenses::ARMOR,
-                is_magical: false,
-                power_multiplier: 1.0,
-                name: w.name().to_string(),
-                weapon: *w,
-            })
-        })
-        .collect();
-}
-
 pub trait HasAttacks {
+    fn add_special_attack(&mut self, attack: Attack);
+    fn calc_all_attacks(&self) -> Vec<Attack>;
     fn calc_accuracy(&self) -> i8;
     fn calc_damage_increments(&self, is_strike: bool) -> i8;
     fn calc_damage_per_round_multiplier(&self) -> f64;
@@ -56,6 +41,26 @@ pub trait HasAttacks {
 }
 
 impl Attack {
+    pub fn calc_strikes<T: HasAttacks + HasEquipment>(creature: &T) -> Vec<Attack> {
+        // TODO: combine maneuvers with weapons and handle non-weapon attacks
+        return creature
+            .weapons()
+            .iter()
+            .map(|w| {
+                Attack::StrikeAttack(StrikeAttackDefinition {
+                    accuracy_modifier: 0,
+                    damage_dice_increments: 0,
+                    damage_modifier: 0,
+                    defense: defenses::ARMOR,
+                    is_magical: false,
+                    power_multiplier: 1.0,
+                    name: w.name().to_string(),
+                    weapon: *w,
+                })
+            })
+            .collect();
+    }
+
     pub fn new_strike(def: StrikeAttackDefinition) -> Self {
         return Attack::StrikeAttack(def);
     }

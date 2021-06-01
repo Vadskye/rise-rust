@@ -1,5 +1,5 @@
 use crate::classes::Class;
-use crate::core_mechanics::attacks::HasAttacks;
+use crate::core_mechanics::attacks::{self, HasAttacks};
 use crate::core_mechanics::attributes::{Attribute, HasAttributes};
 use crate::core_mechanics::damage_absorption::HasDamageAbsorption;
 use crate::core_mechanics::defenses::HasDefenses;
@@ -55,6 +55,14 @@ impl HasAttributes for Character {
 }
 
 impl HasAttacks for Character {
+    fn add_special_attack(&mut self, attack: attacks::Attack) {
+        self.creature.add_special_attack(attack);
+    }
+
+    fn calc_all_attacks(&self) -> Vec<attacks::Attack> {
+        return self.creature.calc_all_attacks();
+    }
+
     fn calc_accuracy(&self) -> i8 {
         return self.creature.calc_accuracy();
     }

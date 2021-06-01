@@ -1,3 +1,4 @@
+#[derive(Clone)]
 pub struct DamageDice {
     count: i8,
     increments: i8,
