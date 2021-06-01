@@ -24,7 +24,19 @@ pub fn animals() -> Vec<MonsterEntry> {
             movement_modes: None,
             name: "Camel",
             size: Size::Medium,
-            special_attacks: None,
+            // Camels have a high strength, but they shouldn't deal massive damage
+            special_attacks: Some(vec![
+                attacks::Attack::new_strike(attacks::StrikeAttackDefinition {
+                    accuracy_modifier: 0,
+                    damage_dice_increments: -1,
+                    damage_modifier: 0,
+                    defense: defenses::ARMOR,
+                    is_magical: false,
+                    power_multiplier: 0.5,
+                    name: String::from("Bite"),
+                    weapon: weapons::Weapon::MonsterBite,
+                }),
+            ]),
             weapons: vec![weapons::Weapon::MonsterBite],
         },
     )));
@@ -110,18 +122,7 @@ pub fn animals() -> Vec<MonsterEntry> {
                     movement_modes: None,
                     name: "Black bear",
                     size: Size::Medium,
-                    special_attacks: Some(vec![
-                        attacks::Attack::new_strike(attacks::StrikeAttackDefinition {
-                            accuracy_modifier: 0,
-                            damage_dice_increments: 1,
-                            damage_modifier: 1,
-                            defense: defenses::ARMOR,
-                            is_magical: false,
-                            power_multiplier: 1.0,
-                            name: String::from("Super Bite"),
-                            weapon: weapons::Weapon::MonsterBite,
-                        }),
-                    ]),
+                    special_attacks: None,
                     weapons: vec![weapons::Weapon::MonsterBite, weapons::Weapon::MonsterClaws],
                 }),
                 Monster::fully_defined(FullMonsterDefinition {

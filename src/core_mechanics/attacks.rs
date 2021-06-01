@@ -1,5 +1,5 @@
 use crate::core_mechanics::{damage_dice, defenses, HasCreatureMechanics};
-use crate::equipment::{weapons, HasEquipment};
+use crate::equipment::weapons;
 use crate::latex_formatting;
 
 #[derive(Clone)]
@@ -41,10 +41,9 @@ pub trait HasAttacks {
 }
 
 impl Attack {
-    pub fn calc_strikes<T: HasAttacks + HasEquipment>(creature: &T) -> Vec<Attack> {
+    pub fn calc_strikes(weapons: Vec<&weapons::Weapon>) -> Vec<Attack> {
         // TODO: combine maneuvers with weapons and handle non-weapon attacks
-        return creature
-            .weapons()
+        return weapons
             .iter()
             .map(|w| {
                 Attack::StrikeAttack(StrikeAttackDefinition {
@@ -55,7 +54,7 @@ impl Attack {
                     is_magical: false,
                     power_multiplier: 1.0,
                     name: w.name().to_string(),
-                    weapon: *w,
+                    weapon: *w.clone(),
                 })
             })
             .collect();

@@ -85,8 +85,8 @@ impl HasEquipment for Character {
         self.creature.add_weapon(weapon);
     }
 
-    fn weapons(&self) -> &Vec<weapons::Weapon> {
-        return &self.creature.weapons();
+    fn weapons(&self) -> Vec<&weapons::Weapon> {
+        return self.creature.weapons();
     }
 }
 

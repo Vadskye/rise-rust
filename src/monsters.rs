@@ -225,8 +225,8 @@ impl HasEquipment for Monster {
         self.creature.add_weapon(weapon);
     }
 
-    fn weapons(&self) -> &Vec<weapons::Weapon> {
-        return &self.creature.weapons();
+    fn weapons(&self) -> Vec<&weapons::Weapon> {
+        return self.creature.weapons();
     }
 }
 
@@ -402,14 +402,8 @@ impl Monster {
     }
 
     fn latex_abilities(&self) -> String {
-        let attacks: Vec<attacks::Attack> = attacks::Attack::calc_strikes(self);
-        let mut attacks: Vec<&attacks::Attack> = attacks.iter().collect();
-        if let Some(special_attacks) = self.creature.special_attacks.as_ref() {
-            for a in special_attacks {
-                attacks.push(a);
-            }
-        }
-
+        let mut attacks = self.calc_all_attacks();
+        attacks.sort_by(|a, b| a.name().to_lowercase().cmp(&b.name().to_lowercase()));
         return attacks
                 .iter()
                 .map(|a| a.latex_ability_block(self))

@@ -63,7 +63,7 @@ fn calc_rounds_to_live<T: HasCreatureMechanics>(attackers: Vec<&T>, defender: &T
 }
 
 fn calc_individual_dpr<T: HasCreatureMechanics>(attacker: &T, defender: &T) -> f64 {
-    let attacks = attacks::Attack::calc_strikes(attacker);
+    let attacks = attacks::Attack::calc_strikes(attacker.weapons());
     let mut best_damage_per_round = 0.0;
     for attack in attacks {
         let hit_probability = calculate_hit_probability(&attack, attacker, defender);

@@ -1,4 +1,3 @@
-use crate::core_mechanics::attacks;
 use crate::core_mechanics::HasCreatureMechanics;
 use crate::core_mechanics::attributes::{self, HasAttributes};
 use crate::core_mechanics::defenses;
@@ -13,7 +12,7 @@ pub fn format_creature<T: HasCreatureMechanics>(
             {attacks}
             Attr: {attributes}
         ",
-        attacks = attacks::Attack::calc_strikes(creature)
+        attacks = creature.calc_all_attacks()
             .iter()
             .map(|a| a.latex_shorthand(creature))
             .collect::<Vec<String>>()

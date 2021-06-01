@@ -5,8 +5,8 @@ use crate::core_mechanics::defenses::{self, HasDefenses};
 use crate::core_mechanics::latex;
 use crate::core_mechanics::movement_modes;
 use crate::core_mechanics::resources::{self, HasResources};
-use crate::core_mechanics::HasCreatureMechanics;
 use crate::core_mechanics::sizes;
+use crate::core_mechanics::HasCreatureMechanics;
 use crate::equipment::{weapons, HasEquipment};
 use std::cmp::{max, min};
 use std::collections::HashMap;
@@ -154,13 +154,31 @@ impl HasAttacks for Creature {
     }
 
     fn calc_all_attacks(&self) -> Vec<attacks::Attack> {
-        let mut strikes = attacks::Attack::calc_strikes(self);
+        let mut all_attacks: Vec<attacks::Attack> = vec![];
         if let Some(ref special_attacks) = self.special_attacks {
             for a in special_attacks {
-                strikes.push(a.clone());
+                all_attacks.push(a.clone());
             }
         }
-        return strikes;
+        let weapons_without_attacks: Vec<&weapons::Weapon> = self
+            .weapons()
+            .into_iter()
+            .filter(|weapon| {
+                let same_weapon_attack = all_attacks.iter().any(|attack| {
+                    if let attacks::Attack::StrikeAttack(s) = attack {
+                        return s.weapon.name() == weapon.name();
+                    } else {
+                        return false;
+                    }
+                });
+                return !same_weapon_attack;
+            })
+            .collect();
+        let strikes = attacks::Attack::calc_strikes(weapons_without_attacks);
+        for strike in strikes {
+            all_attacks.push(strike);
+        }
+        return all_attacks;
     }
 
     fn calc_damage_per_round_multiplier(&self) -> f64 {
@@ -190,8 +208,8 @@ impl HasEquipment for Creature {
         self.weapons.push(weapon);
     }
 
-    fn weapons(&self) -> &Vec<weapons::Weapon> {
-        return &self.weapons;
+    fn weapons(&self) -> Vec<&weapons::Weapon> {
+        return self.weapons.iter().collect();
     }
 }
 
