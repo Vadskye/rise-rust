@@ -26,6 +26,22 @@ pub enum Class {
 }
 
 impl Class {
+    pub fn all() -> Vec<Self> {
+        return vec![
+            Self::Barbarian,
+            Self::Cleric,
+            Self::Druid,
+            Self::Fighter,
+            Self::Monk,
+            Self::Paladin,
+            Self::Ranger,
+            Self::Rogue,
+            Self::Sorcerer,
+            Self::Warlock,
+            Self::Wizard,
+        ];
+    }
+
     pub fn attunement_points(&self) -> i8 {
         match self {
             Self::Barbarian => 1,
@@ -565,11 +581,13 @@ impl Class {
 
                 {basic_class_abilities}
 
+                {special_class_abilities}
+
                 {archetypes}
 
                 {suffix}
             ",
-            archetype_names = latex_formatting::join_string_list(&archetype_names).unwrap(),
+            archetype_names = latex_formatting::join_str_list(&archetype_names).unwrap(),
             archetype_table = self.latex_archetype_table().trim(),
             archetypes = self
                 .archetypes()
@@ -582,6 +600,7 @@ impl Class {
                 .join("\n\n"),
             basic_class_abilities =
                 basic_class_abilities::generate_latex_basic_class_abilities(self).trim(),
+            special_class_abilities = self.latex_special_class_abilities().trim(),
             class_name = titlecase(self.name()),
             class_alignment = self.alignment(),
             suffix = self.latex_suffix(),
@@ -640,10 +659,11 @@ impl Class {
         for archetype in self.archetypes() {
             let rank_abilities = archetype.rank_abilities();
             for rank in 0..7 {
-                let abilities_at_rank: Vec<&archetype_rank_abilities::RankAbility> = rank_abilities
+                let mut abilities_at_rank: Vec<&archetype_rank_abilities::RankAbility> = rank_abilities
                     .iter()
                     .filter(|a| a.rank == rank as i8)
                     .collect();
+                abilities_at_rank.sort_by(|a, b| a.name.cmp(b.name));
                 if abilities_by_rank_and_archetype.get(rank).is_none() {
                     abilities_by_rank_and_archetype.push(Vec::new());
                 }
@@ -666,10 +686,122 @@ impl Class {
         return abilities_by_rank;
     }
 
+    fn latex_special_class_abilities(&self) -> &str {
+        match self {
+            Self::Cleric => {
+                r"
+                    \subsection{Special Class Abilities}
+
+                    \cf{Clr}{Deity}
+                    You must worship a specific deity to be a cleric.
+                    Deities and their associated domains are listed in \trefnp{Deities}.
+
+                    \begin{dtable!*}
+                        \lcaption{Deities}
+                        \begin{dtabularx}{\textwidth}{X l X}
+                            \tb{Deity} & \tb{Alignment} & \tb{Domains} \tableheaderrule
+                            Gregory, warrior god of mundanity     & Lawful good     & Law, Protection, Strength, War         \\
+                            Guftas, horse god of justice          & Lawful good     & Good, Law, Strength, Travel            \\
+                            Lucied, paladin god of justice        & Lawful good     & Destruction, Good, Protection, War     \\
+                            Simor, fighter god of protection      & Lawful good     & Good, Protection, Strength, War        \\
+                            Ayala, naiad god of water             & Neutral good    & Life, Magic, Water, Wild               \\
+                            Pabs, dwarf god of drink              & Neutral good    & Good, Life, Strength, Wild             \\
+                            Rucks, monk god of pragmatism         & Neutral good    & Good, Law, Protection, Travel          \\
+                            Vanya, centaur god of nature          & Neutral good    & Good, Strength, Travel, Wild           \\
+                            Brushtwig, pixie god of creativity    & Chaotic good    & Chaos, Good, Trickery, Wild            \\
+                            Camilla, tiefling god of fire         & Chaotic good    & Fire, Good, Magic, Protection          \\
+                            Chavi, wandering god of stories       & Chaotic good    & Chaos, Knowledge, Trickery             \\
+                            Chort, dwarf god of optimism          & Chaotic good    & Good, Life, Travel, Wild               \\
+                            Ivan Ivanovitch, bear god of strength & Chaotic good    & Chaos, Strength, War, Wild             \\
+                            Krunch, barbarian god of destruction  & Chaotic good    & Destruction, Good, Strength, War       \\
+                            Sir Cakes, dwarf god of freedom       & Chaotic good    & Chaos, Good, Strength                  \\
+                            Mikolash, scholar god of knowledge    & Lawful neutral  & Knowledge, Law, Magic, Protection      \\
+                            Raphael, monk god of retribution      & Lawful neutral  & Death, Law, Protection, Travel         \\
+                            Declan, god of fire                   & True neutral    & Destruction, Fire, Knowledge, Magic    \\
+                            Mammon, golem god of endurance        & True neutral    & Knowledge, Magic, Protection, Strength \\
+                            Kurai, shaman god of nature           & True neutral    & Air, Earth, Fire, Water                \\
+                            Amanita, druid god of decay           & Chaotic neutral & Chaos, Destruction, Life, Wild         \\
+                            Antimony, elf god of necromancy       & Chaotic neutral & Death, Knowledge, Life, Magic          \\
+                            Clockwork, elf god of time            & Chaotic neutral & Chaos, Magic, Trickery, Travel         \\
+                            Diplo, doll god of destruction        & Chaotic neutral & Chaos, Destruction, Strength, War      \\
+                            Lord Khallus, fighter god of pride    & Chaotic neutral & Chaos, Strength, War                   \\
+                            Celeano, sorcerer god of deception    & Chaotic neutral & Chaos, Magic, Protection, Trickery     \\
+                            Murdoc, god of mercenaries            & Chaotic neutral & Destruction, Knowledge, Travel, War    \\
+                            Ribo, halfling god of trickery        & Chaotic neutral & Chaos, Trickery, Water                 \\
+                            Tak, orc god of war                   & Lawful evil     & Law, Strength, Trickery, War           \\
+                            Theodolus, sorcerer god of ambition   & Neutral evil    & Evil, Knowledge, Magic, Trickery       \\
+                            Daeghul, demon god of slaughter       & Chaotic evil    & Destruction, Evil, Magic, War          \\
+                        \end{dtabularx}
+                    \end{dtable!*}
+                "
+            }
+            Self::Paladin => {
+                r"
+                    \subsection{Special Class Abilities}
+
+                    \cf{Pal}{Devoted Alignment} 
+                    You are devoted to a specific alignment.
+                    You must choose one of your alignment components: good, evil, lawful, or chaotic.
+                    The alignment you choose is your devoted alignment.
+                    Your paladin abilities are affected by this choice.
+                    % seems unnecessary
+                    % You excel at slaying creatures with alignments opposed to your devoted alignment.
+                    Your alignment cannot be changed without extraordinary repurcussions.
+                "
+            }
+            Self::Warlock => {
+                r"
+                    \subsection{Special Class Abilities}
+
+                    \cf{War}{Soul Pact}
+                    To become a warlock, you must make a pact with a creature capable of sharing its power with you.
+                    Generally, such a creature must be at least 20th level, and must be a planeforged from a plane other than your own.
+                    You must make a sacrifice, the details of which are subject to negotiation, and offer a part of your immortal soul.
+                    In exchange, you gain the powers of a warlock.
+                    The creature you make the pact with is called your soulkeeper.
+                    Most warlocks make pacts with demons or devils, though other soulkeepers are possible.
+
+                    Offering your soul to an entity in this way grants it the ability to communicate with you in limited ways.
+                    This communication typically manifests as unnatural emotional urges or whispered voices audible only to you.
+                    demon or devil.
+
+                    Your pact specifies how much of your soul is granted to your soulkeeper, and the circumstances of the transfer.
+                    The most common arrangement is for a soulkeeper to gain possession of your soul immediately after you die.
+                    It will keep the soul for one decade per year of your life that you spend as a warlock.
+                    During that time, it will not prevent you from being resurrected.
+                    At the end of that time, if your soul remains intact, your soul will pass on to its intended afterlife.
+                    However, other arrangements are possible, and each warlock's pact can be unique.
+
+                    The longer you spend in an afterlife that is not your own, the more likely you are to lose your sense of self and become subsumed by the plane you are on.
+                    Only a soul of extraordinary strength can maintain its integrity after decades or centuries in any plane.
+                    Many warlocks seek power zealously while mortal to gain the mental fortitude necessary to keep their soul intact after death.
+
+                    \cf{War}{Whispers of the Lost}[Magical]
+                    You hear the voices of souls that inhabit your soulkeeper's plane, linked to you through your soulkeeper.
+                    Choose one of the following types of whispers that you hear.
+                    {
+                        \subcf{Mentoring Whispers} You hear the voice of a dead warlock whose soul is bound to the same soulkeeper as yours.
+
+                        \subcf{Spiteful Whispers} You hear the voices of cruel souls who berate you for your flaws and mistakes.
+
+                        \subcf{Sycophantic Whispers} You hear the voices of adoring souls who praise your talents and everything you do.
+
+                        \subcf{Warning Whispers} You hear the voices of paranoid and fearful souls warning you of danger, both real and imagined.
+
+                        \subcf{Whispers of the Mighty} Your soulkeeper forges the connection to your soul into a boon granted to any soul in the Abyss strong enough to claim it in battle.
+                        You hear the voice of whatever soul currently possesses the boon, which may change suddenly and unexpectedly.
+                    }
+                "
+            }
+            _ => "",
+        }
+    }
+
     // TODO: organize this in a way that makes sense
     fn latex_suffix(&self) -> &str {
         match self {
-            Self::Cleric => r"
+            Self::Cleric => {
+                r"
                 \newpage
                 \subsection{Cleric Domain Abilities}\label{Cleric Domain Abilities}
                     These domain abilities can be granted by the \textit{domain influence} cleric archetype.
@@ -1032,17 +1164,22 @@ impl Class {
                 \subsection{Ex-Clerics}
                     If you grossly violate the code of conduct required by your deity, you lose all spells and magical cleric class abilities.
                     You cannot regain those abilities until you atone for your transgressions to your deity.
-            ",
-            Self::Druid => r"
+            "
+            }
+            Self::Druid => {
+                r"
                 \subsection{Ex-Druids}
                     A druid who ceases to revere nature or who changes to a prohibited alignment loses all \glossterm{magical} druid class abilities.
                     They cannot thereafter gain levels as a druid until they atone for their transgressions.
-            ",
-            Self::Paladin => r"
+            "
+            }
+            Self::Paladin => {
+                r"
                 \subsection{Ex-Paladins}
                     If you cease to follow your devoted alignment, you lose all \glossterm{magical} paladin class abilities.
                     If your atone for your misdeeds and resume the service of your devoted alignment, you can regain your abilities.
-            ",
+            "
+            }
             _ => "",
         }
     }

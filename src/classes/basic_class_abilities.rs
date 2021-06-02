@@ -75,7 +75,7 @@ fn generate_latex_defenses(class: &classes::Class) -> String {
         format!(
             "
                 \\cf<{shorthand_name}><Defenses>
-                You gain the following bonuses to your \\glossterm<defenses>: \\plus{armor} Armor, \\plus{fortitude} Fortitude, \\plus{reflex} Reflex, \\plus{mental} Mental
+                You gain the following bonuses to your \\glossterm<defenses>: \\plus{armor} Armor, \\plus{fortitude} Fortitude, \\plus{reflex} Reflex, \\plus{mental} Mental.
             ",
             armor=class.defense_bonus(defenses::ARMOR),
             fortitude=class.defense_bonus(defenses::FORT),
@@ -107,7 +107,7 @@ fn generate_latex_armor_proficiencies(class: &classes::Class) -> String {
             "
                 You are proficient with {usage_classes} armor.
             ",
-            usage_classes = latex_formatting::join_string_list(&stringified).unwrap(),
+            usage_classes = latex_formatting::join_str_list(&stringified).unwrap(),
         )
     }
 
@@ -131,14 +131,20 @@ fn generate_latex_weapon_proficiencies(class: &classes::Class) -> String {
         "
         .to_string();
     } else if weapon_proficiencies.specific_weapons.is_some() {
-        let specific_weapons = weapon_proficiencies.specific_weapons.unwrap();
-        let stringified: Vec<String> = specific_weapons.iter().map(|w| w.plural_name()).collect();
+        let custom_weapon_groups = generate_labeled_english_number(weapon_proficiencies.custom_weapon_groups, "other weapon group","other weapon groups");
+        let custom_weapon_groups = format!("any {}", custom_weapon_groups);
+        let mut components = vec![
+            String::from("simple weapons"),
+            custom_weapon_groups,
+        ];
+        for w in weapon_proficiencies.specific_weapons.unwrap() {
+            components.push(w.plural_name());
+        }
         proficiences_text = format!(
             "
-                You are proficient with simple weapons, any {weapon_group_text}, and {specific_weapon_text}.
+                You are proficient with {}.
             ",
-            specific_weapon_text = stringified.join(", "),
-            weapon_group_text = generate_labeled_english_number(weapon_proficiencies.custom_weapon_groups, "other weapon group","other weapon groups"),
+            latex_formatting::join_string_list(&components).unwrap_or(String::from("")),
         );
     } else {
         proficiences_text = format!(
@@ -205,7 +211,7 @@ fn generate_latex_class_skills(class: &classes::Class) -> String {
     // Profession as class skills, but this structure is still better in case that changes.
     if skills_without_attribute.len() > 0 {
         attribute_texts.push(format!(
-            "\\item \\subparhead<Other> {skills_text}",
+            "\\item \\subparhead<Other> {skills_text}.",
             skills_text = skills_without_attribute.join(", "),
         ))
     }

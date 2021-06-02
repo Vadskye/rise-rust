@@ -20,7 +20,12 @@ pub fn latexify(text: String) -> String {
     return text.to_string();
 }
 
-pub fn join_string_list(strings: &[&str]) -> Option<String> {
+pub fn join_string_list(strings: &Vec<String>) -> Option<String> {
+    let strings: Vec<&str> = strings.iter().map(|c| c.as_str()).collect();
+    return join_str_list(&strings);
+}
+
+pub fn join_str_list(strings: &Vec<&str>) -> Option<String> {
     if strings.len() == 0 {
         return None;
     } else if strings.len() == 1 {
